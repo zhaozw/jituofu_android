@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/actiontop" />
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        style="@style/contentActivity" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_horizontal_margin" >
+
+            <TextView
+                style="@style/field_tips"
+                android:layout_marginBottom="10dp"
+                android:text="@string/password_tips" />
+
+            <LinearLayout
+                style="@style/bottom_top_border"
+                android:layout_marginBottom="@dimen/normalSpace" >
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        style="@style/label"
+                        android:text="@string/currentpw" />
+
+                    <EditText
+                        android:id="@+id/currentpw"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView1"
+                        android:inputType="text" >
+                    </EditText>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/border"
+                    style="@style/formborder"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/label"
+                        android:text="@string/newpw" />
+
+                    <EditText
+                        android:id="@+id/newpw"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView2"
+                        android:inputType="textPassword" >
+                    </EditText>
+                </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/border"
+                    style="@style/formborder"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/label"
+                        android:text="@string/cnewpw" />
+
+                    <EditText
+                        android:id="@+id/cnewpw"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView3"
+                        android:inputType="text" >
+                    </EditText>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/updateBtn"
+                style="@style/primaryBtn"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="@string/ok" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

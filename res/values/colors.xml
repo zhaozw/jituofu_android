@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="tabActiveTextColor">#e86054</color>
+    <color name="tabNormalTextColor">#888b92</color>
+    <color name="tabBackground">#fefefe</color>
+    <color name="white">#ffffff</color>
+    <color name="contentActivityBg">#f7f7f7</color>
+    
+    <!-- 标准文字颜色 -->
+    <color name="normalTxt">#000000</color>
+    
+    <!-- 字段提示文字颜色 -->
+    <color name="filed_tips_txt">#999999</color>
+    
+    <!-- 细线 -->
+    <color name="spacelinear">#bababa</color>
+</resources>
