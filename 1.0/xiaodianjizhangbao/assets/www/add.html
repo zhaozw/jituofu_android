@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width,height=device-height" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/common.css"/>
+    <link rel="stylesheet" href="assets/css/addProduct.css"/>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+</head>
+<body>
+<!--<nav class="footerbar flexBox J-hideTabBar">-->
+  <!--<a href="cashier.html" class="box">-->
+    <!--<img src="assets/imgs/cashier-30@2x.png" width="30">-->
+    <!--<span>记账台</span>-->
+  <!--</a>-->
+  <!--<a href="account.html" class="box selected">-->
+    <!--<img src="assets/imgs/home-icon@2x.png" width="30">-->
+    <!--<span>我的小店</span>-->
+  <!--</a>-->
+  <!--<a href="settings.html" class="box">-->
+    <!--<img src="assets/imgs/settings-selected@2x.png" width="30">-->
+    <!--<span>账户设置</span>-->
+  <!--</a>-->
+<!--</nav>-->
+<header class="header">
+    <a class="back box touchStatusBtn J-hideTabBar" data-norouting="true" href="warehouse.html"><img src="assets/imgs/back-icon.png" alt="返回"/>返回</a>
+    <span class="box">入库</span>
+</header>
+<div class="container">
+    <input type="hidden" id="J-properties-field"/>
+
+    <aside class="steps">
+        <header>
+            <span class="stepNum">1</span>
+            选择商品图片
+        </header>
+        <nav id="J-uploadNav">
+            <a href="javascript:void(0)" class="photo">图片库</a>
+            <a href="javascript:void(0)" class="camera">拍摄商品</a>
+        </nav>
+        <section class="uploadImgBox">
+            <input type="hidden" id="J-pic"/>
+
+            <div id="J-photoPreview">
+
+            </div>
+            <div class="uploadStatus" id="J-uploadStatus">
+                <div class="loading">
+                    <img src="assets/imgs/ajax-loader.gif" width="16" height="16" alt=""/>
+                </div>
+                <div class="error">
+                    <img src="assets/imgs/Error.png" width="24" height="24" alt=""/>
+
+                    <p>上传出错</p>
+
+                    <p>尝试重新选择图片</p>
+                </div>
+            </div>
+        </section>
+    </aside>
+    <aside class="steps">
+        <header>
+            <span class="stepNum">2</span>
+            填写基本信息
+        </header>
+        <section>
+            <div class="field-group">
+                <p class="label">名称</p>
+                <input class="field input-text" autocapitalize="off" id="name" type="text" placeholder="商品名称"/>
+            </div>
+            <div class="field-group">
+                <p class="label">单价</p>
+                <input class="field input-text" autocapitalize="off" id="price" type="number" placeholder="商品单价"/>
+            </div>
+            <div class="field-group">
+                <p class="label">数量</p>
+                <input class="field input-text" autocapitalize="off" id="count" type="number" placeholder="本次采购数量"/>
+            </div>
+            <div class="field-group typesBox">
+                <p class="label">
+                    分类
+                    <input type="hidden" id="J-types-hide"/>
+                </p>
+
+                <div class="field">
+                    <div id="J-typesSelector">
+                        <img src="assets/imgs/ajax-loader.gif" width="16" height="16" alt=""/>
+                    </div>
+                    <a href="javascript:void(0)" id="J-addType">添加分类</a>
+                </div>
+            </div>
+        </section>
+    </aside>
+
+    <button  class="touchStatusBtn btn btn-primary" id="J-addPropduct-btn">录入</button>
+    <!--<form class="form-default" method="post" action="add.php" enctype="multipart/form-data" novalidate>-->
+    <!--<div class="input-skin first-child">-->
+    <!--<input autocapitalize="off" id="name" name="name" type="text" placeholder="商品名称">        </div>-->
+
+    <!--<div class="input-skin">-->
+    <!--<input autocapitalize="off" id="price" name="price" type="number" placeholder="商品单价">        </div>-->
+
+    <!--<div class="input-skin">-->
+    <!--<input autocapitalize="off" id="count" name="count" type="tel" placeholder="采购数量">        </div>-->
+
+    <!--<div class="input-skin flexBox typesContainer">-->
+    <!--<p>分类：</p>-->
+    <!--<input type="hidden" id="J-types-hide" />-->
+    <!--<div class="typesBox box">-->
+    <!--<div id="J-typesSelector">加载分类...</div>-->
+    <!--<a href="javascript:void(0)" id="J-addType">添加分类</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="input-skin flexBox propsBox">-->
+    <!--<p>属性：</p>-->
+    <!--<div class="box propsBox">-->
+    <!--<input type="hidden" id="J-properties-field" name="properties">-->
+    <!--<div id="J-propsHTMLBox">-->
+    <!--暂无商品属性-->
+    <!--</div>-->
+    <!--<a href="javascript:void(0)" id="J-addProps-btn">&#43; 添加属性</a>-->
+    <!--</div>-->
+    <!--</div>-->
+
+
+    <!--<div class="input-skin flexBox attachmentBox">-->
+    <!--<div class="J-takePhotoBox box">-->
+    <!--<a href="javascript:void(0)" class="J-takePhoto-btn-skin">上传产品照</a>-->
+    <!--<input type="hidden" id="J-pic" />-->
+    <!--</div>-->
+    <!--<div id="J-photoPreview" class="box">-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<button  class="touchStatusBtn btn btn-primary" id="J-addPropduct-btn">确定</button>-->
+    <!--</form>-->
+</div>
+<script type="text/javascript" charset="utf-8">
+    var user = null;
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        seajs.use("jzb.common.js");
+
+        user = localStorage.getItem("user");
+        if (!user) {
+            return location.href = "login.html";
+        }
+        if (user) {
+            user = JSON.parse(user);
+            if (!user.user_id) {
+                return location.href = "login.html";
+            }
+        }
+
+        seajs.use("add.js");
+        seajs.use("footer.js");
+    }
+</script>
+</body>
+</html>

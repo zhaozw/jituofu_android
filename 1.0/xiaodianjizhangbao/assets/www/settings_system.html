@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/common.css"/>
+    <link rel="stylesheet" href="assets/css/settings_system.css"/>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/comment.js"></script>
+</head>
+<body>
+<header class="header">
+    <a class="back box touchStatusBtn J-hideTabBar" href=""><img src="assets/imgs/back-icon.png" alt="返回" />返回</a>
+    <span class="box">系统设置</span>
+</header>
+<div class="container">
+    <div class="logoBox">
+        <img src="assets/imgs/logo.png" alt="小店记账宝" width="100" />
+        <p id="J-productname">小店记账宝</p>
+        <p id="J-version"></p>
+    </div>
+    <nav class="menu">
+        <a href="settings_system.html" target="_blank" id="J-getVersion" class="J-hideTabBar">
+            <span class="text">
+                检查更新
+            </span>
+        </a>
+        <a href="javascript:void(0)" target="_blank" id="J-comment">
+            <span class="text">
+                给个评价吧
+            </span>
+        </a>
+    </nav>
+</div>
+<script type="text/javascript" charset="utf-8">
+    var user = null;
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        seajs.use("jzb.common.js");
+
+        user = localStorage.getItem("user");
+        if (!user) {
+            return location.href = "login.html";
+        }
+        if (user) {
+            user = JSON.parse(user);
+            if (!user.user_id) {
+                return location.href = "login.html";
+            }
+        }
+
+        seajs.use("settings_system.js");
+
+        seajs.use("footer.js");
+    }
+</script>
+</body>
+</html>

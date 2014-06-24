@@ -1,0 +1,15 @@
+.menu .text{
+    padding-left: 10px;
+}
+.menu .arrow{
+    -webkit-transform: rotate(180deg);
+    margin-top: 9px;
+}
+.logoBox{
+    margin: 30px 0;
+    text-align: center;
+}
+#J-version{
+    line-height: 20px;
+    font-size: 14px;
+}

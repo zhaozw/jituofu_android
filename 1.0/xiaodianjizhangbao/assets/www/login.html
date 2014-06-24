@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <link rel="stylesheet" href="assets/css/login.css" />
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+	<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+</head>
+<body>
+<div class="loginBox container">
+    <header>
+        <div class="avatarBox">
+            <img src="assets/imgs/logo-skin.png" class="skin" alt="头像" />
+            <img src="assets/imgs/logo.png" alt="头像" />
+        </div>
+    </header>
+
+    <!--<a class="box feedback" href="feedback.html">-->
+        <!--<img src="assets/imgs/gift.png" width="24" height="24" alt="有奖反馈"/>-->
+        <!--反馈问题有奖啦！-->
+    <!--</a>-->
+
+    <div class="form" action="login.php" method="post">
+        <input type="hidden" name="action" value="login"/>
+        <input type="hidden" name="username" value="username"/>
+        <div class="field-group first">
+            <p class="label">用户名</p>
+            <input type="text" class="field input-text" name="username" id="J-username" autocapitalize="off" />
+        </div>
+        <div class="field-group">
+            <p class="label">登录密码</p>
+            <input type="password" class="field input-text" name="password" id="J-password" autocapitalize="off" />
+        </div>
+    </div>
+
+    <div class="openLogin" style="display: none;">
+        <a href="http://115.29.39.106/qq_login.php" title="QQ登录" class="touchStatusBtn J-hideTabBar" target="_blank" id="J-qq">
+            <img src="assets/imgs/qq_logo.png" alt="QQ登录"/>
+            登录
+        </a>
+    </div>
+
+    <a class="touchStatusBtn btn btn-primary" href="javascript:void(0)" id="J-loginBtn">登录</a>
+
+    <div class="flexBox J-hideTabBar">
+        <a class="box" href="forgot-password.html" title="找回登录密码" target="_blank">忘记登录密码</a>
+        <a class="box" href="register.html" title="免费注册小店" target="_blank">免费注册</a>
+    </div>
+</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+      seajs.use("zepto.min.js", function ($){
+        $('.loginBox').css({
+            marginTop: (Math.max($(document).height(), $(window).height()) - $('.loginBox').offset().height)/2
+        })
+      });
+
+	  var user = null;
+	  
+      function preventBehavior(e) { 
+        e.preventDefault();
+      };
+	  document.addEventListener("touchmove", preventBehavior, false);
+      document.addEventListener("deviceready", onDeviceReady, false);
+	  
+	  function onDeviceReady(){
+        seajs.use("jzb.common.js");
+	    user = localStorage.getItem("user");
+		if(user){
+		  user = JSON.parse(user);
+		  if(user.user_id){
+		    return location.href = "cashier.html";
+		  }
+		}
+		
+		seajs.use("login.js", function (){
+		  navigator.splashscreen.hide(); 
+		});
+
+        seajs.use("footer.js");
+	  }
+</script>
+</html>

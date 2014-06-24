@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/common.css" />
+    <link rel="stylesheet" href="assets/css/register.css" />
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+</head>
+<body>
+<header class="header">
+    <a class="back box J-hideTabBar" data-norouting="true" href="login.html"><img src="assets/imgs/back-icon.png" alt="返回" />返回</a>
+    <span class="box">注册</span>
+    <a class="gotoLogin box J-hideTabBar" href="login.html" title="登录" target="_blank">登录</a>
+</header>
+<div class="step" style="display: none;">
+    <!--<span class="current">注册</span> &gt; <span>邮箱验证</span> &gt; <span>注册完成</span>-->
+    <span class="current">注册</span> &gt; <span>注册完成</span>
+</div>
+
+<div class="registerBox container">
+    <div class="warn flexBox" style="display: none;">
+        <span>
+            嫌注册太麻烦，可用
+        </span>
+        <a href="http://115.29.39.106/qq_login.php" title="QQ登录" class="touchStatusBtn J-hideTabBar" target="_blank">
+          <img src="assets/imgs/qq_logo.png" alt="QQ登录" width="24" height="24" />
+          登录
+        </a>
+    </div>
+
+    <div class="form" action="register.php" method="post">
+        <input type="hidden" name="action" value="register"/>
+        <input type="hidden" name="position" value="" id="J-geoPosition" />
+        <input type="hidden" name="ua" value="" id="J-ua" />
+        <input type="hidden" name="username" value="username"/>
+        <div class="field-group filed-tip">
+            <p class="label"></p>
+            <span class="warn">(2到20位中英文或数字)</span>
+        </div>
+        <div class="field-group">
+            <p class="label">用户名</p>
+            <input type="text" class="field input-text" placeholder="用户名" name="username" id="J-username" autocapitalize="off" />
+        </div>
+        <div class="field-group filed-tip">
+            <p class="label"></p>
+            <span class="warn">(如jizhangbao@qq.com)</span>
+        </div>
+        <div class="field-group">
+            <p class="label">常用邮箱</p>
+            <input type="email" class="field input-text" placeholder="用于找回登录密码的邮箱" name="email" id="J-email" autocapitalize="off" />
+        </div>
+        <div class="field-group filed-tip">
+            <p class="label"></p>
+            <span class="warn">(登录密码必须是6到50位)</span>
+        </div>
+        <div class="field-group">
+            <p class="label">登录密码</p>
+            <input type="password" class="field input-text" placeholder="登录密码" name="password" id="J-password" autocapitalize="off" />
+        </div>
+        <div class="field-group">
+            <p class="label">再次输入</p>
+            <input type="text" class="field input-text" placeholder="再次输入登录密码" name="passwordc" id="J-cpassword" autocapitalize="off" />
+        </div>
+        <!--<div class="input-skin">
+            <input type="text" placeholder="小店名" name="displayname" data-title="您家的小店名" id="J-displayname" autocapitalize="off" />
+        </div>
+        <div class="input-skin last-child flexBox checkcodeBox">
+            <input type="text" placeholder="右侧的验证码" name="captcha" data-title="输入右侧的验证码" id="J-checkcode" class="box" autocapitalize="off" />
+            <span class="box">
+                <span id="J-checkCodeImgBox"><img src="http://115.29.39.106/models/captcha.php" alt="验证码" /></span>
+                <a class="getCheckcode" href="javascript:void(0)" id="J-updateCheckcode">换一个</a>
+            </span>
+        </div>-->
+    </div>
+
+    <a class="touchStatusBtn btn btn-primary" href="javascript:void(0)" id="J-registerBtn">确认</a>
+</div>
+</body>
+<script type="text/javascript" charset="utf-8">
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady(){
+        seajs.use("jzb.common.js");
+        seajs.use("register.js");
+        seajs.use("footer.js");
+    }
+</script>
+</html>

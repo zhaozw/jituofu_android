@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/common.css"/>
+    <link rel="stylesheet" href="assets/css/settings.css"/>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+</head>
+<body>
+<!--<nav class="footerbar flexBox J-hideTabBar">-->
+  <!--<a href="cashier.html" class="box">-->
+    <!--<img src="assets/imgs/cashier-30@2x.png" width="30">-->
+    <!--<span>记账台</span>-->
+  <!--</a>-->
+  <!--<a href="account.html" class="box">-->
+    <!--<img src="assets/imgs/home-icon@2x.png" width="30">-->
+    <!--<span>我的小店</span>-->
+  <!--</a>-->
+  <!--<a href="settings.html" class="box selected">-->
+    <!--<img src="assets/imgs/settings-selected@2x.png" width="30">-->
+    <!--<span>账户设置</span>-->
+  <!--</a>-->
+<!--</nav>-->
+<header class="header">
+    <a class="back box touchStatusBtn J-hideTabBar" data-norouting="true" href="account.html"><img src="assets/imgs/back-icon.png" alt="返回" />返回</a>
+    <span class="box">账户设置</span>
+</header>
+<div class="container">
+    <div id="J-result"></div>
+    <a href="security_settings.html" class="security-box J-hideTabBar">
+        <img src="assets/imgs/security-48.png" alt="安全设置" width="24" height="24" />
+        <span>安全设置</span>
+    </a>
+    <nav class="menu J-hideTabBar">
+        <a href="settings_system.html" target="_blank">
+            <img class="icon" src="assets/imgs/settings-selected@2x.png" width="24" alt="系统设置"/>
+                <span class="text">
+                    系统设置
+                </span>
+        </a>
+    </nav>
+    <nav class="menuList">
+        <p>
+            <span class="label">小店名称：</span>
+            <a href="acount_settings.html?tag=displayname" class="J-hideTabBar"><span id="J-displayname">...</span><img src="assets/imgs/back-icon-black.png" width="24" height="24" class="arrow" /></a>
+        </p>
+        <p>
+            <span class="label">常用邮箱：</span>
+            <a href="acount_settings.html?tag=email" class="J-hideTabBar"><span id="J-email">...</span><img src="assets/imgs/back-icon-black.png" width="24" height="24" class="arrow" /></a>
+        </p>
+    </nav>
+</div>
+<script type="text/javascript" charset="utf-8">
+    var user = null;
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        seajs.use("jzb.common.js");
+
+        user = localStorage.getItem("user");
+        if (!user) {
+            return location.href = "login.html";
+        }
+        if (user) {
+            user = JSON.parse(user);
+            if (!user.user_id) {
+                return location.href = "login.html";
+            }
+        }
+
+        document.querySelector('#J-displayname').innerHTML = user.displayname || "点击设置";
+        document.querySelector('#J-email').innerHTML = user.email || "点击设置";
+
+        seajs.use("footer.js");
+    }
+</script>
+</body>
+</html>

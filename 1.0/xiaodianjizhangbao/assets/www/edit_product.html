@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/common.css"/>
+    <link rel="stylesheet" href="assets/css/editProduct.css"/>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+</head>
+
+<body>
+<!--<nav class="footerbar flexBox J-hideTabBar">-->
+  <!--<a href="cashier.html" class="box">-->
+    <!--<img src="assets/imgs/cashier-30@2x.png" width="30">-->
+    <!--<span>记账台</span>-->
+  <!--</a>-->
+  <!--<a href="account.html" class="box selected">-->
+    <!--<img src="assets/imgs/home-icon@2x.png" width="30">-->
+    <!--<span>我的小店</span>-->
+  <!--</a>-->
+  <!--<a href="settings.html" class="box">-->
+    <!--<img src="assets/imgs/settings-selected@2x.png" width="30">-->
+    <!--<span>账户设置</span>-->
+  <!--</a>-->
+<!--</nav>-->
+<header class="header">
+    <a class="back box touchStatusBtn J-hideTabBar" data-norouting="true" href="warehouse.html"><img src="assets/imgs/back-icon.png" alt="返回"/>返回</a>
+    <span class="box">修改商品</span>
+</header>
+<div class="container">
+        <div class="field-group">
+            <p class="label">商品名称</p>
+            <input id="id" name="id" type="hidden" value="">
+            <input autocapitalize="off" class="field input-text" id="name" name="name" type="text" value=""
+                   placeholder="商品名称"/>
+        </div>
+        <div class="field-group">
+            <p class="label">商品单价</p>
+            <input autocapitalize="off" id="price" class="field input-text" name="price" type="number" value=""
+                   placeholder="商品单价">
+        </div>
+        <div class="field-group filed-tip">
+            <p class="label"></p>
+            <span class="warn">当前库存为：<small class="kc">0</small>个</span>
+        </div>
+        <div class="field-group">
+            <p class="label">本次入库</p>
+            <input autocapitalize="off" class="field input-text" id="count" value="0" name="count" type="number"
+                   class="box" placeholder="本次入库的数量"/>
+        </div>
+        <div class="field-group typesContainer">
+            <p class="label">商品分类</p>
+
+            <div class="typesBox box">
+                <div id="J-typesSelector">加载分类...</div>
+            </div>
+        </div>
+        <button  class="touchStatusBtn btn btn-primary" id="J-editProduct-btn">确定</button>
+</div>
+<script type="text/javascript" charset="utf-8">
+    var user = null;
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        seajs.use("jzb.common.js");
+
+        user = localStorage.getItem("user");
+        if (!user) {
+            return location.href = "login.html";
+        }
+        if (user) {
+            user = JSON.parse(user);
+            if (!user.user_id) {
+                return location.href = "login.html";
+            }
+        }
+
+        seajs.use("updateProduct.js");
+        seajs.use("footer.js");
+    }
+</script>
+</body>
+</html>

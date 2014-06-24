@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title></title>
+    <style>
+        body{
+            background: #ddd;
+        }
+        .container{
+            text-align: center;
+            line-height: 30px;
+            color: #777;
+            width: 190px;
+        }
+        .container img{
+            opacity: .5;
+            max-width: 100px;
+        }
+        .container p{
+            font-size: 20px;
+        }
+    </style>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+    <script>
+        function preventBehavior(e) {
+            e.preventDefault();
+        }
+        ;
+        document.addEventListener("touchmove", preventBehavior, false);
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+        function onDeviceReady() {
+            seajs.use("utils", function (Utils) {
+                navigator.splashscreen.hide();
+
+                setInterval(function (){
+                    if (Utils.network()) {
+                        var user = localStorage.getItem("user");
+                        if (!user) {
+                            return location.href = "login.html";
+                        }
+                        if (user) {
+                            user = JSON.parse(user);
+                            if (!user.user_id) {
+                                return location.href = "login.html";
+                            }
+                        }
+
+                        seajs.use("types", function (type) {
+                            type.clear();
+                            type.query(function (data) {
+                                seajs.use("userAuth", function (ua) {
+                                    ua.update(function () {
+                                        location.href = "cashier.html";
+                                    });
+                                });
+                            });
+                        });
+                    }
+                }, 1500);
+            });
+
+            seajs.use("zepto.min.js", function ($){
+                var docH = $(window).height();
+                var winW = $(window).width();
+                var containerW = parseInt($('.container').css("width"), 10);
+                var containerH = parseInt($('.container').css("height"), 10);
+
+                $('.container').css({
+                    position: "absolute",
+                    left: (winW - containerW) / 2,
+                    top: (docH - containerH) / 2 + window.scrollY,
+                    zIndex: 2
+                });
+            });
+
+            seajs.use("footer.js");
+        }
+    </script>
+</head>
+<body>
+  <div class="container">
+      <img src="assets/imgs/logo-disabled.png" alt="请检查您的网络连接" />
+      <p>请检查您的网络连接</p>
+  </div>
+</body>
+</html>

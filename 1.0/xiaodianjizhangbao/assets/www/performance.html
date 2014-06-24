@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <title>
+        小店记账宝
+    </title>
+    <link rel="stylesheet" href="assets/css/reset.css"/>
+    <link rel="stylesheet" href="assets/css/common.css"/>
+    <link rel="stylesheet" href="assets/css/performance.css"/>
+    <script src="assets/libs/sea.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base: './assets/js/',
+            map: [
+                [".js", ".js?t=" + new Date().getTime()]
+            ]
+        });
+    </script>
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/WaitingDialog.js"></script>
+    <script type="text/javascript" charset="utf-8" src="plugins/datePickerPlugin.js"></script>
+</head>
+<body>
+<!--<nav class="footerbar flexBox J-hideTabBar">-->
+  <!--<a href="cashier.html" class="box">-->
+    <!--<img src="assets/imgs/cashier-30@2x.png" width="30">-->
+    <!--<span>记账台</span>-->
+  <!--</a>-->
+  <!--<a href="account.html" class="box selected">-->
+    <!--<img src="assets/imgs/home-icon@2x.png" width="30">-->
+    <!--<span>我的小店</span>-->
+  <!--</a>-->
+  <!--<a href="settings.html" class="box">-->
+    <!--<img src="assets/imgs/settings-selected@2x.png" width="30">-->
+    <!--<span>账户设置</span>-->
+  <!--</a>-->
+<!--</nav>-->
+<header class="header">
+    <a class="back box touchStatusBtn J-hideTabBar" href="javascript:void(0)"><img src="assets/imgs/back-icon.png" alt="返回"/>返回</a>
+    <span class="box title">...</span>
+</header>
+<div class="container">
+    <div class="queryForm flexBox">
+        <div class="start box">
+            开始： <span id="J-dateStart" class="nativedatepicker"></span>
+        </div>
+        <div class="end box">
+            结束： <span id="J-dateEnd" class="nativedatepicker"></span>
+        </div>
+    </div>
+    <a class="touchStatusBtn btn btn-default queryBtn" href="javascript:void(0)" id="J-queryBtn">查询</a>
+
+    <p class="tip">查询中...</p>
+
+    <div class="perf">
+        <div class="detail" id="J-perf">
+            <a class="gotoDetail J-hideTabBar" href="#">
+                <img src="assets/imgs/back-icon-black.png" alt="查看今日的详细业绩"/>
+            </a>
+            <table border="1">
+                <tbody>
+                <tr class="zu">
+                    <td width="120">
+                        <span class="tag">净利润</span>
+                    </td>
+                    <td id="J-lr">
+                        0
+                        <small>.00</small>
+                        元
+                    </td>
+                </tr>
+                <tr class="y">
+                    <td>
+                        <span class="tag">销售额</span>
+                    </td>
+                    <td id="J-yye">
+                        0
+                        <small>.00</small>
+                        元
+                    </td>
+                </tr>
+                <tr class="z">
+                    <td>
+                        <span class="tag">租金</span>
+                    </td>
+                    <td id="J-zj">
+                        0
+                        <small>.00</small>
+                        元
+                    </td>
+                </tr>
+                <tr class="c">
+                    <td>
+                        <span class="tag">总成本</span>
+                    </td>
+                    <td id="J-cb">
+                        0
+                        <small>.00</small>
+                        元
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="types"></div>
+</div>
+<ul class="charts"></ul>
+</body>
+<script type="text/javascript" charset="utf-8">
+    var user = null;
+
+    function preventBehavior(e) {
+        //e.preventDefault();
+    }
+    ;
+    document.addEventListener("touchmove", preventBehavior, false);
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady() {
+        seajs.use("jzb.common.js");
+
+        user = localStorage.getItem("user");
+        if (!user) {
+            return location.href = "login.html";
+        }
+        if (user) {
+            user = JSON.parse(user);
+            if (!user.user_id) {
+                return location.href = "login.html";
+            }
+        }
+
+        seajs.use("performancelist.js");
+        seajs.use("footer.js");
+    }
+</script>
+</html>
