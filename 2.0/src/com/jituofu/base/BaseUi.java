@@ -361,12 +361,12 @@ public class BaseUi extends Activity {
 			JSONObject operationData = new JSONObject(data);
 
 			String operationDataStr = operationData.toString();
-			String signSrc = operationDataStr + timestamp + C.JZB.localKey;
+			String signSrc = operationDataStr + timestamp + C.COMMON.localKey;
 
 			// 构建public数据
 			publicData.put("productVersion", AppUtil.getVersion(this));
 			publicData.put("productId", "android");
-			publicData.put("channelId", C.JZB.channelId);
+			publicData.put("channelId", C.COMMON.channelId);
 			publicData.put("network", HttpUtil.getType(this) + "");
 			publicData.put("display", AppUtil.getDisplay(this));
 			publicData.put("time", timestamp + "");

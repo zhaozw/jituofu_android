@@ -98,7 +98,7 @@ public class UIFeedback extends BaseUi {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == 0) {
 								AppUtil.openCamera(UIFeedback.this,
-										C.JZB.feedbackDir);
+										C.DIRS.feedbackDir);
 							} else if (which == 1) {
 								AppUtil.openGallery(UIFeedback.this);
 							}
@@ -114,9 +114,9 @@ public class UIFeedback extends BaseUi {
 		Uri imgPreview = null;
 		
 		// 拍照返回
-		if (requestCode == C.JZB.camera) {
-			String path = AppUtil.getExternalStorageDirectory() + C.JZB.rootdir
-					+ C.JZB.feedbackDir + "/" + C.JZB.feedbackFileName;
+		if (requestCode == C.COMMON.camera) {
+			String path = AppUtil.getExternalStorageDirectory() + C.DIRS.rootdir
+					+ C.DIRS.feedbackDir + "/" + C.DIRS.feedbackFileName;
 			Bitmap bitmap = AppUtil.compressImageFromFile(path);
 
 			if (bitmap == null) {
@@ -125,8 +125,8 @@ public class UIFeedback extends BaseUi {
 			}
 
 			String wufdPath = AppUtil.getExternalStorageDirectory()
-					+ C.JZB.rootdir + C.JZB.feedbackDir
-					+ C.JZB.waitUploadFeedbackDir;
+					+ C.DIRS.rootdir + C.DIRS.feedbackDir
+					+ C.DIRS.waitUploadFeedbackDir;
 			if (AppUtil.mkdir(wufdPath)) {
 				FileOutputStream fos = null;
 				String fileName = wufdPath + "/" + AppUtil.getCurrentTime()
@@ -151,7 +151,7 @@ public class UIFeedback extends BaseUi {
 			
 			File oldScreenShot = new File(path);
 			oldScreenShot.delete();
-		} else if (requestCode == C.JZB.gallery) {//图片库选择
+		} else if (requestCode == C.COMMON.gallery) {//图片库选择
 			if(data == null){
 				this.showToast(R.string.no_gallery_image);
 				return;
@@ -168,8 +168,8 @@ public class UIFeedback extends BaseUi {
 			}
 
 			String sdcardDir = AppUtil.getExternalStorageDirectory();
-			if (AppUtil.mkdir(sdcardDir + C.JZB.rootdir)) {
-				if (!AppUtil.mkdir(sdcardDir + C.JZB.rootdir + C.JZB.feedbackDir)) {
+			if (AppUtil.mkdir(sdcardDir + C.DIRS.rootdir)) {
+				if (!AppUtil.mkdir(sdcardDir + C.DIRS.rootdir + C.DIRS.feedbackDir)) {
 					this.showToast(R.string.save_image_error);
 					return;
 				}
@@ -179,8 +179,8 @@ public class UIFeedback extends BaseUi {
 			}
 
 			String wufdPath = AppUtil.getExternalStorageDirectory()
-					+ C.JZB.rootdir + C.JZB.feedbackDir
-					+ C.JZB.waitUploadFeedbackDir;
+					+ C.DIRS.rootdir + C.DIRS.feedbackDir
+					+ C.DIRS.waitUploadFeedbackDir;
 
 			if (AppUtil.mkdir(wufdPath)) {
 				FileOutputStream fos = null;
@@ -315,7 +315,7 @@ public class UIFeedback extends BaseUi {
 		TextView phoneTxt = (TextView) phone.findViewById(R.id.txt);
 		phoneIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.phone));
-		phoneTxt.setText(C.FEEDBACK.phone);
+		phoneTxt.setText(R.string.SERVICE_PHONE);
 
 		// 微信
 		LinearLayout wechat = (LinearLayout) findViewById(R.id.wechat);
@@ -323,7 +323,7 @@ public class UIFeedback extends BaseUi {
 		TextView wechatTxt = (TextView) wechat.findViewById(R.id.txt);
 		wechatIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.weixin));
-		wechatTxt.setText(C.FEEDBACK.wechat);
+		wechatTxt.setText(R.string.SERVICE_WEIXIN);
 		wechat.findViewById(R.id.arrow).setVisibility(View.INVISIBLE);
 
 		// qq
@@ -331,7 +331,7 @@ public class UIFeedback extends BaseUi {
 		ImageView qqIcon = (ImageView) qq.findViewById(R.id.icon);
 		TextView qqTxt = (TextView) qq.findViewById(R.id.txt);
 		qqIcon.setImageDrawable(this.getResources().getDrawable(R.drawable.qq));
-		qqTxt.setText(C.FEEDBACK.qq);
+		qqTxt.setText(R.string.SERVICE_QQ);
 		qq.findViewById(R.id.arrow).setVisibility(View.INVISIBLE);
 
 		// weibo
@@ -340,7 +340,7 @@ public class UIFeedback extends BaseUi {
 		TextView weiboTxt = (TextView) weibo.findViewById(R.id.txt);
 		weiboIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.weibo));
-		weiboTxt.setText(C.FEEDBACK.weibo + this.getString(R.string.app_name));
+		weiboTxt.setText(R.string.SERVICE_WEIBO);
 		weibo.findViewById(R.id.arrow).setVisibility(View.INVISIBLE);
 
 		// mail
@@ -349,7 +349,7 @@ public class UIFeedback extends BaseUi {
 		TextView mailTxt = (TextView) mail.findViewById(R.id.txt);
 		mailIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.mail));
-		mailTxt.setText(C.FEEDBACK.email);
+		mailTxt.setText(R.string.SERVICE_EMAIL);
 		mail.findViewById(R.id.border).setVisibility(View.INVISIBLE);
 		mail.findViewById(R.id.arrow).setVisibility(View.INVISIBLE);
 	}

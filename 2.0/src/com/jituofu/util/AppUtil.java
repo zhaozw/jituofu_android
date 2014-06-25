@@ -98,14 +98,14 @@ public class AppUtil {
 			} else {
 				//目录检查
 				String sdcardDir = AppUtil.getExternalStorageDirectory();
-				if(AppUtil.mkdir(sdcardDir+C.JZB.rootdir)){
-					if(!AppUtil.mkdir(sdcardDir+C.JZB.rootdir+path)){
+				if(AppUtil.mkdir(sdcardDir+C.DIRS.rootdir)){
+					if(!AppUtil.mkdir(sdcardDir+C.DIRS.rootdir+path)){
 						return;
 					}
 				}else{
 					return ;
 				}
-				String fileName = sdcardDir+C.JZB.rootdir+path + "/"+C.JZB.feedbackFileName;
+				String fileName = sdcardDir+C.DIRS.rootdir+path + "/"+C.DIRS.feedbackFileName;
 				Uri imageUri = null;
 				
 				Intent intent = new Intent();
@@ -116,7 +116,7 @@ public class AppUtil {
 				imageUri = Uri.fromFile(new File(fileName));
 				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 				intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-				ui.startActivityForResult(intent, C.JZB.camera);
+				ui.startActivityForResult(intent, C.COMMON.camera);
 			}
 		} else {
 			ui.showToast(R.string.sdcarderror);
@@ -132,7 +132,7 @@ public class AppUtil {
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
-		ui.startActivityForResult(intent, C.JZB.gallery);
+		ui.startActivityForResult(intent, C.COMMON.gallery);
 	}
 
 	/**
@@ -384,7 +384,7 @@ public class AppUtil {
 		} catch (NameNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			name = C.JZB.versionName;
+			name = C.COMMON.versionName;
 		}
 
 		return name;

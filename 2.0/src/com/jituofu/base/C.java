@@ -2,24 +2,32 @@ package com.jituofu.base;
 
 import com.jituofu.R;
 
+/**
+ * 常量类
+ * 
+ * @author zhuqi
+ * 
+ */
 public final class C {
-	public static final class JZB {
+	public static final class DIRS {
+		public static final String rootdir = "/jituofu";
+		public static final String feedbackDir = "/feedback";
+		public static final String waitUploadFeedbackDir = "/wufd";// 存储等待上传的截图文件
+		public static final String feedbackFileName = "screenshot.png";// 临时的截图文件名
+	}
+
+	public static final class COMMON {
 		public static final int TAG = R.string.app_name;
 		public static final String channelId = "官方";
 		public static final String versionName = "2.0.0";
-		public static final String localKey = "JTF_ANDROID";
-		public static final String rootdir = "/jituofu";
-		public static final String feedbackDir = "/feedback";
-		public static final String waitUploadFeedbackDir = "/wufd";
-		public static final String feedbackFileName = "screenshot.png";
-		
-		public static final int camera = 0;
-		public static final int gallery = 1;
+		public static final String localKey = "JTF_ANDROID";// 必须与服务端的localKey对应
+		public static final int camera = 0;// 从相机上传图片
+		public static final int gallery = 1;// 从图库片上传图片
 	}
 
 	public static final class API {
+		// public static final String host = "http://10.0.2.2";
 		public static final String host = "http://192.168.1.100/";
-		//public static final String host = "http://10.0.2.2";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";
@@ -36,14 +44,6 @@ public final class C {
 		public static final String networkException = "网络请求异常,请重试";
 		public static final String networkNone = "请连接网络";
 		public static final String serverException = "服务器发生异常,请重试";
-	}
-
-	public static final class FEEDBACK {
-		public static final String wechat = "公众账号:xiaodianjizhangbao";
-		public static final String weibo = "@";
-		public static final String qq = "QQ服务号:2421042542";
-		public static final String email = "service@jizhangbao.com.cn";
-		public static final String phone = "客服电话:1213213213213";
 	}
 
 	public static final class TASK {

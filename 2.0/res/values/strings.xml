@@ -98,4 +98,10 @@
     <string name="no_gallery_image">您没有选择图片</string>
     <string name="save_image_error">保存图片失败</string>
 
+    <!-- 客服电话、反馈渠道相关 -->
+    <string name="SERVICE_PHONE">18657101350</string>
+    <string name="SERVICE_EMAIL">service@jizhangbao.com.cn</string>
+    <string name="SERVICE_WEIXIN">小店记账宝</string>
+    <string name="SERVICE_QQ">253456273</string>
+    <string name="SERVICE_WEIBO">记托付</string>
 </resources>
