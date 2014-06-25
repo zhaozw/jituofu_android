@@ -11,7 +11,6 @@ import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class UILogin extends BaseUiForm {
-	private Dialog dialog = null;
 	private String usernameVal, passwordVal;
 	
 	@Override
@@ -79,20 +77,9 @@ public class UILogin extends BaseUiForm {
 			}});
 	}
 	
-	private void showPopup(int txt) {
-		dialog = getPopupDialog(this);
-
-		this.setPopupView(R.layout.popup_contentview);
-
-		TextView popupTxt = (TextView) dialog.findViewById(R.id.popupTxt);
-
-		popupTxt.setText(txt);
-		showPopupDialog(false);
-	}
-	
 	@Override
 	protected void doSubmit(){
-		showPopup(R.string.LOGIN_LOGINNING);
+		AppUtil.showLoadingPopup(this, R.string.LOGIN_LOGINNING);
 		doTaskLogin();
 	}
 	
@@ -107,8 +94,8 @@ public class UILogin extends BaseUiForm {
 
 		// 验证用户名
 		if (username != null) {
-			if (AppUtil.getStrLen(username) < 2
-					|| AppUtil.getStrLen(username) > 20) {
+			if (AppUtil.getStrLen(username) < C.USERNAMELENGTH.MIN
+					|| AppUtil.getStrLen(username) > C.USERNAMELENGTH.MAX) {
 				showToast(R.string.username_error);
 			} else {
 				result = true;
@@ -120,8 +107,8 @@ public class UILogin extends BaseUiForm {
 		// 验证密码
 		if (result) {
 			if (password != null) {
-				if (AppUtil.getStrLen(password) < 6
-						|| AppUtil.getStrLen(password) > 50) {
+				if (AppUtil.getStrLen(password) < C.PASSWORDLENGTH.MIN
+						|| AppUtil.getStrLen(password) > C.PASSWORDLENGTH.MAX) {
 					result = false;
 					showToast(R.string.password_error);
 				}else{
@@ -129,7 +116,7 @@ public class UILogin extends BaseUiForm {
 				}
 			} else {
 				result = false;
-				showToast(R.string.password_hint);
+				showToast(R.string.LOGIN_PASSWORD_HINT);
 			}
 		}
 

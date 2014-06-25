@@ -83,7 +83,7 @@
                             android:id="@+id/password"
                             style="@style/commonEditText"
                             android:layout_toRightOf="@+id/textView3"
-                            android:hint="@string/password_hint"
+                            android:hint="@string/LOGIN_PASSWORD_HINT"
                             android:inputType="textPassword" >
                         </EditText>
                     </RelativeLayout>

@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jituofu.R;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +14,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.StorageUtil;
 
 public class UIUpdatepw extends BaseUiAuth {
 	Dialog dialog;
@@ -91,9 +94,9 @@ public class UIUpdatepw extends BaseUiAuth {
 			AppUtil.timer(new TimerTask(){
 				@Override
 				public void run() {
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
 					
 					closePopupDialog();
 					

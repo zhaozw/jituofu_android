@@ -70,7 +70,7 @@ public class UIRegister extends BaseUi {
 				validated = true;
 
 				if (validation()) {
-					AppUtil.showPopup(UIRegister.this, R.string.register_zcz);
+					AppUtil.showLoadingPopup(UIRegister.this, R.string.register_zcz);
 					doTaskRegister();
 				}
 			}
@@ -131,7 +131,7 @@ public class UIRegister extends BaseUi {
 				}
 			} else {
 				result = false;
-				showToast(R.string.password_hint);
+				showToast(R.string.LOGIN_PASSWORD_HINT);
 			}
 		}
 		if (result) {

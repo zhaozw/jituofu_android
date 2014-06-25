@@ -41,7 +41,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings.Secure;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.widget.TextView;
@@ -78,10 +77,11 @@ public class AppUtil {
 
 	/**
 	 * 打开相机
-	 * 
 	 * @param ui
+	 * @param dir
+	 * @param temFileName
 	 */
-	public static void openCamera(BaseUi ui, String path) {
+	public static void openCamera(BaseUi ui, String dir, String temFileName) {
 		if (SDUtil.isOkSDCard()) {
 			int fs = SDUtil.getFreeSpace();
 
@@ -92,14 +92,14 @@ public class AppUtil {
 				// 目录检查
 				String sdcardDir = AppUtil.getExternalStorageDirectory();
 				if (AppUtil.mkdir(sdcardDir + C.DIRS.rootdir)) {
-					if (!AppUtil.mkdir(sdcardDir + C.DIRS.rootdir + path)) {
+					if (!AppUtil.mkdir(sdcardDir + C.DIRS.rootdir + dir)) {
 						return;
 					}
 				} else {
 					return;
 				}
-				String fileName = sdcardDir + C.DIRS.rootdir + path + "/"
-						+ C.DIRS.feedbackFileName;
+				String fileName = sdcardDir + C.DIRS.rootdir + dir + "/"
+						+ temFileName;
 				Uri imageUri = null;
 
 				Intent intent = new Intent();
@@ -203,14 +203,16 @@ public class AppUtil {
 	 * @param uri
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	public static String getRealPathFromURI(BaseUi ui, Uri uri) {
-		String[] proj = { MediaStore.Images.Media.DATA };
-		Cursor cursor = ui.managedQuery(uri, proj, null, null, null);
-		int column_index = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		cursor.moveToFirst();
-		return cursor.getString(column_index);
+		String res = null;
+	    String[] proj = { MediaStore.Images.Media.DATA };
+	    Cursor cursor = ui.getContentResolver().query(uri, proj, null, null, null);
+	    if(cursor.moveToFirst()){;
+	       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	       res = cursor.getString(column_index);
+	    }
+	    cursor.close();
+	    return res;
 	}
 
 	/**
@@ -248,7 +250,7 @@ public class AppUtil {
 	 * 
 	 * @param txt
 	 */
-	public static void showPopup(BaseUi ui, int txt) {
+	public static void showLoadingPopup(BaseUi ui, int txt) {
 		Dialog dialog = ui.getPopupDialog(ui);
 
 		ui.setPopupView(R.layout.popup_contentview);
@@ -342,7 +344,7 @@ public class AppUtil {
 		for (int i = 0; i < value.length(); i++) {
 			String temp = value.substring(i, i + 1);
 			if (temp.matches(chinese)) {
-				valueLength += 0;//2;
+				valueLength += 1;//2;
 			} else {
 				valueLength += 1;
 			}
@@ -350,7 +352,7 @@ public class AppUtil {
 		return valueLength;
 	}
 
-	public static BaseMessage getMessage(String result) throws Exception {
+	public static BaseMessage getMessage(String result) throws Exception,JSONException {
 		BaseMessage message = new BaseMessage();
 		JSONObject jsonObject = null;
 		try {
@@ -359,7 +361,7 @@ public class AppUtil {
 				message.setResult(result);
 			}
 		} catch (JSONException e) {
-			Log.w("JSON格式错误", result);
+			throw new JSONException("JSON格式错误： "+result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -464,26 +466,13 @@ public class AppUtil {
 	 * @param v
 	 * @return
 	 */
+	@SuppressLint("UseValueOf")
 	static public boolean isEmptyInt(int v) {
 		Integer t = new Integer(v);
 		return t == null ? true : false;
 	}
 
-	/**
-	 * 删除内部数据
-	 * 
-	 * @param context
-	 * @param filename
-	 * @return boolean
-	 */
-	public static boolean deleteInternalStoragePrivate(Context context,
-			String filename) {
-		File file = context.getFileStreamPath(filename);
-		if (file != null) {
-			return file.delete();
-		}
-		return false;
-	}
+	
 
 	/**
 	 * 获取device id

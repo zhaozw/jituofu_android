@@ -98,7 +98,7 @@ public class UIFeedback extends BaseUi {
 						public void onClick(DialogInterface dialog, int which) {
 							if (which == 0) {
 								AppUtil.openCamera(UIFeedback.this,
-										C.DIRS.feedbackDir);
+										C.DIRS.feedbackDir, C.DIRS.feedbackFileName);
 							} else if (which == 1) {
 								AppUtil.openGallery(UIFeedback.this);
 							}

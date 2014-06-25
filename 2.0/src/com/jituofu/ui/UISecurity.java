@@ -14,12 +14,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.StorageUtil;
 
 public class UISecurity extends BaseUiAuth {
 	Dialog dialog = null;
@@ -85,7 +87,7 @@ public class UISecurity extends BaseUiAuth {
 	}
 
 	private void logout() {
-		AppUtil.showPopup(this, R.string.logoutting);
+		AppUtil.showLoadingPopup(this, R.string.logoutting);
 		
 		String deviceId = AppUtil.getDeviceId(this);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
@@ -104,9 +106,9 @@ public class UISecurity extends BaseUiAuth {
 			throws Exception {
 		int resultStatus = message.getResultStatus();
 		if (resultStatus == 100 || resultStatus == 300) {
-			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userCookieFileName);
-			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userIdFileName);
-			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userInfoFileName);
+			StorageUtil.deleteInternalStoragePrivate(this, C.DIRS.userCookieFileName);
+			StorageUtil.deleteInternalStoragePrivate(this, C.DIRS.userIdFileName);
+			StorageUtil.deleteInternalStoragePrivate(this, C.DIRS.userInfoFileName);
 			
 			this.closePopupDialog();
 			forward(UILogin.class);

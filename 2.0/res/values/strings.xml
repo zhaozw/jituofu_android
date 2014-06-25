@@ -28,7 +28,6 @@
     <string name="email_hint">请填写常用邮箱</string>
     <string name="email_tips">用于找回密码的常用邮箱,如jizhangbao@qq.com</string>
     <string name="password">密码</string>
-    <string name="password_hint">请填写登录密码</string>
     <string name="password_tips">6到50位登录密码</string>
     <string name="cpassword">确认密码</string>
     <string name="cpassword_hint">请再次填写登录密码</string>
@@ -107,4 +106,5 @@
     <!-- 登录 -->
     <string name="LOGIN_TITLE">登 录</string>
     <string name="LOGIN_LOGINNING">正在登录...</string>
+    <string name="LOGIN_PASSWORD_HINT">请填写登录密码</string>
 </resources>

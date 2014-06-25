@@ -73,7 +73,7 @@ public class UIHelpdetail extends BaseUi {
 	}
 
 	private void doTaskTask(String type) {
-		AppUtil.showPopup(this, R.string.cl);
+		AppUtil.showLoadingPopup(this, R.string.cl);
 
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 		urlParams.put("id", id + "");
