@@ -36,14 +36,14 @@ public class UISecurity extends BaseUiAuth {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.security);
 
-		this.globalBackLogic();
-		updateUI();
-		bindUI();
+		this.onCustomBack();
+		onUpdateUi();
+		onBindUi();
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
+	protected void onBindUi() {
+		super.onBindUi();
 		
 		Button submitLogoutBtn = (Button) this.findViewById(R.id.submitLogout);
 		LinearLayout updatepwBtn = (LinearLayout) this.findViewById(R.id.updatepw);
@@ -104,9 +104,9 @@ public class UISecurity extends BaseUiAuth {
 			throws Exception {
 		int resultStatus = message.getResultStatus();
 		if (resultStatus == 100 || resultStatus == 300) {
-			AppUtil.deleteInternalStoragePrivate(this, "ck");
-			AppUtil.deleteInternalStoragePrivate(this, "ud");
-			AppUtil.deleteInternalStoragePrivate(this, "usi");
+			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userCookieFileName);
+			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userIdFileName);
+			AppUtil.deleteInternalStoragePrivate(this, C.DIRS.userInfoFileName);
 			
 			this.closePopupDialog();
 			forward(UILogin.class);
@@ -119,8 +119,8 @@ public class UISecurity extends BaseUiAuth {
 	}
 
 	@Override
-	protected void updateUI() {
-		super.updateUI();
+	protected void onUpdateUi() {
+		super.onUpdateUi();
 		
 		LinearLayout updatepw = (LinearLayout) this.findViewById(R.id.updatepw);
 		LinearLayout border = (LinearLayout) updatepw.findViewById(R.id.border);

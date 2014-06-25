@@ -9,7 +9,8 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
-
+import com.jituofu.util.SDUtil;
+ 
 public class UIPortal extends BaseUi {
 
 	@Override
@@ -39,7 +40,6 @@ public class UIPortal extends BaseUi {
 				JSONObject operation = message.getOperation();
 				boolean hasId = operation.has("id");
 
-				//自动登录异常
 				if (!hasId) {
 					forward(UILogin.class, bundle);
 					this.finish();

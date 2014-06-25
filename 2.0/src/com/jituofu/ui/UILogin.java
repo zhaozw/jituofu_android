@@ -9,6 +9,8 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.StorageUtil;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,13 +31,13 @@ public class UILogin extends BaseUi {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 
-		updateUI();
-		bindUI();
+		onUpdateUi();
+		onBindUi();
 	}
 
 	@Override
-	protected void updateUI() {
-		super.updateUI();
+	protected void onUpdateUi() {
+		super.onUpdateUi();
 		
 		TextView title = (TextView) findViewById(R.id.title);
 		EditText usernameEditText = (EditText) findViewById(R.id.username);
@@ -51,8 +53,8 @@ public class UILogin extends BaseUi {
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
+	protected void onBindUi() {
+		super.onBindUi();
 		
 		TextView gotoRegisterBtn = (TextView) this
 				.findViewById(R.id.goregister);
@@ -173,8 +175,8 @@ public class UILogin extends BaseUi {
 			String userId = operation.getString("id");
 			String cookie = operation.getString("cookie");
 
-			AppUtil.writeInternalStoragePrivate(this, "ck", cookie);
-			AppUtil.writeInternalStoragePrivate(this, "ud", userId);
+			StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userCookieFileName, cookie);
+			StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userIdFileName, userId);
 
 			this.forward(UIHome.class);
 			this.finish();

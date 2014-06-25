@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.json.JSONObject;
 
-import com.jituofu.util.AppClient;
+import com.jituofu.util.AppClientUtil;
 
 import android.content.Context;
 import android.os.Looper;
@@ -44,7 +44,6 @@ public class BaseTaskPool {
 	}
 
 	private class TaskThread implements Runnable {
-		private Context context;
 		private String url;
 		private HashMap<String, JSONObject> data;
 		private BaseTask baseTask;
@@ -52,7 +51,6 @@ public class BaseTaskPool {
 
 		public TaskThread(Context context, String taskUrl,
 				HashMap<String, JSONObject> data, BaseTask baseTask, int delayTime) {
-			this.context = context;
 			this.url = taskUrl;
 			this.data = data;
 			this.baseTask = baseTask;
@@ -70,12 +68,8 @@ public class BaseTaskPool {
 					Thread.sleep(delayTime);
 				}
 				try {
-					if (url != null) {
-						AppClient client = new AppClient(url);
-						if (data != null) {
-							httpResult = client.post(data);
-						}
-					}
+					AppClientUtil client = new AppClientUtil(url);
+					httpResult = client.post(data);
 					if (httpResult != null) {
 						baseTask.onComplete(httpResult);
 					} else {

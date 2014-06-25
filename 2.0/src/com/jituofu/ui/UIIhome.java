@@ -15,6 +15,8 @@ import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.base.BaseUi;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.StorageUtil;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -57,12 +59,12 @@ public class UIIhome extends BaseUiAuth {
 			e.printStackTrace();
 		}
 
-		bindUI();
+		onBindUi();
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
+	protected void onBindUi() {
+		super.onBindUi();
 		
 		LinearLayout security = (LinearLayout) this.findViewById(R.id.security);
 
@@ -117,13 +119,13 @@ public class UIIhome extends BaseUiAuth {
 		TextView username = (TextView) findViewById(R.id.username);
 		TextView email = (TextView) findViewById(R.id.email);
 
-		byte[] userInfo = AppUtil.readInternalStoragePrivate(this, "usi");
+		byte[] userInfo = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userInfoFileName);
 		String userInfoVal = null;
 		if (userInfo.length > 0 && userInfo[0] != 0) {
 			userInfoVal = new String(userInfo, "UTF-8");
 		} else {
 			// 如果本地没有保存用户信息,就从本地读取userId后,再发送一次获取用户信息的请求
-			byte[] userId = AppUtil.readInternalStoragePrivate(this, "ud");
+			byte[] userId = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userIdFileName);
 
 			String userIdVal = null;
 

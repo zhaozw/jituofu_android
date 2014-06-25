@@ -1,14 +1,10 @@
 package com.jituofu.base;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Log;
 
 public class BaseMessage {
 	private String resultSrc;
@@ -118,13 +114,14 @@ public class BaseMessage {
 		JSONArray errorsArray = this.getOperationErrorsMessage();
 		String msg;
 		if (errorsArray.length() <= 0) {
-			msg = this.getPublic().getString("memo");
+			msg = this.getMemo();
 		}else{
 			msg = errorsArray.getString(0);
 		}
 		return msg;
 	}
 
+	@SuppressWarnings("unchecked")
 	private JSONArray getErrors(JSONObject data) throws JSONException {
 		JSONArray errorsArray = new JSONArray();
 		Iterator<String> it = data.keys();

@@ -51,7 +51,7 @@ public class BaseTask {
 		 Log.e("BaseTask:onError", error);
 	}
 
-	public void onStop() throws Exception {
+	public void onStop(){
 		 Log.w("BaseTask:onStop", "onStop");
 	}
 

@@ -18,7 +18,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
-public class GlobalTabView extends UITabActivity {
+public class UIGlobalTabView extends UITabActivity {
 	private TabHost tabHost;
 	int sysVersion = Build.VERSION.SDK_INT;
 

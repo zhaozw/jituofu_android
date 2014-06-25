@@ -40,16 +40,16 @@ public class UIHelp extends BaseUi {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.help);
 
-		globalBackLogic();
+		onCustomBack();
 
-		updateUI();
+		onUpdateUi();
 		doTaskHelps();
-		bindUI();
+		onBindUi();
 	}
 	
 	@Override
-	protected void bindUI(){
-		super.bindUI();
+	protected void onBindUi(){
+		super.onBindUi();
 		
 		Button goQuickHelpBtn = (Button) this.findViewById(R.id.goQuickHelp);
 		
@@ -130,10 +130,10 @@ public class UIHelp extends BaseUi {
 			}
 		});
 		
-		bindUI2list();
+		onBindUi2list();
 	}
 	
-	private void bindUI2list(){
+	private void onBindUi2list(){
 		lv.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
@@ -150,7 +150,7 @@ public class UIHelp extends BaseUi {
 	}
 
 	@Override
-	protected void updateUI() {
+	protected void onUpdateUi() {
 		TextView title = (TextView) findViewById(R.id.title);
 
 		title.setText(R.string.helpCenter);

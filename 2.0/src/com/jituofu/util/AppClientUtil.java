@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -30,7 +27,7 @@ import android.util.Log;
 
 import com.jituofu.base.C;
 
-public class AppClient {
+public class AppClientUtil {
 	// 压缩配置
 	final private static int CS_NONE = 0;
 	final private static int CS_GZIP = 1;
@@ -39,18 +36,18 @@ public class AppClient {
 	private String apiUrl;
 	private HttpParams httpParams;
 	private HttpClient httpClient;
-	private int timeoutConnection = 10000;
-	private int timeoutSocket = 10000;
+	private int timeoutConnection = 1000*60;
+	private int timeoutSocket = 1000*60;
 	private int compress = CS_NONE;
 
 	// 默认字符集
 	private String charset = HTTP.UTF_8;
 
-	public AppClient(String url) {
+	public AppClientUtil(String url) {
 		initClient(url);
 	}
 
-	public AppClient(String url, String charset, int compress) {
+	public AppClientUtil(String url, String charset, int compress) {
 		initClient(url);
 		this.charset = charset;
 		this.compress = compress;
@@ -64,17 +61,6 @@ public class AppClient {
 		HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
 
 		httpClient = new DefaultHttpClient(httpParams);
-	}
-
-	private HttpGet headerFilter(HttpGet httpGet) {
-		switch (this.compress) {
-		case CS_GZIP:
-			httpGet.addHeader("Accept-Encoding", "gzip");
-			break;
-		default:
-			break;
-		}
-		return httpGet;
 	}
 
 	private HttpPost headerFilter(HttpPost httpPost) {
@@ -104,28 +90,8 @@ public class AppClient {
 		}
 		return result;
 	}
-
-	public String get() throws Exception {
-		try{
-			HttpGet httpGet = headerFilter(new HttpGet(this.apiUrl));
-			Log.w("客户端GET请求:", this.apiUrl);
-			HttpResponse httpResponse = httpClient.execute(httpGet);
-			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				String httpResult = resultFilter(httpResponse.getEntity());
-				Log.w("GET请求获取数据:", httpResult);
-				return httpResult;
-			} else {
-				return null;
-			}
-		}catch(ConnectTimeoutException e){
-			throw new Exception(C.ERROR.networkTimeout);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return null;
-	}
 	
-	public String post(HashMap urlParams) throws Exception{
+	public String post(HashMap<String, JSONObject> urlParams) throws ConnectTimeoutException,SocketTimeoutException,Exception{
 		try{
 			//初始化post请求
 			HttpPost httpPost = headerFilter(new HttpPost(this.apiUrl));
@@ -157,9 +123,9 @@ public class AppClient {
 				return null;
 			}
 		}catch(ConnectTimeoutException e){
-			throw new Exception(C.ERROR.networkTimeout);
+			throw new ConnectTimeoutException(C.ERROR.networkTimeout);
 		}catch (SocketTimeoutException e){
-			throw new Exception(C.ERROR.networkTimeout);
+			throw new SocketTimeoutException(C.ERROR.networkTimeout);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

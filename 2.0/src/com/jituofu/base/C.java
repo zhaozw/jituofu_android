@@ -14,6 +14,9 @@ public final class C {
 		public static final String feedbackDir = "/feedback";
 		public static final String waitUploadFeedbackDir = "/wufd";// 存储等待上传的截图文件
 		public static final String feedbackFileName = "screenshot.png";// 临时的截图文件名
+	    public static final String userInfoFileName = "usr";
+	    public static final String userIdFileName = "uid";
+	    public static final String userCookieFileName = "uck";
 	}
 
 	public static final class COMMON {
@@ -27,7 +30,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://192.168.1.100/";
+		public static final String host = "http://10.1.10.167";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";

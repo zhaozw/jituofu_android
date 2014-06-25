@@ -28,15 +28,15 @@ public class UIHelpdetail extends BaseUi {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.help_detail);
 
-		updateUI();
-		bindUI();
+		onUpdateUi();
+		onBindUi();
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
+	protected void onBindUi() {
+		super.onBindUi();
 
-		this.globalBackLogic();
+		this.onCustomBack();
 
 		ImageButton yes = (ImageButton) this.findViewById(R.id.yes);
 		ImageButton no = (ImageButton) this.findViewById(R.id.no);
@@ -60,8 +60,8 @@ public class UIHelpdetail extends BaseUi {
 	}
 
 	@Override
-	protected void updateUI() {
-		super.updateUI();
+	protected void onUpdateUi() {
+		super.onUpdateUi();
 
 		Bundle bundle = this.getIntent().getExtras();
 		TextView title = (TextView) findViewById(R.id.title);

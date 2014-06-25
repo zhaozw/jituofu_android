@@ -60,10 +60,12 @@ public class AppUtil {
 
 	/**
 	 * 打开图片选择器
+	 * 
 	 * @param ui
 	 * @param listener
 	 */
-	public static void openImagePicker(final BaseUi ui, DialogInterface.OnClickListener listener) {
+	public static void openImagePicker(final BaseUi ui,
+			DialogInterface.OnClickListener listener) {
 		AlertDialog.Builder dialog = null;
 		String[] items = new String[] {
 				ui.getString(R.string.imagepickercamera),
@@ -92,22 +94,23 @@ public class AppUtil {
 		if (SDUtil.isOkSDCard()) {
 			int fs = SDUtil.getFreeSpace();
 
-			//没有剩余空间
+			// 没有剩余空间
 			if (fs < 1) {
 				ui.showToast(R.string.sdcardnospace);
 			} else {
-				//目录检查
+				// 目录检查
 				String sdcardDir = AppUtil.getExternalStorageDirectory();
-				if(AppUtil.mkdir(sdcardDir+C.DIRS.rootdir)){
-					if(!AppUtil.mkdir(sdcardDir+C.DIRS.rootdir+path)){
+				if (AppUtil.mkdir(sdcardDir + C.DIRS.rootdir)) {
+					if (!AppUtil.mkdir(sdcardDir + C.DIRS.rootdir + path)) {
 						return;
 					}
-				}else{
-					return ;
+				} else {
+					return;
 				}
-				String fileName = sdcardDir+C.DIRS.rootdir+path + "/"+C.DIRS.feedbackFileName;
+				String fileName = sdcardDir + C.DIRS.rootdir + path + "/"
+						+ C.DIRS.feedbackFileName;
 				Uri imageUri = null;
-				
+
 				Intent intent = new Intent();
 				intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 				ContentValues values = new ContentValues();
@@ -137,6 +140,7 @@ public class AppUtil {
 
 	/**
 	 * 创建文件夹
+	 * 
 	 * @param path
 	 * @return
 	 */
@@ -146,12 +150,12 @@ public class AppUtil {
 		if (!file.exists()) {
 			if (file.mkdir()) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
-		}else if(file.isDirectory()){
+		} else if (file.isDirectory()) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -168,12 +172,13 @@ public class AppUtil {
 
 	/**
 	 * 压缩一个已存的bitmap
+	 * 
 	 * @param srcPath
 	 * @return
 	 */
 	public static Bitmap compressImageFromFile(String srcPath) {
 		BitmapFactory.Options newOpts = new BitmapFactory.Options();
-		newOpts.inJustDecodeBounds = true;//只读边,不读内容
+		newOpts.inJustDecodeBounds = true;// 只读边,不读内容
 		Bitmap bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
 
 		newOpts.inJustDecodeBounds = false;
@@ -189,32 +194,34 @@ public class AppUtil {
 		}
 		if (be <= 0)
 			be = 1;
-		newOpts.inSampleSize = be;//设置采样率
-		
-		newOpts.inPreferredConfig = Config.ARGB_8888;//该模式是默认的,可不设
+		newOpts.inSampleSize = be;// 设置采样率
+
+		newOpts.inPreferredConfig = Config.ARGB_8888;// 该模式是默认的,可不设
 		newOpts.inPurgeable = true;// 同时设置才会有效
-		newOpts.inInputShareable = true;//。当系统内存不够时候图片自动被回收
-		
+		newOpts.inInputShareable = true;// 。当系统内存不够时候图片自动被回收
+
 		bitmap = BitmapFactory.decodeFile(srcPath, newOpts);
-		
+
 		return bitmap;
 	}
-	
+
 	/**
 	 * 获取Uri的真实物理路径
+	 * 
 	 * @param ui
 	 * @param uri
 	 * @return
 	 */
 	@SuppressWarnings("deprecation")
-	public static String getRealPathFromURI(BaseUi ui, Uri uri){
-		String[] proj = {MediaStore.Images.Media.DATA};
+	public static String getRealPathFromURI(BaseUi ui, Uri uri) {
+		String[] proj = { MediaStore.Images.Media.DATA };
 		Cursor cursor = ui.managedQuery(uri, proj, null, null, null);
-		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		int column_index = cursor
+				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		cursor.moveToFirst();
 		return cursor.getString(column_index);
 	}
-	
+
 	/**
 	 * 执行延时任务
 	 * 
@@ -469,55 +476,6 @@ public class AppUtil {
 	static public boolean isEmptyInt(int v) {
 		Integer t = new Integer(v);
 		return t == null ? true : false;
-	}
-
-	/**
-	 * 写入内部数据
-	 * 
-	 * @param filename
-	 * @param content
-	 */
-	public static void writeInternalStoragePrivate(Context context,
-			String filename, String content) {
-		try {
-			FileOutputStream fos = context.openFileOutput(filename,
-					Context.MODE_PRIVATE);
-			fos.write(content.getBytes());
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 读取内部数据
-	 * 
-	 * @param context
-	 * @param filename
-	 * @return
-	 */
-	public static byte[] readInternalStoragePrivate(Context context,
-			String filename) {
-		int len = 1024;
-		byte[] buffer = new byte[len];
-		try {
-			FileInputStream fis = context.openFileInput(filename);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			int nrb = fis.read(buffer, 0, len);
-			while (nrb != -1) {
-				baos.write(buffer, 0, nrb);
-				nrb = fis.read(buffer, 0, len);
-			}
-			buffer = baos.toByteArray();
-			fis.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return buffer;
 	}
 
 	/**

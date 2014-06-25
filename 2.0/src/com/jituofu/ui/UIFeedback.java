@@ -76,15 +76,15 @@ public class UIFeedback extends BaseUi {
 				.findViewById(R.id.screenshots);
 		this.addBtn = (ImageButton) this.findViewById(R.id.add);
 
-		updateUI();
-		bindUI();
+		onUpdateUi();
+		onBindUi();
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
+	protected void onBindUi() {
+		super.onBindUi();
 
-		this.globalBackLogic();
+		this.onCustomBack();
 		addBtn.setOnClickListener(new AddScreenShotListener());
 	}
 
@@ -300,8 +300,8 @@ public class UIFeedback extends BaseUi {
 	}
 
 	@Override
-	protected void updateUI() {
-		super.updateUI();
+	protected void onUpdateUi() {
+		super.onUpdateUi();
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(R.string.feedbackTitle);
 

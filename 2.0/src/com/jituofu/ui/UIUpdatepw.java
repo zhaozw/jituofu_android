@@ -29,13 +29,13 @@ public class UIUpdatepw extends BaseUiAuth {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.updatepw);
 
-		updateUI();
-		bindUI();
+		onUpdateUi();
+		onBindUi();
 	}
 
 	@Override
-	protected void updateUI() {
-		super.updateUI();
+	protected void onUpdateUi() {
+		super.onUpdateUi();
 		
 		TextView title = (TextView) this.findViewById(R.id.title);
 		Bundle bundle = this.getIntent().getExtras();
@@ -45,9 +45,9 @@ public class UIUpdatepw extends BaseUiAuth {
 	}
 
 	@Override
-	protected void bindUI() {
-		super.bindUI();
-		this.globalBackLogic();
+	protected void onBindUi() {
+		super.onBindUi();
+		this.onCustomBack();
 
 		Button updateBtn = (Button) this.findViewById(R.id.updateBtn);
 		updateBtn.setOnClickListener(new OnClickListener() {
@@ -91,9 +91,9 @@ public class UIUpdatepw extends BaseUiAuth {
 			AppUtil.timer(new TimerTask(){
 				@Override
 				public void run() {
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), "ck");
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), "ud");
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), "usi");
+					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
+					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
+					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
 					
 					closePopupDialog();
 					

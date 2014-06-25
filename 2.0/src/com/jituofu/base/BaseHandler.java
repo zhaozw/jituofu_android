@@ -21,12 +21,11 @@ public class BaseHandler extends Handler {
 	@Override
 	public void handleMessage(Message msg) {
 		try {
-			int taskId;
+			int taskId = msg.getData().getInt("task");
 			String result;
 
 			switch (msg.what) {
 			case BaseTask.TASK_COMPLETE:
-				taskId = msg.getData().getInt("task");
 				result = msg.getData().getString("data");
 				if (result != null) {
 					ui.onTaskComplete(taskId, AppUtil.getMessage(result));
@@ -36,15 +35,12 @@ public class BaseHandler extends Handler {
 				}
 				break;
 			case BaseTask.NETWORK_ERROR:
-				taskId = msg.getData().getInt("task");
 				ui.onNetworkError(taskId);
 				break;
 			case BaseTask.SERVER_ERROR:
-				taskId = msg.getData().getInt("task");
 				ui.onServerException(taskId);
 				break;
 			case BaseTask.NETWORKTIMEOUT:
-				taskId = msg.getData().getInt("task");
 				ui.onNetworkTimeout(taskId);
 				break;
 			}

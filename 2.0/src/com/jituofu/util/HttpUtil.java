@@ -1,5 +1,6 @@
 package com.jituofu.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,6 +12,12 @@ public class HttpUtil {
 	static public int G3_INT = 3;
 	static public int G2_INT = 2;
 
+	/**
+	 * 获取当前网络类型
+	 * @param ctx
+	 * @return
+	 */
+	@SuppressLint("DefaultLocale")
 	static public int getType(Context ctx) {
 		ConnectivityManager conn = null;
 		try {

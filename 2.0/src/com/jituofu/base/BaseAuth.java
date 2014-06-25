@@ -3,7 +3,8 @@ package com.jituofu.base;
 import java.io.UnsupportedEncodingException;
 
 import android.content.Context;
-import com.jituofu.util.AppUtil;
+
+import com.jituofu.util.StorageUtil;
 
 public class BaseAuth{
 	/**
@@ -13,8 +14,8 @@ public class BaseAuth{
 	 * @throws UnsupportedEncodingException
 	 */
 	public static boolean isLogin(Context ctx) throws UnsupportedEncodingException{
-		byte[] cookie = AppUtil.readInternalStoragePrivate(ctx, "ck");
-		byte[] userId = AppUtil.readInternalStoragePrivate(ctx, "ud");
+		byte[] cookie = StorageUtil.readInternalStoragePrivate(ctx, C.DIRS.userCookieFileName);
+		byte[] userId = StorageUtil.readInternalStoragePrivate(ctx, C.DIRS.userIdFileName);
 		
 		String cookieVal = null;
 		String userIdVal = null;

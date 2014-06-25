@@ -23,7 +23,6 @@ public class BaseUiAuth extends BaseUi{
 				
 				this.forward(UILogin.class, bundle);
 				this.finish();
-				this.onStop();
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

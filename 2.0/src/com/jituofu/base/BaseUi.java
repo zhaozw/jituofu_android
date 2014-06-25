@@ -1,45 +1,35 @@
 package com.jituofu.base;
 
-import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.text.AttributedCharacterIterator.Attribute;
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
-import com.jituofu.ui.UIHome;
-import com.jituofu.ui.UILogin;
 import com.jituofu.util.AppUtil;
+import com.jituofu.base.BaseBroadcast;
 import com.jituofu.util.HttpUtil;
+import com.jituofu.util.StorageUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningTaskInfo;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseUi extends Activity {
@@ -49,11 +39,13 @@ public class BaseUi extends Activity {
 	protected BaseTaskPool taskPool;
 	protected BaseHandler handler;
 
-	//一个基础的广播对象
-	private BroadcastReceiver br = new BroadcastReceiver() {
+	// 一个基础的广播对象
+	private BaseBroadcast br = new BaseBroadcast() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
+			super.onReceive(context, intent);
+			
 			Bundle bundle = intent.getExtras();
 			onBrReceive(bundle.getString("type"));
 		}
@@ -63,20 +55,20 @@ public class BaseUi extends Activity {
 	 * 广播对象的接收器
 	 * 
 	 * @param type
-	 *            广播类型
+	 * 
 	 */
 	protected void onBrReceive(String type) {
 
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data){
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		Log.i(this.getString(R.string.app_name), "onCreate");
+		Log.i(this.getString(R.string.app_name), this.toString() + " onCreate");
 
 		super.onCreate(savedInstanceState);
 
@@ -91,48 +83,53 @@ public class BaseUi extends Activity {
 
 	@Override
 	protected void onResume() {
-		Log.i(this.getString(R.string.app_name), "onResume");
+		Log.i(this.getString(R.string.app_name), this.toString() + " onResume");
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		Log.i(this.getString(R.string.app_name), "onPause");
+		Log.i(this.getString(R.string.app_name), this.toString() + " onPause");
 		super.onPause();
 	}
 
 	@Override
 	public void onStart() {
-		Log.i(this.getString(R.string.app_name), "onStart");
+		Log.i(this.getString(R.string.app_name), this.toString() + " onStart");
 		super.onStart();
 	}
 
 	@Override
 	public void onStop() {
-		Log.i(this.getString(R.string.app_name), "onStop");
+		Log.i(this.getString(R.string.app_name), this.toString() + " onStop");
 		super.onStop();
 	}
 
 	@Override
 	protected void onDestroy() {
-		Log.i(this.getString(R.string.app_name), "onDestroy");
-		
+		Log.i(this.getString(R.string.app_name), this.toString() + " onDestroy");
+
 		// 取消监听广播
 		BaseUi.this.unregisterReceiver(br);
 		super.onDestroy();
 	}
 
-	protected void bindUI() {
+	/**
+	 * 绑定UI事件
+	 */
+	protected void onBindUi() {
 	}
 
-	protected void updateUI() {
+	/**
+	 * 更新UI
+	 */
+	protected void onUpdateUi() {
 	}
 
 	/**
 	 * 跳转activity
 	 * 
 	 * @param obj
-	 *            Activity class
 	 */
 	public void forward(Class<?> obj) {
 		Intent intent = new Intent();
@@ -145,9 +142,7 @@ public class BaseUi extends Activity {
 	 * 绑定数据 跳转activity
 	 * 
 	 * @param obj
-	 *            Activity class
 	 * @param params
-	 *            数据
 	 */
 	public void forward(Class<?> obj, Bundle params) {
 		Intent intent = new Intent();
@@ -161,8 +156,7 @@ public class BaseUi extends Activity {
 	 * 生成弹出层实例
 	 * 
 	 * @param ctx
-	 *            应用上下文
-	 * @return Dialog实例
+	 * @return Dialog
 	 */
 	public Dialog getPopupDialog(Context ctx) {
 		if (this.popupDialog != null) {
@@ -180,7 +174,6 @@ public class BaseUi extends Activity {
 	 * 设置弹层内容
 	 * 
 	 * @param layoutResId
-	 *            布局资源
 	 */
 	public void setPopupView(int layoutResId) {
 		if (this.popupDialog != null) {
@@ -196,6 +189,7 @@ public class BaseUi extends Activity {
 	 * @param firstListener
 	 * @param secondListener
 	 */
+	@SuppressLint("InlinedApi")
 	public void showConfirmDialog(int titleId, int mesId,
 			DialogInterface.OnClickListener firstListener,
 			DialogInterface.OnClickListener secondListener) {
@@ -247,7 +241,6 @@ public class BaseUi extends Activity {
 	 * 显示弹出层
 	 * 
 	 * @param setCanceledOnTouchOutside
-	 *            是否允许点击外部区域关闭弹层
 	 */
 	public void showPopupDialog(boolean setCanceledOnTouchOutside) {
 		if (this.popupDialog != null) {
@@ -270,7 +263,7 @@ public class BaseUi extends Activity {
 	/**
 	 * 全局返回按钮逻辑
 	 */
-	public void globalBackLogic() {
+	public void onCustomBack() {
 		Boolean hideBack = null;
 		Bundle bundle = this.getIntent().getExtras();
 
@@ -329,7 +322,9 @@ public class BaseUi extends Activity {
 		}
 
 		if (value != null) {
-			return value.trim();
+			value = value.trim();
+			obj.setText(value);
+			return value;
 		}
 
 		return null;
@@ -353,8 +348,7 @@ public class BaseUi extends Activity {
 
 			JSONObject urlParams = new JSONObject();
 
-			long timestamp = AppUtil.getCurrentTime();
-
+			long timestamp = AppUtil.getCurrentTime();//时间戳
 			HashMap<String, JSONObject> requestData = new HashMap<String, JSONObject>();
 			HashMap<String, String> publicData = new HashMap<String, String>();
 
@@ -374,8 +368,8 @@ public class BaseUi extends Activity {
 			publicData.put("pushToken", "");
 
 			// 从本地获取userId和cookie
-			byte[] cookie = AppUtil.readInternalStoragePrivate(this, "ck");
-			byte[] userId = AppUtil.readInternalStoragePrivate(this, "ud");
+			byte[] cookie = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userCookieFileName);
+			byte[] userId = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userIdFileName);
 			String cookieVal = "";
 			String userIdVal = "";
 			if (cookie.length > 0 && cookie[0] != 0) {
@@ -416,7 +410,7 @@ public class BaseUi extends Activity {
 				}
 
 				@Override
-				public void onStop() throws Exception {
+				public void onStop() {
 					super.onStop();
 					closePopupDialog();
 				}
@@ -431,15 +425,15 @@ public class BaseUi extends Activity {
 	}
 
 	public void onNetworkError(int taskId) {
-		this.showToast(C.ERROR.networkException + taskId);
+		this.showToast(C.ERROR.networkException);
 	}
 
 	public void onNetworkTimeout(int taskId) {
-		this.showToast(C.ERROR.networkTimeout + taskId);
+		this.showToast(C.ERROR.networkTimeout);
 	}
 
 	public void onServerException(int taskId) {
-		this.showToast(C.ERROR.serverException + taskId);
+		this.showToast(C.ERROR.serverException);
 	}
 
 	/**
@@ -449,7 +443,7 @@ public class BaseUi extends Activity {
 	 * @param taskId
 	 * @param data
 	 */
-	public void sendMessage(int what, int taskId, String data) {
+	private void sendMessage(int what, int taskId, String data) {
 		Bundle b = new Bundle();
 
 		b.putInt("task", taskId);
@@ -493,7 +487,7 @@ public class BaseUi extends Activity {
 				if (hasId) {
 					String userInfo = operation.toString();
 
-					AppUtil.writeInternalStoragePrivate(this, "usi", userInfo);
+					StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userInfoFileName, userInfo);
 				}
 			}
 		}
