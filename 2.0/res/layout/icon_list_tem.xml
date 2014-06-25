@@ -41,7 +41,7 @@
 
     <LinearLayout
         android:id="@+id/border"
-        style="@style/formborder"
+        style="@style/field_separator"
         android:layout_marginLeft="@dimen/list_spacelinear_margin_left"
         android:orientation="vertical" >
     </LinearLayout>

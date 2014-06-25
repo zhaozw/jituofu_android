@@ -4,7 +4,7 @@
     <color name="tabNormalTextColor">#888b92</color>
     <color name="tabBackground">#fefefe</color>
     <color name="white">#ffffff</color>
-    <color name="contentActivityBg">#f7f7f7</color>
+    <color name="containerBg">#f7f7f7</color>
     
     <!-- 标准文字颜色 -->
     <color name="normalTxt">#000000</color>

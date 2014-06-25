@@ -4,11 +4,11 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/top" />
+    <include layout="@layout/topbar1" />
     
     <ScrollView
         android:id="@+id/scrollView1"
-        style="@style/contentActivity" >
+        style="@style/container" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,7 +18,7 @@
 
             <!-- 用户信息 -->
 
-            <LinearLayout style="@style/bottom_top_border" >
+            <LinearLayout style="@style/box1" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             </LinearLayout>
 
             <LinearLayout
-                style="@style/bottom_top_border"
+                style="@style/box1"
                 android:layout_marginTop="@dimen/normalSpace" >
 
                 <LinearLayout
@@ -101,7 +101,7 @@
             </LinearLayout>
 
             <LinearLayout
-                style="@style/bottom_top_border"
+                style="@style/box1"
                 android:layout_marginTop="@dimen/normalSpace" >
 
                 <LinearLayout

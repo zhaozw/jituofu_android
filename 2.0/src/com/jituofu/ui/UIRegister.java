@@ -1,35 +1,25 @@
 package com.jituofu.ui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
-import com.jituofu.base.BaseUi;
+import com.jituofu.base.BaseUiForm;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class UIRegister extends BaseUi {
-	Dialog dialog = null;
-	boolean validated = false;
-
-	private String usernameVal, emailVal, passwordVal, cpasswordVal;
+public class UIRegister extends BaseUiForm {
+	private String usernameVal, emailVal, passwordVal, REGISTER_CPASSWORDVal;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,37 +36,27 @@ public class UIRegister extends BaseUi {
 		super.onUpdateUi();
 
 		TextView title = (TextView) findViewById(R.id.title);
-		TextView actionTopRight = (TextView) findViewById(R.id.actionTopRight);
+		TextView topBar2Right = (TextView) findViewById(R.id.topBar2Right);
 
-		title.setText(R.string.goregister);
-		actionTopRight.setText(R.string.help);
+		title.setText(R.string.COMMON_GOTOREGISTER);
+		topBar2Right.setText(R.string.help);
 	}
 
 	@Override
 	protected void onBindUi() {
 		super.onBindUi();
-		TextView actionTopRight = (TextView) findViewById(R.id.actionTopRight);
+		TextView topBar2Right = (TextView) findViewById(R.id.topBar2Right);
 		Button btn = (Button) findViewById(R.id.submitRegister);
 
 		btn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				// 防止重复点击
-				if (validated) {
-					return;
-				}
-
-				validated = true;
-
-				if (validation()) {
-					AppUtil.showPopup(UIRegister.this, R.string.register_zcz);
-					doTaskRegister();
-				}
+				beforeSubmit();
 			}
 		});
 
-		actionTopRight.setOnClickListener(new OnClickListener() {
+		topBar2Right.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				forward(UIHelp.class);
@@ -84,28 +64,35 @@ public class UIRegister extends BaseUi {
 		});
 	}
 
-	private boolean validation() {
+	@Override
+	protected void doSubmit() {
+		AppUtil.showLoadingPopup(UIRegister.this, R.string.register_zcz);
+		doTaskRegister();
+	}
+
+	@Override
+	protected boolean validation() {
 		boolean result = false;
 		EditText usernameEditText = (EditText) findViewById(R.id.username);
 		EditText emailEditText = (EditText) findViewById(R.id.email);
 		EditText passwordEditText = (EditText) findViewById(R.id.password);
-		EditText cpasswordEditText = (EditText) findViewById(R.id.cpassword);
+		EditText REGISTER_CPASSWORDEditText = (EditText) findViewById(R.id.REGISTER_CPASSWORD);
 
-		String username = getEditValue(usernameEditText);
-		String email = getEditValue(emailEditText);
-		String password = getEditValue(passwordEditText);
-		String cpassword = getEditValue(cpasswordEditText);
+		String username = AppUtil.trimAll(getEditValue(usernameEditText));
+		String email = AppUtil.trimAll(getEditValue(emailEditText));
+		String password = AppUtil.trimAll(getEditValue(passwordEditText));
+		String REGISTER_CPASSWORD = AppUtil.trimAll(getEditValue(REGISTER_CPASSWORDEditText));
 
 		// 验证用户名
 		if (username != null) {
-			if (AppUtil.getStrLen(username) < 2
-					|| AppUtil.getStrLen(username) > 20) {
+			if (AppUtil.getStrLen(username) < C.USERNAMELENGTH.MIN
+					|| AppUtil.getStrLen(username) > C.USERNAMELENGTH.MAX) {
 				showToast(R.string.username_error);
 			} else {
 				result = true;
 			}
 		} else {
-			showToast(R.string.username_hint);
+			showToast(R.string.COMMON_USERNAME_HINT);
 		}
 
 		// 验证邮箱
@@ -117,39 +104,37 @@ public class UIRegister extends BaseUi {
 				}
 			} else {
 				result = false;
-				showToast(R.string.email_hint);
+				showToast(R.string.COMMON_EMAIL_HINT);
 			}
 		}
 
 		// 验证密码
 		if (result) {
 			if (password != null) {
-				if (AppUtil.getStrLen(password) < 6
-						|| AppUtil.getStrLen(password) > 50) {
+				if (AppUtil.getStrLen(password) < C.PASSWORDLENGTH.MIN
+						|| AppUtil.getStrLen(password) > C.PASSWORDLENGTH.MAX) {
 					result = false;
 					showToast(R.string.password_error);
 				}
 			} else {
 				result = false;
-				showToast(R.string.password_hint);
+				showToast(R.string.LOGIN_PASSWORD_HINT);
 			}
 		}
 		if (result) {
-			if (cpassword != null && !password.equals(cpassword)) {
-				showToast(R.string.cpassword_error);
+			if (REGISTER_CPASSWORD != null && !password.equals(REGISTER_CPASSWORD)) {
+				showToast(R.string.REGISTER_CPASSWORD_error);
 				result = false;
-			} else if (cpassword == null) {
+			} else if (REGISTER_CPASSWORD == null) {
 				result = false;
-				showToast(R.string.cpassword_tips);
+				showToast(R.string.REGISTER_CPASSWORD_TIPS);
 			}
 		}
-
-		validated = false;
 
 		this.usernameVal = username;
 		this.emailVal = email;
 		this.passwordVal = password;
-		this.cpasswordVal = cpassword;
+		this.REGISTER_CPASSWORDVal = REGISTER_CPASSWORD;
 
 		return result;
 	}
@@ -161,7 +146,7 @@ public class UIRegister extends BaseUi {
 		urlParams.put("username", this.usernameVal);
 		urlParams.put("email", this.emailVal);
 		urlParams.put("password", this.passwordVal);
-		urlParams.put("cpassword", this.cpasswordVal);
+		urlParams.put("REGISTER_CPASSWORD", this.REGISTER_CPASSWORDVal);
 		urlParams.put("clientId", deviceId);
 
 		try {
@@ -187,16 +172,17 @@ public class UIRegister extends BaseUi {
 
 			if (!hasId || !hasCookie) {
 				Bundle bundle = new Bundle();
-				bundle.putString("username",
-						this.usernameVal.replaceAll(" ", ""));
+				bundle.putString("username", this.usernameVal);
 				this.showToast(R.string.register_success);
 				this.forward(UILogin.class, bundle);
 			} else {
 				String userId = operation.getString("id");
 				String cookie = operation.getString("cookie");
 
-				StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userCookieFileName, cookie);
-				StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userIdFileName, userId);
+				StorageUtil.writeInternalStoragePrivate(this,
+						C.DIRS.userCookieFileName, cookie);
+				StorageUtil.writeInternalStoragePrivate(this,
+						C.DIRS.userIdFileName, userId);
 
 				this.forward(UIIhome.class);
 			}

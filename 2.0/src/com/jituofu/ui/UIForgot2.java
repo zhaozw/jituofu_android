@@ -19,8 +19,8 @@ public class UIForgot2 extends BaseUi{
 		setContentView(R.layout.forgot2);
 		
 		TextView title = (TextView) findViewById(R.id.title);
-		TextView actionTopRight = (TextView) findViewById(R.id.actionTopRight);
+		TextView topBar2Right = (TextView) findViewById(R.id.topBar2Right);
 		title.setText(R.string.forgottitle2);
-		actionTopRight.setText(R.string.help);
+		topBar2Right.setText(R.string.help);
 	}
 }

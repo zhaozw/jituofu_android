@@ -67,7 +67,7 @@ public class UIHelp extends BaseUi {
 	}
 	
 	private void doTaskHelps() {
-		AppUtil.showPopup(this, R.string.helquering);
+		AppUtil.showLoadingPopup(this, R.string.helquering);
 		
 		String deviceId = AppUtil.getDeviceId(this);
 

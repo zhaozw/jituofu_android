@@ -4,9 +4,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actiontop" />
+    <include layout="@layout/topbar2" />
 
-    <ScrollView style="@style/contentActivity" >
+    <ScrollView style="@style/container" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -21,7 +21,7 @@
                 <!-- 密钥 -->
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -41,7 +41,7 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -52,7 +52,7 @@
                 <!-- 密码 -->
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -72,17 +72,17 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/password_tips" />
+                    android:text="@string/REGISTER_PASSWORD_TIPS" />
                 <!-- 确认密码 -->
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -91,10 +91,10 @@
                     <TextView
                         android:id="@+id/textView4"
                         style="@style/label"
-                        android:text="@string/cpassword" />
+                        android:text="@string/REGISTER_CPASSWORD" />
 
                     <EditText
-                        android:id="@+id/cpassword"
+                        android:id="@+id/REGISTER_CPASSWORD"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView4"
                         android:inputType="text" >
@@ -102,13 +102,13 @@
                 </RelativeLayout>
 
                 <LinearLayout
-                    style="@style/formborder"
+                    style="@style/field_separator"
                     android:orientation="vertical" >
                 </LinearLayout>
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/cpassword_tips" />
+                    android:text="@string/REGISTER_CPASSWORD_TIPS" />
             </LinearLayout>
 
             <Button
@@ -116,7 +116,7 @@
                 style="@style/primaryBtn"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:text="@string/ok" />
+                android:text="@string/COMMON_OK" />
         </LinearLayout>
     </ScrollView>
 

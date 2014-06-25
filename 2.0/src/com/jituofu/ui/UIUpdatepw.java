@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jituofu.R;
+
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +14,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.StorageUtil;
 
 public class UIUpdatepw extends BaseUiAuth {
 	Dialog dialog;
@@ -69,7 +72,7 @@ public class UIUpdatepw extends BaseUiAuth {
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 		urlParams.put("opassword", this.currentPw);
 		urlParams.put("password", this.newPw);
-		urlParams.put("cpassword", this.cnewPw);
+		urlParams.put("REGISTER_CPASSWORD", this.cnewPw);
 
 		try {
 			this.doTaskAsync(C.TASK.update, C.API.host + C.API.update,
@@ -91,9 +94,9 @@ public class UIUpdatepw extends BaseUiAuth {
 			AppUtil.timer(new TimerTask(){
 				@Override
 				public void run() {
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
-					AppUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
+					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
 					
 					closePopupDialog();
 					
@@ -156,7 +159,7 @@ public class UIUpdatepw extends BaseUiAuth {
 				this.showToast(R.string.cnew_password_hint);
 				result = false;
 			} else if (!newPw.equals(cnewPw)) {
-				showToast(R.string.cpassword_error);
+				showToast(R.string.REGISTER_CPASSWORD_error);
 				result = false;
 			}
 		}

@@ -4,9 +4,9 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actiontop" />
+    <include layout="@layout/topbar2" />
 
-    <ScrollView style="@style/contentActivity" >
+    <ScrollView style="@style/container" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -20,20 +20,20 @@
 
                 <!-- 用户名 -->
 
-                <LinearLayout style="@style/bottom_top_border" >
+                <LinearLayout style="@style/box1" >
 
                     <RelativeLayout style="@style/field" >
 
                         <TextView
                             android:id="@+id/textView1"
                             style="@style/label"
-                            android:text="@string/username" />
+                            android:text="@string/COMMON_USERNAME" />
 
                         <EditText
                             android:id="@+id/username"
                             style="@style/commonEditText"
                             android:layout_toRightOf="@+id/textView1"
-                            android:hint="@string/username_hint"
+                            android:hint="@string/COMMON_USERNAME_HINT"
                             android:inputType="text" >
                         </EditText>
                     </RelativeLayout>
@@ -41,24 +41,24 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/username_tips" />
+                    android:text="@string/REGISTER_USERNAME_TIPS" />
 
                 <!-- 邮箱 -->
 
-                <LinearLayout style="@style/bottom_top_border" >
+                <LinearLayout style="@style/box1" >
 
                     <RelativeLayout style="@style/field" >
 
                         <TextView
                             android:id="@+id/textView2"
                             style="@style/label"
-                            android:text="@string/email" />
+                            android:text="@string/COMMON_EMAIL" />
 
                         <EditText
                             android:id="@+id/email"
                             style="@style/commonEditText"
                             android:layout_toRightOf="@+id/textView2"
-                            android:hint="@string/email_hint"
+                            android:hint="@string/COMMON_EMAIL_HINT"
                             android:inputType="textEmailAddress" >
                         </EditText>
                     </RelativeLayout>
@@ -66,24 +66,24 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/email_tips" />
+                    android:text="@string/REGISTER_EMAIL_TIPS" />
 
                 <!-- 密码 -->
 
-                <LinearLayout style="@style/bottom_top_border" >
+                <LinearLayout style="@style/box1" >
 
                     <RelativeLayout style="@style/field" >
 
                         <TextView
                             android:id="@+id/textView3"
                             style="@style/label"
-                            android:text="@string/password" />
+                            android:text="@string/COMMON_PASSWORD" />
 
                         <EditText
                             android:id="@+id/password"
                             style="@style/commonEditText"
                             android:layout_toRightOf="@+id/textView3"
-                            android:hint="@string/password_hint"
+                            android:hint="@string/LOGIN_PASSWORD_HINT"
                             android:inputType="textPassword" >
                         </EditText>
                     </RelativeLayout>
@@ -91,24 +91,24 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/password_tips" />
+                    android:text="@string/REGISTER_PASSWORD_TIPS" />
 
                 <!-- 确认密码 -->
 
-                <LinearLayout style="@style/bottom_top_border" >
+                <LinearLayout style="@style/box1" >
 
                     <RelativeLayout style="@style/field" >
 
                         <TextView
                             android:id="@+id/textView4"
                             style="@style/label"
-                            android:text="@string/cpassword" />
+                            android:text="@string/REGISTER_CPASSWORD" />
 
                         <EditText
-                            android:id="@+id/cpassword"
+                            android:id="@+id/REGISTER_CPASSWORD"
                             style="@style/commonEditText"
                             android:layout_toRightOf="@+id/textView4"
-                            android:hint="@string/cpassword_hint"
+                            android:hint="@string/REGISTER_CPASSWORD_hint"
                             android:inputType="text" >
                         </EditText>
                     </RelativeLayout>
@@ -116,7 +116,7 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/cpassword_tips" />
+                    android:text="@string/REGISTER_CPASSWORD_TIPS" />
             </LinearLayout>
 
             <Button
@@ -124,7 +124,7 @@
                 style="@style/primaryBtn"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="@string/ok" />
+                android:text="@string/COMMON_OK" />
         </LinearLayout>
     </ScrollView>
 

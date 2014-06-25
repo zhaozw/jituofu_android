@@ -50,6 +50,13 @@ public class BaseUi extends Activity {
 			onBrReceive(bundle.getString("type"));
 		}
 	};
+	
+	public void forwardForResult(Class<?> obj, int requestCode){
+		Intent intent = new Intent();
+		intent.setClass(this, obj);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		this.startActivityForResult(intent, requestCode);
+	}
 
 	/**
 	 * 广播对象的接收器

@@ -46,8 +46,8 @@ public class UIIhome extends BaseUiAuth {
 		setContentView(R.layout.ihome);
 
 		if(sysVersion < 16){
-			LinearLayout globalTop = (LinearLayout) this.findViewById(R.id.globalTop);
-			globalTop.setVisibility(View.GONE);
+			LinearLayout topBar = (LinearLayout) this.findViewById(R.id.topBar);
+			topBar.setVisibility(View.GONE);
 		}
 		
 		setView();

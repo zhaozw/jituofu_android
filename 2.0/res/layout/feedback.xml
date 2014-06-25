@@ -4,16 +4,16 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actiontop" />
+    <include layout="@layout/topbar2" />
 
-    <ScrollView style="@style/contentActivity" >
+    <ScrollView style="@style/container" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout style="@style/bottom_top_border" >
+            <LinearLayout style="@style/box1" >
 
                 <include
                     android:id="@+id/phone"
@@ -38,7 +38,7 @@
             </LinearLayout>
 
             <LinearLayout
-                style="@style/bottom_top_border"
+                style="@style/box1"
                 android:layout_marginBottom="@dimen/normalSpace"
                 android:layout_marginTop="@dimen/normalSpace"
                 android:focusable="true"
@@ -64,7 +64,7 @@
                 android:textSize="14sp" />
 
             <LinearLayout
-                style="@style/bottom_top_border"
+                style="@style/box1"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/normalSpace"
                 android:gravity="left"

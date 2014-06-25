@@ -16,7 +16,7 @@
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
-                style="@style/contentActivity"
+                style="@style/container"
                 android:layout_height="0dp"
                 android:paddingTop="-15dp"
                 android:layout_weight="1" >
@@ -24,7 +24,7 @@
 
             <LinearLayout
                 android:id="@+id/border"
-                style="@style/formborder"
+                style="@style/field_separator"
                 android:background="#4c6f8b"
                 android:orientation="vertical" >
             </LinearLayout>

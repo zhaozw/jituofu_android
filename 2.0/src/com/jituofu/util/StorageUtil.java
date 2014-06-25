@@ -1,6 +1,7 @@
 package com.jituofu.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -56,5 +57,21 @@ public class StorageUtil {
 			e.printStackTrace();
 		}
 		return buffer;
+	}
+	
+	/**
+	 * 删除内部数据
+	 * 
+	 * @param context
+	 * @param filename
+	 * @return boolean
+	 */
+	public static boolean deleteInternalStoragePrivate(Context context,
+			String filename) {
+		File file = context.getFileStreamPath(filename);
+		if (file != null) {
+			return file.delete();
+		}
+		return false;
 	}
 }

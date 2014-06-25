@@ -4,10 +4,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/actiontop" />
+    <include layout="@layout/topbar2" />
 
     <LinearLayout
-        style="@style/contentActivity"
+        style="@style/container"
         android:orientation="vertical" >
 
         <Button

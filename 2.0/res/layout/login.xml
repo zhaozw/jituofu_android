@@ -4,56 +4,54 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/top" />
+    <include layout="@layout/topbar1" />
 
-    <ScrollView style="@style/contentActivity" >
+    <ScrollView style="@style/container" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout style="@style/bottom_top_border" >
+            <LinearLayout style="@style/box1" >
 
                 <RelativeLayout style="@style/field" >
 
                     <TextView
                         android:id="@+id/textView1"
                         style="@style/label"
-                        android:text="@string/username" />
+                        android:text="@string/COMMON_USERNAME" />
 
                     <EditText
                         android:id="@+id/username"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView1"
-                        android:hint="@string/username_hint"
+                        android:hint="@string/COMMON_USERNAME_HINT"
                         android:inputType="text" >
                     </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
                 </RelativeLayout>
 
-                <LinearLayout
-                    style="@style/formborder"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical" >
-                </LinearLayout>
-                
                 <RelativeLayout style="@style/field" >
 
                     <TextView
                         android:id="@+id/textView2"
                         style="@style/label"
-                        android:text="@string/password" />
+                        android:text="@string/COMMON_PASSWORD" />
 
                     <EditText
                         android:id="@+id/password"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView2"
-                        android:hint="@string/password_hint"
+                        android:hint="@string/LOGIN_PASSWORD_HINT"
                         android:inputType="textPassword" >
                     </EditText>
                 </RelativeLayout>
-
-                
             </LinearLayout>
 
             <LinearLayout
@@ -69,14 +67,14 @@
                     android:id="@+id/goregister"
                     style="@style/link"
                     android:layout_weight="1"
-                    android:text="@string/goregister" />
+                    android:text="@string/COMMON_GOTOREGISTER" />
 
                 <TextView
                     android:id="@+id/forgot"
                     style="@style/link"
                     android:layout_weight="1"
                     android:gravity="right"
-                    android:text="@string/forgotpw" />
+                    android:text="@string/COMMON_GOTOFORGOTPW" />
             </LinearLayout>
 
             <Button
@@ -84,7 +82,7 @@
                 style="@style/primaryBtn"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="@string/LOGIN_LOGINNING" />
+                android:text="@string/LOGIN_TITLE" />
         </LinearLayout>
     </ScrollView>
 
