@@ -13,10 +13,12 @@
     <string name="storesettings">小店设置</string>
     <string name="securitysettings">安全中心</string>
     <string name="cl">处理中...</string>
-    <string name="imagepickertitle">请选择图片</string>
-    <string name="imagepickergallery">图片库</string>
-    <string name="imagepickercamera">拍照</string>
+    <string name="COMMON_IMAGEPICKERTITLE">请选择图片</string>
+    <string name="COMMON_IMAGEPICKERGALLERY">图片库</string>
+    <string name="COMMON_IMAGEPICKERCAMMERA">拍照</string>
     <string name="uploader_no_image">没有找到文件</string>
+    <string name="COMMON_SDCARDERROR">SD卡有异常</string>
+    <string name="COMMON_SDCARDNOSPACE">SD卡没有存储空间</string>
 
     <!-- 注册登录 -->
     <string name="username">用户名</string>
@@ -33,10 +35,8 @@
     <string name="cpassword_tips">再次输入上面的登录密码</string>
     <string name="forgotpw">忘记密码</string>
     <string name="goregister">免费注册</string>
-    <string name="login">登录</string>
     <string name="hasaccount">有账号,去登录</string>
     <string name="register_zcz">注册中...</string>
-    <string name="loginning">正在登录...</string>
     <string name="username_error">用户名不正确</string>
     <string name="email_error">常用邮箱不正确</string>
     <string name="password_error">登录密码不正确</string>
@@ -92,8 +92,7 @@
     <string name="cnew_password_hint">请再次填写新密码</string>
     
     <!-- 错误部分 -->
-    <string name="sdcarderror">SD卡有异常</string>
-    <string name="sdcardnospace">SD卡没有存储空间</string>
+    
     <string name="no_camera_image">您没有拍摄图片</string>
     <string name="no_gallery_image">您没有选择图片</string>
     <string name="save_image_error">保存图片失败</string>
@@ -104,4 +103,8 @@
     <string name="SERVICE_WEIXIN">小店记账宝</string>
     <string name="SERVICE_QQ">253456273</string>
     <string name="SERVICE_WEIBO">记托付</string>
+    
+    <!-- 登录 -->
+    <string name="LOGIN_TITLE">登 录</string>
+    <string name="LOGIN_LOGINNING">正在登录...</string>
 </resources>

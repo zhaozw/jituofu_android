@@ -6,13 +6,12 @@ import org.json.JSONObject;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
-import com.jituofu.base.BaseUi;
+import com.jituofu.base.BaseUiForm;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class UILogin extends BaseUi {
-	Dialog dialog = null;
-	boolean validated = false;
-
+public class UILogin extends BaseUiForm {
+	private Dialog dialog = null;
 	private String usernameVal, passwordVal;
 	
 	@Override
@@ -44,7 +41,7 @@ public class UILogin extends BaseUi {
 
 		Bundle bundle = this.getIntent().getExtras();
 
-		title.setText(this.getString(R.string.login));
+		title.setText(this.getString(R.string.LOGIN_TITLE));
 
 		if (bundle != null) {
 			String extraUsername = bundle.getString("username");
@@ -78,17 +75,7 @@ public class UILogin extends BaseUi {
 
 			@Override
 			public void onClick(View v) {
-				// 防止重复点击
-				if (validated) {
-					return;
-				}
-
-				validated = true;
-
-				if (validation()) {
-					showPopup(R.string.loginning);
-					doTaskLogin();
-				}
+				beforeSubmit();
 			}});
 	}
 	
@@ -103,7 +90,14 @@ public class UILogin extends BaseUi {
 		showPopupDialog(false);
 	}
 	
-	private boolean validation() {
+	@Override
+	protected void doSubmit(){
+		showPopup(R.string.LOGIN_LOGINNING);
+		doTaskLogin();
+	}
+	
+	@Override
+	protected boolean validation() {
 		boolean result = false;
 		EditText usernameEditText = (EditText) findViewById(R.id.username);
 		EditText passwordEditText = (EditText) findViewById(R.id.password);
@@ -139,7 +133,7 @@ public class UILogin extends BaseUi {
 			}
 		}
 
-		validated = false;
+		
 
 		this.usernameVal = username;
 		this.passwordVal = password;

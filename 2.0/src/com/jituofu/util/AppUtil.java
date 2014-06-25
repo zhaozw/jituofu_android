@@ -1,34 +1,26 @@
 package com.jituofu.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.zip.GZIPInputStream;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
-
 import org.apache.http.util.CharArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
-import com.jituofu.ui.UILogin;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -47,13 +39,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Media;
 import android.provider.Settings.Secure;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import android.view.Display;
 import android.widget.TextView;
 
 public class AppUtil {
@@ -64,12 +54,13 @@ public class AppUtil {
 	 * @param ui
 	 * @param listener
 	 */
+	@SuppressLint("InlinedApi")
 	public static void openImagePicker(final BaseUi ui,
 			DialogInterface.OnClickListener listener) {
 		AlertDialog.Builder dialog = null;
 		String[] items = new String[] {
-				ui.getString(R.string.imagepickercamera),
-				ui.getString(R.string.imagepickergallery) };
+				ui.getString(R.string.COMMON_IMAGEPICKERCAMMERA),
+				ui.getString(R.string.COMMON_IMAGEPICKERGALLERY) };
 
 		ContextThemeWrapper themedContext;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -80,7 +71,7 @@ public class AppUtil {
 					android.R.style.Theme_Light_NoTitleBar);
 		}
 		dialog = new AlertDialog.Builder(themedContext);
-		dialog.setTitle(R.string.imagepickertitle);
+		dialog.setTitle(R.string.COMMON_IMAGEPICKERTITLE);
 		dialog.setItems(items, listener);
 		dialog.create().show();
 	}
@@ -96,7 +87,7 @@ public class AppUtil {
 
 			// 没有剩余空间
 			if (fs < 1) {
-				ui.showToast(R.string.sdcardnospace);
+				ui.showToast(R.string.COMMON_SDCARDNOSPACE);
 			} else {
 				// 目录检查
 				String sdcardDir = AppUtil.getExternalStorageDirectory();
@@ -122,7 +113,7 @@ public class AppUtil {
 				ui.startActivityForResult(intent, C.COMMON.camera);
 			}
 		} else {
-			ui.showToast(R.string.sdcarderror);
+			ui.showToast(R.string.COMMON_SDCARDERROR);
 		}
 	}
 
@@ -340,7 +331,7 @@ public class AppUtil {
 	}
 
 	/**
-	 * 获取字符串长度,中文是英文长度的2倍
+	 * 获取字符串长度
 	 * 
 	 * @param value
 	 * @return
@@ -351,7 +342,7 @@ public class AppUtil {
 		for (int i = 0; i < value.length(); i++) {
 			String temp = value.substring(i, i + 1);
 			if (temp.matches(chinese)) {
-				valueLength += 2;
+				valueLength += 0;//2;
 			} else {
 				valueLength += 1;
 			}
