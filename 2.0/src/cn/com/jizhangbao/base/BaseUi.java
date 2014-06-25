@@ -49,7 +49,7 @@ public class BaseUi extends Activity {
 	protected BaseTaskPool taskPool;
 	protected BaseHandler handler;
 
-	// 一个基础的广播对象
+	//一个基础的广播对象
 	private BroadcastReceiver br = new BroadcastReceiver() {
 
 		@Override
