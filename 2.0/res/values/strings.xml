@@ -12,7 +12,7 @@
     <string name="lsxsjl">历史销售管理</string>
     <string name="storesettings">小店设置</string>
     <string name="securitysettings">安全中心</string>
-    <string name="cl">处理中...</string>
+    <string name="COMMON_CLZ">处理中...</string>
     <string name="COMMON_IMAGEPICKERTITLE">请选择图片</string>
     <string name="COMMON_IMAGEPICKERGALLERY">图片库</string>
     <string name="COMMON_IMAGEPICKERCAMMERA">拍照</string>
@@ -56,11 +56,11 @@
     <string name="forgotpw">忘记密码</string>
     <string name="goregister">免费注册</string>
     <string name="hasaccount">有账号,去登录</string>
-    <string name="register_zcz">注册中...</string>
-    <string name="username_error">用户名不正确</string>
-    <string name="email_error">常用邮箱不正确</string>
-    <string name="password_error">登录密码不正确</string>
-    <string name="REGISTER_CPASSWORD_error">2次输入的登录密码不一样</string>
+    <string name="REGISTER_ZCZ">注册中...</string>
+    <string name="COMMON_USERNAME_ERROR">用户名不正确</string>
+    <string name="COMMON_EMAIL_ERROR">常用邮箱不正确</string>
+    <string name="COMMON_PASSWORD_ERROR">登录密码不正确</string>
+    <string name="REGISTER_CPASSWORD_INVALID">2次输入的登录密码不一样</string>
     <string name="register_success">注册成功</string>
     <string name="logout">安全退出</string>
 
@@ -77,13 +77,16 @@
     <string name="feedback_ok_btn">提交</string>
 
     <!-- 忘记密码 -->
-    <string name="forgottitle">忘记密码</string>
-    <string name="forgottitle2">收到密钥,继续找回</string>
+    <string name="FORGOT_TITLE">忘记密码</string>
+    <string name="FORGOT_GOTOSTEP2">收到校验码,继续找回</string>
     <string name="FORGOT_REGISTER_USERNAME_TIPS">您注册时的用户名</string>
     <string name="FORGOT_REGISTER_EMAIL_TIPS">您注册时的邮箱</string>
-    <string name="forgottoken">安全密钥</string>
-    <string name="forgottoken_tips">邮箱中接收到的安全密钥</string>
-    <string name="forgotnewpwd">新密码</string>
+    <string name="FORGOT_TOKEN">校验码</string>
+    <string name="FORGOT_TOKEN_SPECIFY">请填写校验码</string>
+    <string name="FORGOT_TOKEN_INVALID">校验码不正确</string>
+    <string name="FORGOT_TOKEN_TIPS">邮箱中接收到的安全校验码</string>
+    <string name="FORGOT_NEW_PWD">新密码</string>
+    <string name="FORGOT_ERROR">找回密码失败，请重试</string>
 
     <!-- 记账台 -->
     <string name="cashiertitle">记账台</string>
@@ -108,7 +111,7 @@
     <string name="cnewpw">再次输入</string>
     <string name="current_password_hint">请填写当前登录密码</string>
     <string name="new_password_hint">请填写新的登录密码</string>
-    <string name="new_password_error">新的登录密码不正确</string>
+    <string name="new_COMMON_PASSWORD_ERROR">新的登录密码不正确</string>
     <string name="cnew_password_hint">请再次填写新密码</string>
 
     <!-- 错误部分 -->

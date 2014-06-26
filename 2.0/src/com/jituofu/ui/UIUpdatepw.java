@@ -61,7 +61,7 @@ public class UIUpdatepw extends BaseUiAuth {
 				}
 				validated = true;
 				if (validation()) {
-					showPopup(R.string.cl);
+					showPopup(R.string.COMMON_CLZ);
 					doTaskUpdate();
 				}
 			}
@@ -138,7 +138,7 @@ public class UIUpdatepw extends BaseUiAuth {
 			this.showToast(R.string.current_password_hint);
 		} else if (AppUtil.getStrLen(currentPw) < 6
 				|| AppUtil.getStrLen(currentPw) > 50) {
-			showToast(R.string.password_error);
+			showToast(R.string.COMMON_PASSWORD_ERROR);
 		} else {
 			result = true;
 		}
@@ -149,7 +149,7 @@ public class UIUpdatepw extends BaseUiAuth {
 				result = false;
 			} else if (AppUtil.getStrLen(newPw) < 6
 					|| AppUtil.getStrLen(newPw) > 50) {
-				showToast(R.string.new_password_error);
+				showToast(R.string.new_COMMON_PASSWORD_ERROR);
 				result = false;
 			}
 		}
@@ -159,7 +159,7 @@ public class UIUpdatepw extends BaseUiAuth {
 				this.showToast(R.string.cnew_password_hint);
 				result = false;
 			} else if (!newPw.equals(cnewPw)) {
-				showToast(R.string.REGISTER_CPASSWORD_error);
+				showToast(R.string.REGISTER_CPASSWORD_INVALID);
 				result = false;
 			}
 		}

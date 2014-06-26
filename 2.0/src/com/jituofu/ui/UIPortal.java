@@ -9,7 +9,6 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
-import com.jituofu.util.SDUtil;
  
 public class UIPortal extends BaseUi {
 

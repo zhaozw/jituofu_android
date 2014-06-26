@@ -9,17 +9,21 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.util.CharArrayBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,7 +43,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings.Secure;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -258,6 +262,16 @@ public class AppUtil {
 	 * @param txt
 	 */
 	public static void showLoadingPopup(BaseUi ui, int txt) {
+		Dialog dialog = ui.getPopupDialog(ui);
+
+		ui.setPopupView(R.layout.popup_contentview);
+
+		TextView popupTxt = (TextView) dialog.findViewById(R.id.popupTxt);
+
+		popupTxt.setText(txt);
+		ui.showPopupDialog(false);
+	}
+	public static void showLoadingPopup(BaseUi ui, String txt) {
 		Dialog dialog = ui.getPopupDialog(ui);
 
 		ui.setPopupView(R.layout.popup_contentview);
@@ -488,13 +502,19 @@ public class AppUtil {
 	 * @return
 	 */
 	public static String getDeviceId(Context context) {
-		String id = Secure.getString(context.getContentResolver(),
-				Secure.ANDROID_ID);
-		if (id != null) {
-			return id;
-		}
+		String id;
+		
+		final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-		return null;
+	    final String tmDevice, tmSerial, androidId;
+	    tmDevice = "" + tm.getDeviceId();
+	    tmSerial = "" + tm.getSimSerialNumber();
+	    androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+	    id = deviceUuid.toString();
+
+		return id;
 	}
 
 	/**

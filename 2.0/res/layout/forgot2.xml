@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <!-- 密钥 -->
+                <!-- 校验码 -->
 
                 <LinearLayout
                     style="@style/field_separator"
@@ -30,10 +30,10 @@
                     <TextView
                         android:id="@+id/textView1"
                         style="@style/label"
-                        android:text="@string/forgottoken" />
+                        android:text="@string/FORGOT_TOKEN" />
 
                     <EditText
-                        android:id="@+id/username"
+                        android:id="@+id/token"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView1"
                         android:inputType="text" >
@@ -47,7 +47,7 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/forgottoken_tips" />
+                    android:text="@string/FORGOT_TOKEN_TIPS" />
 
                 <!-- 密码 -->
 
@@ -61,7 +61,7 @@
                     <TextView
                         android:id="@+id/textView3"
                         style="@style/label"
-                        android:text="@string/forgotnewpwd" />
+                        android:text="@string/FORGOT_NEW_PWD" />
 
                     <EditText
                         android:id="@+id/password"
@@ -94,7 +94,7 @@
                         android:text="@string/REGISTER_CPASSWORD" />
 
                     <EditText
-                        android:id="@+id/REGISTER_CPASSWORD"
+                        android:id="@+id/cpassword"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView4"
                         android:inputType="text" >
@@ -112,7 +112,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/submitRegister"
+                android:id="@+id/okBtn"
                 style="@style/primaryBtn"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
