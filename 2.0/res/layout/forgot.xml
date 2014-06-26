@@ -80,7 +80,7 @@
                     style="@style/field_tips"
                     android:text="@string/FORGOT_REGISTER_EMAIL_TIPS" />
             </LinearLayout>
-
+ 
             <Button
                 android:id="@+id/submitRegister"
                 style="@style/primaryBtn"
