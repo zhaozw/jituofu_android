@@ -67,7 +67,7 @@ public class UIRegister extends BaseUiForm {
 
 	@Override
 	protected void doSubmit() {
-		AppUtil.showLoadingPopup(UIRegister.this, R.string.register_zcz);
+		AppUtil.showLoadingPopup(UIRegister.this, R.string.REGISTER_ZCZ);
 		doTaskRegister();
 	}
 
@@ -89,7 +89,7 @@ public class UIRegister extends BaseUiForm {
 		if (username != null) {
 			if (AppUtil.getStrLen(username) < C.USERNAMELENGTH.MIN
 					|| AppUtil.getStrLen(username) > C.USERNAMELENGTH.MAX) {
-				showToast(R.string.username_error);
+				showToast(R.string.COMMON_USERNAME_ERROR);
 			} else {
 				result = true;
 			}
@@ -102,7 +102,7 @@ public class UIRegister extends BaseUiForm {
 			if (email != null) {
 				if (AppUtil.getStrLen(email) < 5 || email.indexOf("@") < 0) {
 					result = false;
-					showToast(R.string.email_error);
+					showToast(R.string.COMMON_EMAIL_ERROR);
 				}
 			} else {
 				result = false;

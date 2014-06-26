@@ -96,7 +96,7 @@ public class UILogin extends BaseUiForm {
 		if (username != null) {
 			if (AppUtil.getStrLen(username) < C.USERNAMELENGTH.MIN
 					|| AppUtil.getStrLen(username) > C.USERNAMELENGTH.MAX) {
-				showToast(R.string.username_error);
+				showToast(R.string.COMMON_USERNAME_ERROR);
 			} else {
 				result = true;
 			}

@@ -39,19 +39,23 @@ public class BaseUi extends Activity {
 	protected BaseTaskPool taskPool;
 	protected BaseHandler handler;
 
+	protected void onUpdateUi(){}
+	
+	protected void onBindUi(){}
+	
 	// 一个基础的广播对象
 	private BaseBroadcast br = new BaseBroadcast() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			super.onReceive(context, intent);
-			
+
 			Bundle bundle = intent.getExtras();
 			onBrReceive(bundle.getString("type"));
 		}
 	};
-	
-	public void forwardForResult(Class<?> obj, int requestCode){
+
+	public void forwardForResult(Class<?> obj, int requestCode) {
 		Intent intent = new Intent();
 		intent.setClass(this, obj);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -119,18 +123,6 @@ public class BaseUi extends Activity {
 		// 取消监听广播
 		BaseUi.this.unregisterReceiver(br);
 		super.onDestroy();
-	}
-
-	/**
-	 * 绑定UI事件
-	 */
-	protected void onBindUi() {
-	}
-
-	/**
-	 * 更新UI
-	 */
-	protected void onUpdateUi() {
 	}
 
 	/**
@@ -355,7 +347,7 @@ public class BaseUi extends Activity {
 
 			JSONObject urlParams = new JSONObject();
 
-			long timestamp = AppUtil.getCurrentTime();//时间戳
+			long timestamp = AppUtil.getCurrentTime();// 时间戳
 			HashMap<String, JSONObject> requestData = new HashMap<String, JSONObject>();
 			HashMap<String, String> publicData = new HashMap<String, String>();
 
@@ -375,8 +367,10 @@ public class BaseUi extends Activity {
 			publicData.put("pushToken", "");
 
 			// 从本地获取userId和cookie
-			byte[] cookie = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userCookieFileName);
-			byte[] userId = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userIdFileName);
+			byte[] cookie = StorageUtil.readInternalStoragePrivate(this,
+					C.DIRS.userCookieFileName);
+			byte[] userId = StorageUtil.readInternalStoragePrivate(this,
+					C.DIRS.userIdFileName);
 			String cookieVal = "";
 			String userIdVal = "";
 			if (cookie.length > 0 && cookie[0] != 0) {
@@ -494,7 +488,8 @@ public class BaseUi extends Activity {
 				if (hasId) {
 					String userInfo = operation.toString();
 
-					StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userInfoFileName, userInfo);
+					StorageUtil.writeInternalStoragePrivate(this,
+							C.DIRS.userInfoFileName, userInfo);
 				}
 			}
 		}

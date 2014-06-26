@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <!-- 密钥 -->
+                <!-- 校验码 -->
 
                 <LinearLayout
                     style="@style/field_separator"
@@ -30,7 +30,7 @@
                     <TextView
                         android:id="@+id/textView1"
                         style="@style/label"
-                        android:text="@string/forgottoken" />
+                        android:text="@string/FORGOT_TOKEN" />
 
                     <EditText
                         android:id="@+id/username"
@@ -47,7 +47,7 @@
 
                 <TextView
                     style="@style/field_tips"
-                    android:text="@string/forgottoken_tips" />
+                    android:text="@string/FORGOT_TOKEN_TIPS" />
 
                 <!-- 密码 -->
 
@@ -61,7 +61,7 @@
                     <TextView
                         android:id="@+id/textView3"
                         style="@style/label"
-                        android:text="@string/forgotnewpwd" />
+                        android:text="@string/FORGOT_NEW_PWD" />
 
                     <EditText
                         android:id="@+id/password"

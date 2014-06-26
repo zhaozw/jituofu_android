@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permisson.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <uses-feature
         android:name="android.hardware.bluetooth"
@@ -26,7 +27,7 @@
     <uses-feature android:name="android.hardware.camera.focus" />
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
     <application

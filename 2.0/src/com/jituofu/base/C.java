@@ -40,6 +40,7 @@ public final class C {
 		public static final String helpyes = "/help/yes";
 		public static final String helpno = "/help/no";
 		public static final String fileadd = "/files/add";
+		public static final String forgotpw = "/users/forgot";
 	}
 
 	public static final class ERROR {
@@ -59,6 +60,7 @@ public final class C {
 		public static final int helpyes = 1007;
 		public static final int helpno = 1008;
 		public static final int fileadd = 1009;
+		public static final int forgotpw = 1010;
 	}
 	
 	public static final class PASSWORDLENGTH{

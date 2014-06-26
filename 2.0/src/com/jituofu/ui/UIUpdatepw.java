@@ -61,7 +61,7 @@ public class UIUpdatepw extends BaseUiAuth {
 				}
 				validated = true;
 				if (validation()) {
-					showPopup(R.string.cl);
+					showPopup(R.string.COMMON_CLZ);
 					doTaskUpdate();
 				}
 			}
