@@ -1,13 +1,11 @@
 package com.jituofu.ui;
 
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.jituofu.R;
 
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
@@ -22,6 +21,9 @@ import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
 public class UIUpdatepw extends BaseUiAuth {
+	private BaseDialog.Builder baseDialogBuilder;
+	private BaseDialog baseDialog;
+	
 	Dialog dialog;
 	boolean validated = false;
 
@@ -72,7 +74,7 @@ public class UIUpdatepw extends BaseUiAuth {
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 		urlParams.put("opassword", this.currentPw);
 		urlParams.put("password", this.newPw);
-		urlParams.put("REGISTER_CPASSWORD", this.cnewPw);
+		urlParams.put("cpassword", this.cnewPw);
 
 		try {
 			this.doTaskAsync(C.TASK.update, C.API.host + C.API.update,
@@ -89,24 +91,30 @@ public class UIUpdatepw extends BaseUiAuth {
 
 		int resultStatus = message.getResultStatus();
 		if (resultStatus == 100) {
-			this.showToast(message.getFirstOperationErrorMessage());
+			baseDialogBuilder = new BaseDialog.Builder(this);
+			baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
+					new DialogInterface.OnClickListener() {
 
-			AppUtil.timer(new TimerTask(){
-				@Override
-				public void run() {
-					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
-					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
-					StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
-					
-					closePopupDialog();
-					
-					forward(UILogin.class);
-					finish();
-					
-					AppUtil.sendClearActivitiesBr(getApplicationContext());
-	                
-				}});
-
+						@Override
+						public void onClick(DialogInterface di, int which) {
+							// TODO Auto-generated method stub
+							baseDialog.dismiss();
+							
+							StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userCookieFileName);
+							StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userIdFileName);
+							StorageUtil.deleteInternalStoragePrivate(getApplicationContext(), C.DIRS.userInfoFileName);
+							
+							forward(UILogin.class);
+							finish();
+						}
+					});
+			baseDialogBuilder
+					.setMessage(message.getMemo());
+			baseDialog = baseDialogBuilder.create();
+			baseDialog.setCanceledOnTouchOutside(false);
+			baseDialog.show();
+			
+			AppUtil.sendClearActivitiesBr(getApplicationContext());
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}

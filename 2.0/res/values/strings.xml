@@ -102,7 +102,7 @@
     <!-- 修改登录密码 -->
     <string name="currentpw">当前密码</string>
     <string name="newpw">新密码</string>
-    <string name="cnewpw">再次输入</string>
+    <string name="UPDATEPW_AGAINTXT">再次输入</string>
     <string name="current_password_hint">请填写当前登录密码</string>
     <string name="new_password_hint">请填写新的登录密码</string>
     <string name="new_COMMON_PASSWORD_ERROR">新的登录密码不正确</string>

@@ -38,14 +38,14 @@
                         android:layout_toRightOf="@+id/textView1"
                         android:inputType="text" >
                     </EditText>
-                </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/border"
-                    style="@style/field_separator"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical" >
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/border"
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <RelativeLayout style="@style/field" >
 
@@ -60,20 +60,21 @@
                         android:layout_toRightOf="@+id/textView2"
                         android:inputType="textPassword" >
                     </EditText>
+
+                    <LinearLayout
+                        android:id="@+id/border"
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
                 </RelativeLayout>
-                <LinearLayout
-                    android:id="@+id/border"
-                    style="@style/field_separator"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:orientation="vertical" >
-                </LinearLayout>
 
                 <RelativeLayout style="@style/field" >
 
                     <TextView
                         android:id="@+id/textView3"
                         style="@style/label"
-                        android:text="@string/cnewpw" />
+                        android:text="@string/UPDATEPW_AGAINTXT" />
 
                     <EditText
                         android:id="@+id/cnewpw"

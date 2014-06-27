@@ -5,7 +5,8 @@
 
     <LinearLayout
         style="@style/BaseDialogBackground"
-        android:layout_margin="15dp" >
+        android:layout_margin="15dp"
+        android:minWidth="220dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -41,8 +42,8 @@
             <Button
                 android:id="@+id/positiveButton"
                 style="@style/primaryBtn"
-                android:layout_weight="1"
                 android:layout_marginRight="5dp"
+                android:layout_weight="1"
                 android:singleLine="true" />
 
             <Button
