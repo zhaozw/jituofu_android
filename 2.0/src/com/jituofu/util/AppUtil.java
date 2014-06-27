@@ -38,6 +38,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.ParseException;
 import android.net.Uri;
 import android.os.Build;
@@ -51,13 +53,64 @@ import android.widget.TextView;
 
 public class AppUtil {
 
-	public static String trimAll(String str){
-		if(str == null){
+	/**
+	 * 读取图片属性：旋转的角度
+	 * 
+	 * @param path
+	 * @return degree
+	 */
+	public static int readPictureDegree(String path) {
+		int degree = 0;
+		try {
+			ExifInterface exifInterface = new ExifInterface(path);
+			int orientation = exifInterface.getAttributeInt(
+					ExifInterface.TAG_ORIENTATION,
+					ExifInterface.ORIENTATION_NORMAL);
+			switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				degree = 90;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				degree = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				degree = 270;
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return degree;
+	}
+
+	/*
+	 * 旋转图片
+	 * 
+	 * @param angle
+	 * 
+	 * @param bitmap
+	 * 
+	 * @return Bitmap
+	 */
+	public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+		// 旋转图片 动作
+		Matrix matrix = new Matrix();
+		;
+		matrix.postRotate(angle);
+		System.out.println("angle2=" + angle);
+		// 创建新的图片
+		Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+				bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+		return resizedBitmap;
+	}
+
+	public static String trimAll(String str) {
+		if (str == null) {
 			return str;
 		}
 		return str.replaceAll("\\s*", "");
 	}
-	
+
 	/**
 	 * 打开图片选择器
 	 * 
@@ -88,6 +141,7 @@ public class AppUtil {
 
 	/**
 	 * 打开相机
+	 * 
 	 * @param ui
 	 * @param dir
 	 * @param temFileName
@@ -216,14 +270,17 @@ public class AppUtil {
 	 */
 	public static String getRealPathFromURI(BaseUi ui, Uri uri) {
 		String res = null;
-	    String[] proj = { MediaStore.Images.Media.DATA };
-	    Cursor cursor = ui.getContentResolver().query(uri, proj, null, null, null);
-	    if(cursor.moveToFirst()){;
-	       int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	       res = cursor.getString(column_index);
-	    }
-	    cursor.close();
-	    return res;
+		String[] proj = { MediaStore.Images.Media.DATA };
+		Cursor cursor = ui.getContentResolver().query(uri, proj, null, null,
+				null);
+		if (cursor.moveToFirst()) {
+			;
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			res = cursor.getString(column_index);
+		}
+		cursor.close();
+		return res;
 	}
 
 	/**
@@ -271,6 +328,7 @@ public class AppUtil {
 		popupTxt.setText(txt);
 		ui.showPopupDialog(false);
 	}
+
 	public static void showLoadingPopup(BaseUi ui, String txt) {
 		Dialog dialog = ui.getPopupDialog(ui);
 
@@ -365,7 +423,7 @@ public class AppUtil {
 		for (int i = 0; i < value.length(); i++) {
 			String temp = value.substring(i, i + 1);
 			if (temp.matches(chinese)) {
-				valueLength += 1;//2;
+				valueLength += 1;// 2;
 			} else {
 				valueLength += 1;
 			}
@@ -373,7 +431,8 @@ public class AppUtil {
 		return valueLength;
 	}
 
-	public static BaseMessage getMessage(String result) throws Exception,JSONException {
+	public static BaseMessage getMessage(String result) throws Exception,
+			JSONException {
 		BaseMessage message = new BaseMessage();
 		JSONObject jsonObject = null;
 		try {
@@ -382,7 +441,7 @@ public class AppUtil {
 				message.setResult(result);
 			}
 		} catch (JSONException e) {
-			throw new JSONException("JSON格式错误： "+result);
+			throw new JSONException("JSON格式错误： " + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -493,8 +552,6 @@ public class AppUtil {
 		return t == null ? true : false;
 	}
 
-	
-
 	/**
 	 * 获取device id
 	 * 
@@ -503,16 +560,21 @@ public class AppUtil {
 	 */
 	public static String getDeviceId(Context context) {
 		String id;
-		
-		final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
-	    final String tmDevice, tmSerial, androidId;
-	    tmDevice = "" + tm.getDeviceId();
-	    tmSerial = "" + tm.getSimSerialNumber();
-	    androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+		final TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
 
-	    UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
-	    id = deviceUuid.toString();
+		final String tmDevice, tmSerial, androidId;
+		tmDevice = "" + tm.getDeviceId();
+		tmSerial = "" + tm.getSimSerialNumber();
+		androidId = ""
+				+ android.provider.Settings.Secure.getString(
+						context.getContentResolver(),
+						android.provider.Settings.Secure.ANDROID_ID);
+
+		UUID deviceUuid = new UUID(androidId.hashCode(),
+				((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+		id = deviceUuid.toString();
 
 		return id;
 	}

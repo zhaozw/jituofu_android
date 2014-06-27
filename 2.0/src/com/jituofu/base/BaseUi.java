@@ -1,6 +1,7 @@
 package com.jituofu.base;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONException;
@@ -38,11 +39,15 @@ public class BaseUi extends Activity {
 
 	protected BaseTaskPool taskPool;
 	protected BaseHandler handler;
+	
+	private BaseTask baseTask;
 
-	protected void onUpdateUi(){}
-	
-	protected void onBindUi(){}
-	
+	protected void onUpdateUi() {
+	}
+
+	protected void onBindUi() {
+	}
+
 	// 一个基础的广播对象
 	private BaseBroadcast br = new BaseBroadcast() {
 
@@ -85,6 +90,43 @@ public class BaseUi extends Activity {
 
 		this.taskPool = new BaseTaskPool(this);
 		this.handler = new BaseHandler(this);
+		this.baseTask = new BaseTask() {
+			@Override
+			public void onComplete(String httpResult) {
+				sendMessage(BaseTask.TASK_COMPLETE, this.getId(),
+						httpResult);
+			}
+			
+			@Override
+			public void onComplete(String httpResult, ArrayList<String> files) {
+				sendMessage(BaseTask.TASK_COMPLETE, this.getId(),
+						httpResult, files);
+			}
+
+			@Override
+			public void onError(String error) {
+				super.onError(error);
+				sendMessage(BaseTask.NETWORK_ERROR, this.getId(), null);
+			}
+
+			@Override
+			public void onServerError() {
+				super.onServerError();
+				sendMessage(BaseTask.SERVER_ERROR, this.getId(), null);
+			}
+
+			@Override
+			public void onStop() {
+				super.onStop();
+				closePopupDialog();
+			}
+
+			@Override
+			public void onNetworkTimeout() {
+				super.onNetworkTimeout();
+				sendMessage(BaseTask.NETWORKTIMEOUT, this.getId(), null);
+			}
+		};
 
 		// 注册一个监听清除Activities堆栈的广播
 		IntentFilter filter = new IntentFilter();
@@ -329,6 +371,58 @@ public class BaseUi extends Activity {
 		return null;
 	}
 
+	private HashMap<String, JSONObject> getRequestData(HashMap<String, String> data)
+			throws UnsupportedEncodingException {
+		JSONObject urlParams = new JSONObject();
+
+		long timestamp = AppUtil.getCurrentTime();// 时间戳
+		HashMap<String, JSONObject> requestData = new HashMap<String, JSONObject>();
+		HashMap<String, String> publicData = new HashMap<String, String>();
+
+		JSONObject operationData = new JSONObject(data);
+
+		String operationDataStr = operationData.toString();
+		String signSrc = operationDataStr + timestamp + C.COMMON.localKey;
+
+		// 构建public数据
+		publicData.put("productVersion", AppUtil.getVersion(this));
+		publicData.put("productId", "android");
+		publicData.put("channelId", C.COMMON.channelId);
+		publicData.put("network", HttpUtil.getType(this) + "");
+		publicData.put("display", AppUtil.getDisplay(this));
+		publicData.put("time", timestamp + "");
+		publicData.put("sign", AppUtil.get32MD5(signSrc));
+		publicData.put("pushToken", "");
+
+		// 从本地获取userId和cookie
+		byte[] cookie = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.userCookieFileName);
+		byte[] userId = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.userIdFileName);
+		String cookieVal = "";
+		String userIdVal = "";
+		if (cookie.length > 0 && cookie[0] != 0) {
+			cookieVal = new String(cookie, "UTF-8");
+		}
+		if (userId.length > 0 && userId[0] != 0) {
+			userIdVal = new String(userId, "UTF-8");
+		}
+		publicData.put("cookie", cookieVal);
+		publicData.put("userId", userIdVal);
+		
+		try {
+			urlParams.put("public", new JSONObject(publicData));
+			urlParams.put("operation", operationData);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		// 构建requestData数据
+		requestData.put("requestData", urlParams);
+		
+		return requestData;
+	}
+
 	/**
 	 * 发送异步post请求
 	 * 
@@ -345,83 +439,25 @@ public class BaseUi extends Activity {
 			this.showToast(C.ERROR.networkNone);
 		} else {
 
-			JSONObject urlParams = new JSONObject();
+			taskPool.addTask(taskId, taskUrl, getRequestData(data), baseTask, 0);
+		}
+	}
+	
+	/**
+	 * 发送一个POST上传文件的请求
+	 * @param taskId
+	 * @param taskUrl
+	 * @param data
+	 * @param filesPath
+	 * @throws UnsupportedEncodingException
+	 */
+	public void doUploadTaskAsync(int taskId, String taskUrl,
+			HashMap<String, String> data, ArrayList<String> filesPath) throws UnsupportedEncodingException {
+		if (HttpUtil.getType(this) == 0) {
+			this.showToast(C.ERROR.networkNone);
+		} else {
 
-			long timestamp = AppUtil.getCurrentTime();// 时间戳
-			HashMap<String, JSONObject> requestData = new HashMap<String, JSONObject>();
-			HashMap<String, String> publicData = new HashMap<String, String>();
-
-			JSONObject operationData = new JSONObject(data);
-
-			String operationDataStr = operationData.toString();
-			String signSrc = operationDataStr + timestamp + C.COMMON.localKey;
-
-			// 构建public数据
-			publicData.put("productVersion", AppUtil.getVersion(this));
-			publicData.put("productId", "android");
-			publicData.put("channelId", C.COMMON.channelId);
-			publicData.put("network", HttpUtil.getType(this) + "");
-			publicData.put("display", AppUtil.getDisplay(this));
-			publicData.put("time", timestamp + "");
-			publicData.put("sign", AppUtil.get32MD5(signSrc));
-			publicData.put("pushToken", "");
-
-			// 从本地获取userId和cookie
-			byte[] cookie = StorageUtil.readInternalStoragePrivate(this,
-					C.DIRS.userCookieFileName);
-			byte[] userId = StorageUtil.readInternalStoragePrivate(this,
-					C.DIRS.userIdFileName);
-			String cookieVal = "";
-			String userIdVal = "";
-			if (cookie.length > 0 && cookie[0] != 0) {
-				cookieVal = new String(cookie, "UTF-8");
-			}
-			if (userId.length > 0 && userId[0] != 0) {
-				userIdVal = new String(userId, "UTF-8");
-			}
-			publicData.put("cookie", cookieVal);
-			publicData.put("userId", userIdVal);
-			try {
-				urlParams.put("public", new JSONObject(publicData));
-				urlParams.put("operation", operationData);
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-
-			// 构建requestData数据
-			requestData.put("requestData", urlParams);
-
-			taskPool.addTask(taskId, taskUrl, requestData, new BaseTask() {
-				@Override
-				public void onComplete(String httpResult) {
-					sendMessage(BaseTask.TASK_COMPLETE, this.getId(),
-							httpResult);
-				}
-
-				@Override
-				public void onError(String error) {
-					super.onError(error);
-					sendMessage(BaseTask.NETWORK_ERROR, this.getId(), null);
-				}
-
-				@Override
-				public void onServerError() {
-					super.onServerError();
-					sendMessage(BaseTask.SERVER_ERROR, this.getId(), null);
-				}
-
-				@Override
-				public void onStop() {
-					super.onStop();
-					closePopupDialog();
-				}
-
-				@Override
-				public void onNetworkTimeout() {
-					super.onNetworkTimeout();
-					sendMessage(BaseTask.NETWORKTIMEOUT, this.getId(), null);
-				}
-			}, 0);
+			taskPool.addTask(taskId, taskUrl,  getRequestData(data), filesPath, baseTask, 0);
 		}
 	}
 
@@ -456,6 +492,20 @@ public class BaseUi extends Activity {
 
 		handler.sendMessage(m);
 	}
+	
+	private void sendMessage(int what, int taskId, String data, ArrayList<String> files) {
+		Bundle b = new Bundle();
+
+		b.putInt("task", taskId);
+		b.putString("data", data);
+		b.putStringArrayList("files", files);
+
+		Message m = new Message();
+		m.what = what;
+		m.setData(b);
+
+		handler.sendMessage(m);
+	}
 
 	/**
 	 * 获取上下文
@@ -474,6 +524,35 @@ public class BaseUi extends Activity {
 	 * @throws Exception
 	 */
 	public void onTaskComplete(int taskId, BaseMessage message)
+			throws Exception {
+		this.closePopupDialog();
+
+		// 如果获取到用户信息就保存到本地
+		if (taskId == C.TASK.getuser) {
+			int resultStatus = message.getResultStatus();
+
+			if (resultStatus == 100) {
+				JSONObject operation = message.getOperation();
+				boolean hasId = operation.has("id");
+
+				if (hasId) {
+					String userInfo = operation.toString();
+
+					StorageUtil.writeInternalStoragePrivate(this,
+							C.DIRS.userInfoFileName, userInfo);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * 上传文件处理成功
+	 * @param taskId
+	 * @param message
+	 * @param filesPath
+	 * @throws Exception
+	 */
+	public void onTaskComplete(int taskId, BaseMessage message, ArrayList<String> filesPath)
 			throws Exception {
 		this.closePopupDialog();
 

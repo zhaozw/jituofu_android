@@ -1,5 +1,7 @@
 package com.jituofu.base;
 
+import java.util.ArrayList;
+
 import android.util.Log;
 
 public class BaseTask {
@@ -44,6 +46,10 @@ public class BaseTask {
 	}
 
 	public void onComplete(String httpResult) {
+		 Log.w("BaseTask:onComplete", httpResult);
+	}
+	
+	public void onComplete(String httpResult, ArrayList<String> files) {
 		 Log.w("BaseTask:onComplete", httpResult);
 	}
 

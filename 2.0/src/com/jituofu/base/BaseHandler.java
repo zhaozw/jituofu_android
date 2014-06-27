@@ -1,7 +1,10 @@
 package com.jituofu.base;
 
+import java.util.ArrayList;
+
 import com.jituofu.util.AppUtil;
 import com.jituofu.R;
+
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -23,12 +26,21 @@ public class BaseHandler extends Handler {
 		try {
 			int taskId = msg.getData().getInt("task");
 			String result;
+			ArrayList<String> files;
 
 			switch (msg.what) {
 			case BaseTask.TASK_COMPLETE:
 				result = msg.getData().getString("data");
+
 				if (result != null) {
-					ui.onTaskComplete(taskId, AppUtil.getMessage(result));
+					files = msg.getData().getStringArrayList("files");
+					if (files != null) {
+						ui.onTaskComplete(taskId, AppUtil.getMessage(result),
+								files);
+					} else {
+						ui.onTaskComplete(taskId, AppUtil.getMessage(result));
+					}
+
 				} else {
 					Log.e(ui.getResources().getString(R.string.app_name),
 							"handleMessage没有获取到data");

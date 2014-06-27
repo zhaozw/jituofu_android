@@ -1,14 +1,21 @@
 package com.jituofu.base;
 
+import java.io.File;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
+import com.jituofu.ui.UIFeedback;
 import com.jituofu.util.AppClientUtil;
+import com.jituofu.util.AppUtil;
 
 import android.content.Context;
 import android.os.Looper;
@@ -43,18 +50,54 @@ public class BaseTaskPool {
 		}
 	}
 
+	/**
+	 * 添加一个上传文件的任务
+	 * 
+	 * @param taskId
+	 * @param taskUrl
+	 * @param filesPath
+	 * @param data
+	 * @param baseTask
+	 * @param delayTime
+	 */
+	public void addTask(int taskId, String taskUrl,
+			HashMap<String, JSONObject> data, ArrayList<String> filesPath,
+			BaseTask baseTask, int delayTime) {
+		baseTask.setId(taskId);
+		try {
+			taskPool.execute(new TaskThread(context, taskUrl, data, filesPath,
+					baseTask, delayTime));
+		} catch (Exception e) {
+			taskPool.shutdown();
+		}
+	}
+
 	private class TaskThread implements Runnable {
 		private String url;
 		private HashMap<String, JSONObject> data;
 		private BaseTask baseTask;
 		private int delayTime = 0;
+		private ArrayList<String> files;
+		private Context ctx;
 
 		public TaskThread(Context context, String taskUrl,
-				HashMap<String, JSONObject> data, BaseTask baseTask, int delayTime) {
+				HashMap<String, JSONObject> data, BaseTask baseTask,
+				int delayTime) {
 			this.url = taskUrl;
 			this.data = data;
 			this.baseTask = baseTask;
 			this.delayTime = delayTime;
+			this.ctx = context;
+		}
+
+		public TaskThread(Context context, String taskUrl,
+				HashMap<String, JSONObject> data, ArrayList<String> filesPath,
+				BaseTask baseTask, int delayTime) {
+			this.url = taskUrl;
+			this.data = data;
+			this.baseTask = baseTask;
+			this.delayTime = delayTime;
+			this.files = filesPath;
 		}
 
 		@Override
@@ -69,15 +112,24 @@ public class BaseTaskPool {
 				}
 				try {
 					AppClientUtil client = new AppClientUtil(url);
-					httpResult = client.post(data);
+					if (files == null) {
+						httpResult = client.post(data);
+					} else {// 上传文件
+						httpResult = client.post(data, files);
+					}
 					if (httpResult != null) {
-						baseTask.onComplete(httpResult);
+						if (files != null) {
+							baseTask.onComplete(httpResult, files);
+						} else {
+							baseTask.onComplete(httpResult);
+						}
+
 					} else {
 						baseTask.onServerError();
 					}
-				}catch(ConnectTimeoutException e){
+				} catch (ConnectTimeoutException e) {
 					baseTask.onNetworkTimeout();
-				}catch (SocketTimeoutException e){
+				} catch (SocketTimeoutException e) {
 					baseTask.onNetworkTimeout();
 				} catch (Exception e) {
 					baseTask.onError(e.getMessage());

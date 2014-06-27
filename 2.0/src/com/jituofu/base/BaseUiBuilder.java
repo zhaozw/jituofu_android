@@ -2,17 +2,17 @@ package com.jituofu.base;
 
 public interface BaseUiBuilder {
 	/**
-	 * 绑定UI事件
+	 * 初始化绑定UI事件
 	 */
 	void onBind();
 
 	/**
-	 * 更新UI
+	 * 初始化更新UI
 	 */
 	void onUpdate();
 	
 	/**
-	 * 准备UI
+	 * 初始化准备UI
 	 */
 	void prepare();
 }
