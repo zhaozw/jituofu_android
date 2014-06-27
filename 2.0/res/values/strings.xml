@@ -26,22 +26,15 @@
     <string name="COMMON_GOTOFORGOTPW">忘记密码</string>
     <string name="COMMON_EMAIL">邮箱</string>
     <string name="COMMON_EMAIL_HINT">请填写常用邮箱</string>
-    
+
     <!-- 注册登录 -->
 
-
     <string name="REGISTER_USERNAME_TIPS">2到20位中英文或数字</string>
-    
-    
     <string name="REGISTER_EMAIL_TIPS">用于找回密码的常用邮箱,如jizhangbao@qq.com</string>
-    
     <string name="REGISTER_PASSWORD_TIPS">6到50位登录密码</string>
     <string name="REGISTER_CPASSWORD">确认密码</string>
     <string name="REGISTER_CPASSWORD_hint">请再次填写登录密码</string>
     <string name="REGISTER_CPASSWORD_TIPS">再次输入上面的登录密码</string>
-    
-    
-
     <string name="username">用户名</string>
     <string name="username_hint">请填写用户名</string>
     <string name="username_tips">2到20位中英文或数字</string>
