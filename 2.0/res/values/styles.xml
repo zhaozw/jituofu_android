@@ -206,14 +206,12 @@
     <style name="BaseDialogContentView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginBottom">20dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">#000000</item>
     </style>
 
     <style name="BaseDialog" parent="android:style/Theme.Dialog">
-        <item name="android:windowBackground">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowFrame">@null</item>

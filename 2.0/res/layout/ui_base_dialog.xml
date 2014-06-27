@@ -3,11 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout style="@style/BaseDialogBackground" android:layout_margin="15dp" >
+    <LinearLayout
+        style="@style/BaseDialogBackground"
+        android:layout_margin="15dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:orientation="vertical" >
 
             <TextView
@@ -24,26 +27,28 @@
                 android:id="@+id/message"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:gravity="center" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/positiveButton"
                 style="@style/primaryBtn"
                 android:layout_weight="1"
+                android:layout_marginRight="5dp"
                 android:singleLine="true" />
 
             <Button
-                style="@style/negativeButton"
-                android:layout_marginLeft="10dp"
                 android:id="@+id/negativeButton"
+                style="@style/negativeButton"
+                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
                 android:singleLine="true" />
         </LinearLayout>

@@ -162,7 +162,14 @@ public class BaseDialog extends Dialog {
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
             dialog.addContentView(layout, lp);
             // set the dialog title
-            ((TextView) layout.findViewById(R.id.title)).setText(title);
+            if(title == null){
+            	TextView titleView = (TextView) layout.findViewById(R.id.title);
+            	LinearLayout titleViewParent = (LinearLayout) titleView.getParent();
+            	titleViewParent.setVisibility(View.GONE);
+            }else{
+            	((TextView) layout.findViewById(R.id.title)).setText(title);
+            }
+            
             // set the confirm button
             if (positiveButtonText != null) {
                 ((Button) layout.findViewById(R.id.positiveButton))
@@ -190,7 +197,7 @@ public class BaseDialog extends Dialog {
                     ((Button) layout.findViewById(R.id.negativeButton))
                             .setOnClickListener(new View.OnClickListener() {
                                 public void onClick(View v) {
-                                    positiveButtonClickListener.onClick(
+                                	negativeButtonClickListener.onClick(
                                     		dialog, 
                                             DialogInterface.BUTTON_NEGATIVE);
                                 }
@@ -201,6 +208,12 @@ public class BaseDialog extends Dialog {
                 layout.findViewById(R.id.negativeButton).setVisibility(
                         View.GONE);
             }
+            
+            if(negativeButtonText == null && positiveButtonText == null){
+            	LinearLayout buttonsParnetView = (LinearLayout) (((Button) layout.findViewById(R.id.negativeButton)).getParent());
+            	buttonsParnetView.setVisibility(View.GONE);
+            }
+            
             // set the content message
             if (message != null) {
                 ((TextView) layout.findViewById(
@@ -214,7 +227,7 @@ public class BaseDialog extends Dialog {
                         .addView(contentView, 
                                 new LayoutParams(
                                         LayoutParams.MATCH_PARENT, 
-                                        LayoutParams.MATCH_PARENT));
+                                        LayoutParams.WRAP_CONTENT));
             }
             dialog.setContentView(layout);
             return dialog;

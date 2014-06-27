@@ -26,6 +26,7 @@
     <string name="COMMON_GOTOFORGOTPW">忘记密码</string>
     <string name="COMMON_EMAIL">邮箱</string>
     <string name="COMMON_EMAIL_HINT">请填写常用邮箱</string>
+    <string name="COMMON_IKNOW">知道了</string>
 
     <!-- 注册登录 -->
 

@@ -1,8 +1,6 @@
 package com.jituofu.ui;
 
 import java.util.HashMap;
-import java.util.TimerTask;
-
 import com.jituofu.R;
 import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseMessage;
@@ -12,6 +10,7 @@ import com.jituofu.base.BaseUiFormBuilder;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +22,7 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 		BaseUiBuilder {
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
-	
+
 	// 验证结果
 	public boolean validated = false;
 
@@ -38,11 +37,6 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forgot2);
-
-		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setMessage("fdsafsafsafdsafdsafsafdsafdsafdsafsad工在在在在在在在在在大 在在大 在在在在在");
-		baseDialog = baseDialogBuilder.create();
-		baseDialog.show();
 		
 		this.prepare();
 		this.onUpdate();
@@ -91,7 +85,7 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 		} else {
 			showToast(R.string.FORGOT_TOKEN_SPECIFY);
 		}
-		
+
 		if (result) {
 			if (this.password != null) {
 				if (AppUtil.getStrLen(this.password) < C.PASSWORDLENGTH.MIN
@@ -104,10 +98,9 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 				showToast(R.string.LOGIN_PASSWORD_HINT);
 			}
 		}
-		
+
 		if (result) {
-			if (this.cpassword != null
-					&& !this.cpassword.equals(this.password)) {
+			if (this.cpassword != null && !this.cpassword.equals(this.password)) {
 				showToast(R.string.REGISTER_CPASSWORD_INVALID);
 				result = false;
 			} else if (this.cpassword == null) {
@@ -160,7 +153,7 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 
 		okBtnView = (Button) findViewById(R.id.okBtn);
 	}
-	
+
 	private void doTaskForgot() {
 
 		HashMap<String, String> urlParams = new HashMap<String, String>();
@@ -185,15 +178,21 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 		int resultStatus = message.getResultStatus();
 		if (resultStatus == 100) {
 			baseDialogBuilder = new BaseDialog.Builder(this);
-			baseDialogBuilder.setMessage(message.getMemo());
-			baseDialogBuilder.create().show();
-			
-			AppUtil.timer(new TimerTask(){
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					forward(UILogin.class);
-				}}, 4000);
+			baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
+					new DialogInterface.OnClickListener() {
+
+						@Override
+						public void onClick(DialogInterface di, int which) {
+							// TODO Auto-generated method stub
+							baseDialog.dismiss();
+							forward(UILogin.class);
+						}
+					});
+			baseDialogBuilder
+					.setMessage(message.getMemo());
+			baseDialog = baseDialogBuilder.create();
+			baseDialog.setCanceledOnTouchOutside(false);
+			baseDialog.show();
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
