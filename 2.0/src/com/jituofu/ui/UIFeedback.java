@@ -7,27 +7,17 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TimerTask;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,13 +28,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseMessage;
+import com.jituofu.base.BaseNotification;
 import com.jituofu.base.BaseUiBuilder;
 import com.jituofu.base.BaseUiFormBuilder;
 import com.jituofu.base.C;
@@ -54,6 +44,9 @@ import com.jituofu.util.StorageUtil;
 
 public class UIFeedback extends BaseUi implements BaseUiBuilder,
 		BaseUiFormBuilder {
+	private BaseDialog.Builder baseDialogBuilder;
+	private BaseDialog baseDialog;
+
 	private boolean validated = false;// 验证结果
 	private int screenShotCounter = 0, // 截图计数器
 			maxScreenShotCounter = 3;// 最大截图数量
@@ -70,6 +63,14 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 	private String feedbackContent;
 
 	private ArrayList<String> imgFiles = new ArrayList<String>();// 存储所有截图的路径
+
+	// 消息通知
+	private boolean isStop = false;// 如果当前activity没有显示，那么截图上传完毕后就调用notification通知
+	private int notificationId = 0;
+	private BaseNotification baseNoti;
+	private String notificationTitle;
+	private String notificationTickerText;
+	private int autoCancelTime = 3000;// 自动取消的时间
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -217,6 +218,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 			RelativeLayout view = this.getScreenShotLayout();
 			ImageView iv = (ImageView) view.findViewById(R.id.iv);
 			iv.setImageURI(imgPreview);
+			iv.setTag(imgPreview.getPath());// 保存当前图片的路径
 			bind2ShotView(view);
 
 			// 最大允许3个截图
@@ -228,7 +230,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 	}
 
 	private void bind2ShotView(final RelativeLayout view) {
-		ImageView icon = (ImageView) view.findViewById(R.id.iv);
+		final ImageView icon = (ImageView) view.findViewById(R.id.iv);
 		ImageButton delete = (ImageButton) view.findViewById(R.id.delete);
 
 		icon.setOnLongClickListener(new OnLongClickListener() {
@@ -260,6 +262,13 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 				if (screenShotCounter < maxScreenShotCounter) {
 					addBtnView.setVisibility(View.VISIBLE);
 				}
+
+				// 从imgFiles中删除截图
+				String path = (String) icon.getTag();
+				if (path != null && imgFiles.indexOf(path) != -1) {
+					imgFiles.remove(path);
+					StorageUtil.deleteFile(path);
+				}
 			}
 		});
 	}
@@ -284,11 +293,168 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 		urlParams.put("dir", C.DIRS.feedbackDir);
 
 		try {
-			this.doUploadTaskAsync(C.TASK.feedbackcreate,
-					C.API.host + C.API.feedbackcreate, urlParams, imgFiles);
+			if (this.imgFiles.size() > 0) {
+				this.closePopupDialog();
+
+				// 清除表单内容
+				this.screenShotCounter = 0;
+				this.screenshotsBoxView.removeAllViews();
+				this.textareaView.setText(null);
+
+				baseDialogBuilder
+						.setMessage(R.string.FEEDBACK_SAVE2LOCAL_SUCCESS);
+				baseDialog = baseDialogBuilder.create();
+				baseDialog.show();
+				AppUtil.timer(new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							saveData2LocalAndSend();
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						baseDialog.dismiss();
+					}
+				}, 3000);
+			} else {
+				this.doTaskAsync(C.TASK.feedbackcreate, C.API.host
+						+ C.API.feedbackcreate, urlParams);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * 保存数据到本地然后发送
+	 * 
+	 * @throws JSONException
+	 * @throws UnsupportedEncodingException
+	 */
+	private void saveData2LocalAndSend() throws JSONException,
+			UnsupportedEncodingException {
+		JSONArray fileList = new JSONArray();// 截图路径列表
+		JSONObject data = new JSONObject();// 每一组反馈内容的数据
+		JSONArray feedbacks = null;// 所有反馈内容
+
+		for (int i = 0; i < this.imgFiles.size(); i++) {
+			fileList.put(imgFiles.get(i));
+		}
+		data.put("content", this.feedbackContent);
+		data.put("files", fileList);
+
+		// 从本地获取feedback数据
+		byte[] fdc = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.feedbackCacheFileName);
+		String fdcVal = "";
+		if (fdc.length > 0 && fdc[0] != 0) {
+			fdcVal = new String(fdc, "UTF-8");
+		}
+		if (fdcVal != null && fdcVal.length() > 0) {
+			feedbacks = new JSONArray(fdcVal);
+		} else {
+			feedbacks = new JSONArray();
+		}
+
+		if (feedbacks != null) {
+			feedbacks.put(data);
+		}
+		StorageUtil.writeInternalStoragePrivate(this,
+				C.DIRS.feedbackCacheFileName, feedbacks.toString());
+
+		// 发送本地保存的反馈数据
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+		urlParams.put("dir", C.DIRS.feedbackDir);
+		for (int j = 0; j < feedbacks.length(); j++) {
+			JSONObject fd = feedbacks.getJSONObject(j);
+			if (fd != null) {
+				String content = fd.getString("content");
+				JSONArray files = fd.getJSONArray("files");
+				ArrayList<String> filesArrayList = AppUtil
+						.jsonArray2ArrayList(files);
+
+				if (filesArrayList.size() > 0) {
+					urlParams.put("content", content);
+					this.doUploadTaskAsync(C.TASK.feedbackcreate, C.API.host
+							+ C.API.feedbackcreate, urlParams, filesArrayList);
+				}
+			}
+		}
+	}
+
+	private void resetForm(ArrayList<String> filesPath)
+			throws UnsupportedEncodingException, JSONException {
+		this.imgFiles = new ArrayList<String>();
+		this.screenShotCounter = 0;
+		this.screenshotsBoxView.removeAllViews();
+		this.textareaView.setText(null);
+
+		JSONArray feedbacks = null;
+		JSONArray newFeedbacks = new JSONArray();
+		// 从本地获取feedback数据
+		byte[] fdc = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.feedbackCacheFileName);
+		String fdcVal = "";
+		if (fdc.length > 0 && fdc[0] != 0) {
+			fdcVal = new String(fdc, "UTF-8");
+		}
+		if (fdcVal != null && fdcVal.length() > 0) {
+			feedbacks = new JSONArray(fdcVal);
+		} else {
+			feedbacks = new JSONArray();
+		}
+
+		for (int i = 0; i < filesPath.size(); i++) {
+			String path = filesPath.get(i);
+
+			if (path != null) {
+				StorageUtil.deleteFile(path);
+
+				// 从本地缓存数据中删除已经提交的截图
+
+				for (int j = feedbacks.length() - 1; j >= 0; j--) {
+					JSONObject fd = feedbacks.getJSONObject(j);
+					if (fd != null) {
+						JSONArray files = fd.getJSONArray("files");
+						ArrayList<String> filesArrayList = AppUtil
+								.jsonArray2ArrayList(files);
+						for (int k = filesArrayList.size() - 1; k >= 0; k--) {
+							if (filesPath.indexOf(filesArrayList.get(k)) != -1) {
+								filesArrayList.remove(k);
+							}
+						}
+						fd.put("files",
+								AppUtil.arrayList2JSONArray(filesArrayList));
+
+						if (filesArrayList.size() > 0) {
+							newFeedbacks.put(fd);
+						}
+					}
+				}
+
+			}
+		}
+		StorageUtil.writeInternalStoragePrivate(this,
+				C.DIRS.feedbackCacheFileName, newFeedbacks.toString());
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		isStop = true;
+	}
+
+	private void resetForm() {
+		this.imgFiles = new ArrayList<String>();
+		this.screenShotCounter = 0;
+		this.screenshotsBoxView.removeAllViews();
+		this.textareaView.setText(null);
 	}
 
 	@Override
@@ -298,8 +464,76 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 
 		int resultStatus = message.getResultStatus();
 		if (resultStatus == 100) {
-			JSONObject operation = message.getOperation();
+			resetForm(filesPath);
 
+			if (!isStop) {
+				this.isStop = false;
+				baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface di, int which) {
+								// TODO Auto-generated method stub
+								baseDialog.dismiss();
+							}
+						});
+				baseDialogBuilder.setMessage(message.getMemo());
+				baseDialog = baseDialogBuilder.create();
+				baseDialog.show();
+			} else {
+				baseNoti.create(UIFeedback.class, notificationTickerText,
+						notificationTitle, message.getMemo());
+
+				AppUtil.timer(new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						baseNoti.cancel();
+					}
+				}, autoCancelTime);
+			}
+		} else {
+			this.showToast(message.getFirstOperationErrorMessage());
+		}
+	}
+
+	@Override
+	public void onTaskComplete(int taskId, BaseMessage message)
+			throws Exception {
+		super.onTaskComplete(taskId, message);
+
+		int resultStatus = message.getResultStatus();
+		if (resultStatus == 100) {
+			resetForm();
+
+			if (!isStop) {
+				this.isStop = false;
+				baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface di, int which) {
+								// TODO Auto-generated method stub
+								baseDialog.dismiss();
+							}
+						});
+				baseDialogBuilder.setMessage(message.getMemo());
+				baseDialog = baseDialogBuilder.create();
+				baseDialog.show();
+			} else {
+				baseNoti.create(UIFeedback.class, notificationTickerText,
+						notificationTitle, message.getMemo());
+
+				AppUtil.timer(new TimerTask() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						baseNoti.cancel();
+					}
+				}, autoCancelTime);
+			}
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
@@ -427,5 +661,14 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 
 		titleView = (TextView) findViewById(R.id.title);
 		textareaView = (EditText) findViewById(R.id.textarea);
+
+		baseDialogBuilder = new BaseDialog.Builder(this);
+
+		// 消息通知
+		baseNoti = new BaseNotification(this, this.notificationId);
+		this.notificationTitle = this
+				.getString(R.string.FEEDBACK_SAVE2LOCAL_SUCCESS);
+		this.notificationTickerText = this
+				.getString(R.string.FEEDBACK_SAVE2LOCAL_TIKERTEXT);
 	}
 }

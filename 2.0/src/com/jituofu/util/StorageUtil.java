@@ -74,4 +74,19 @@ public class StorageUtil {
 		}
 		return false;
 	}
+	
+	/**
+	 * 从SD卡中删除文件
+	 * @param path
+	 * @return
+	 */
+	public static boolean deleteFile(String path){
+		File file = new File(path);
+		
+		if(file.isFile() && file.delete()){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

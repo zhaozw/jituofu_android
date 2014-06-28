@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,6 +17,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.apache.http.util.CharArrayBuffer;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,6 +36,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -52,6 +55,55 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 public class AppUtil {
+
+	/**
+	 * drawable转bipmap
+	 * @param context
+	 * @param resId
+	 * @return
+	 */
+	public static Bitmap getBitmapFromResources(Context context, int resId) {
+		Resources res = context.getResources();
+		return BitmapFactory.decodeResource(res, resId);
+	}
+
+	/**
+	 * 转换JSONArray字符串到ArrayList<String>
+	 * 
+	 * @param jsonArray
+	 * @return
+	 * @throws JSONException
+	 */
+	public static ArrayList<String> jsonArray2ArrayList(JSONArray jsonArray)
+			throws JSONException {
+		ArrayList<String> arrayList = new ArrayList<String>();
+
+		for (int k = 0; k < jsonArray.length(); k++) {
+
+			arrayList.add(jsonArray.getString(k));
+		}
+
+		return arrayList;
+	}
+
+	/**
+	 * 转换ArrayList<String>到 JSONArray
+	 * 
+	 * @param arrayList
+	 * @return
+	 * @throws JSONException
+	 */
+	public static JSONArray arrayList2JSONArray(ArrayList<String> arrayList)
+			throws JSONException {
+		JSONArray jsonArray = new JSONArray();
+
+		for (int k = 0; k < arrayList.size(); k++) {
+
+			jsonArray.put(arrayList.get(k));
+		}
+
+		return jsonArray;
+	}
 
 	/**
 	 * 读取图片属性：旋转的角度

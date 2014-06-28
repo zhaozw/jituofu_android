@@ -72,6 +72,8 @@
     <string name="FEEDBACK_CONTENT_SPECIFY">亲，反馈内容不能为空</string>
     <string name="FEEDBACK_CONTENT_INVALID">亲，反馈内容太少了吧</string>
     <string name="FEEDBACK_SCREENSHOT_OVERMAX">亲，目前只能上传3张截图</string>
+    <string name="FEEDBACK_SAVE2LOCAL_SUCCESS">提交成功</string>
+    <string name="FEEDBACK_SAVE2LOCAL_TIKERTEXT">反馈意见提交成功</string>
 
     <!-- 忘记密码 -->
     <string name="FORGOT_TITLE">忘记密码</string>
