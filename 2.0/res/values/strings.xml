@@ -142,4 +142,12 @@
     <string name="SPFL_QUERY_LOADING">正在获取分类...</string>
     <string name="SPFL_QUERY_NODATA">没有分类数据，您可以</string>
     <string name="SPFL_QUERY_ADDTXT">添加分类</string>
+    
+    <!-- 自定义listview -->
+    <string name="BASE_LISTVIEW_HEADER_HINT_NORMAL">下拉刷新</string>
+    <string name="BASE_LISTVIEW_HEADER_HINT_READY">松开后刷新数据</string>
+    <string name="BASE_LISTVIEW_HEADER_HINT_LOADING">正在加载...</string>
+    <string name="BASE_LISTVIEW_HEADER_HINT_LAST_TIME">上次更新时间：</string>
+    <string name="BASE_LISTVIEW_FOOTER_HINT_NORMAL">加载更多</string>
+    <string name="BASE_LISTVIEW_FOOTER_HINT_READY">松开后加载更多</string>
 </resources>
