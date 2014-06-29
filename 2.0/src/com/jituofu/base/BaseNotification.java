@@ -1,26 +1,17 @@
 package com.jituofu.base;
 
 import com.jituofu.R;
-import com.jituofu.ui.UIFeedback;
 import com.jituofu.util.AppUtil;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Notification;
-import android.app.Notification.Builder;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.provider.MediaStore.Audio;
 import android.support.v4.app.NotificationCompat;
-import android.view.ContextThemeWrapper;
-import android.view.View;
-import android.widget.Button;
 
 /***
  * @description 状态栏通知相关

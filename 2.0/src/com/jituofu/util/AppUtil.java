@@ -27,6 +27,7 @@ import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
@@ -55,6 +56,20 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 public class AppUtil {
+	/**
+	 * 获取屏幕分辨率
+	 * @param activity
+	 * @return
+	 */
+	public static int[] getScreen(Activity activity){
+		DisplayMetrics dm = new DisplayMetrics();
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);        
+        
+        int width = dm.widthPixels; //当前分辨率 宽度
+        int heigth = dm.heightPixels; //当前分辨率高度
+        
+        return new int[]{width, heigth};
+	}
 
 	/**
 	 * drawable转bipmap

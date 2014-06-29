@@ -275,7 +275,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 
 	private RelativeLayout getScreenShotLayout() {
 		RelativeLayout tem = (RelativeLayout) LayoutInflater.from(
-				getApplicationContext()).inflate(R.layout.screenshot, null);
+				getApplicationContext()).inflate(R.layout.screenshot_item_layout, null);
 		LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		p.width = AppUtil.getActualMeasure(getApplicationContext(), 50);

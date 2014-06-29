@@ -1,10 +1,6 @@
 package com.jituofu.ui;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,25 +9,19 @@ import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
-import com.jituofu.base.BaseUi;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 public class UIIhome extends BaseUiAuth {
-	int sysVersion = Build.VERSION.SDK_INT;
+	private int sysVersion = Build.VERSION.SDK_INT;
 	
 	@Override
 	protected void onBrReceive(String type){
@@ -50,7 +40,7 @@ public class UIIhome extends BaseUiAuth {
 			topBar.setVisibility(View.GONE);
 		}
 		
-		setView();
+		initView();
 
 		try {
 			updateView();
@@ -67,11 +57,13 @@ public class UIIhome extends BaseUiAuth {
 		super.onBindUi();
 		
 		LinearLayout security = (LinearLayout) this.findViewById(R.id.security);
+		LinearLayout spgl = (LinearLayout) this.findViewById(R.id.spgl);
 
 		security.setOnClickListener(new LinearLayoutClick());
+		spgl.setOnClickListener(new LinearLayoutClick());
 	}
 
-	private void setView() {
+	private void initView() {
 		// 记账台
 		LinearLayout jzt = (LinearLayout) findViewById(R.id.jzt);
 		ImageView jztIcon = (ImageView) jzt.findViewById(R.id.icon);
@@ -191,6 +183,9 @@ public class UIIhome extends BaseUiAuth {
 			switch (v.getId()) {
 			case R.id.security:
 				forward(UISecurity.class);
+				break;
+			case R.id.spgl:
+				forward(UIProductManager.class);
 				break;
 			default:
 				break;

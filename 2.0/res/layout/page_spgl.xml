@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/topbar2" />
+    "
+    <ScrollView style="@style/container" >
+
+        <LinearLayout style="@style/box1" >
+
+            <include
+                android:id="@+id/ckgl"
+                layout="@layout/template_menulist_item" />
+
+            <include
+                android:id="@+id/flgl"
+                layout="@layout/template_menulist_item" />
+
+            <include
+                android:id="@+id/sprk"
+                layout="@layout/template_menulist_item" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

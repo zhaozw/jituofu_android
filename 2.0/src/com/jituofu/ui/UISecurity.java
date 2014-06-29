@@ -37,7 +37,7 @@ public class UISecurity extends BaseUiAuth {
 
 		}
 
-		return false;
+		return super.onKeyDown(keyCode, event);
 
 	}
 

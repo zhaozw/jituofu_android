@@ -43,6 +43,7 @@ public final class C {
 		public static final String fileadd = "/files/add";
 		public static final String forgotpw = "/users/forgot";
 		public static final String feedbackcreate = "/feedback/create";
+		public static final String gettypes = "/types/index";
 	}
 
 	public static final class ERROR {
@@ -64,6 +65,7 @@ public final class C {
 		public static final int fileadd = 1009;
 		public static final int forgotpw = 1010;
 		public static final int feedbackcreate = 1011;
+		public static final int gettypes = 1012;
 	}
 	
 	public static final class PASSWORDLENGTH{
