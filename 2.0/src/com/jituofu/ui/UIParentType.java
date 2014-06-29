@@ -54,7 +54,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 
 	private CustomAdapter customAdapter;
 
-	private boolean isRefresh, isLoadMore;
+	private boolean isRefresh, isLoadMore, isLoading;
 	
 	private ArrayList<String> typesId = new ArrayList<String>();//存储所有分类的id，以免重复加载
 
@@ -174,6 +174,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 			public void onItemClick(AdapterView<?> parent, View v, int position,
 					long id) {
 				// TODO Auto-generated method stub
+				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lv.getItemAtPosition(position);
 				Log.w("JZB", map.toString());
 			}});
@@ -321,15 +322,19 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 
 	@Override
 	public void onRefresh() {
+		if(isLoading){return;}
 		// TODO Auto-generated method stub
 		this.isRefresh = true;
+		this.isLoading = true;
 		doQueryTask();
 	}
 
 	@Override
 	public void onLoadMore() {
+		if(isLoading){return;}
 		// TODO Auto-generated method stub
 		this.isLoadMore = true;
+		this.isLoading = true;
 		doQueryTask();
 	}
 	
@@ -337,5 +342,6 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 		lv.stopRefresh();
 		lv.stopLoadMore();
 		lv.setRefreshTime(AppUtil.getCurrentDateTime());
+		isLoading = false;
 	}
 }
