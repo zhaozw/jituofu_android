@@ -4,22 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/topbar3" android:id="@+id/topbar3"/>
-    
-    <include layout="@layout/template_again" android:id="@+id/again" android:visibility="gone" />
-    
-    <include layout="@layout/template_no_data" android:id="@+id/noData" android:visibility="gone" />
+    <include
+        android:id="@+id/topbar3"
+        layout="@layout/topbar3" />
 
     <LinearLayout
         style="@style/container"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="0dp" >
+
+        <include
+            android:id="@+id/again"
+            layout="@layout/template_again"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/noData"
+            layout="@layout/template_no_data"
+            android:visibility="gone" />
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:divider="@null" >
         </ListView>
-        
     </LinearLayout>
 
 </LinearLayout>
