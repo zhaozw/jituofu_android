@@ -13,9 +13,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +55,8 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 	private CustomAdapter customAdapter;
 
 	private boolean isRefresh, isLoadMore;
+	
+	private ArrayList<String> typesId = new ArrayList<String>();//存储所有分类的id，以免重复加载
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,26 +120,47 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 					.setText(R.string.SPFL_QUERY_NODATA);
 			((TextView) noDataView.findViewById(R.id.action_btn))
 					.setText(R.string.SPFL_QUERY_ADDTXT);
-
-			initQuery = false;
 			return;
 		}
-
+		if(initQuery){
+			initQuery = false;
+		}
+		
 		for (int i = 0; i < data.length(); i++) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			JSONObject json = data.getJSONObject(i);
+			String id = json.getString("id");
 			map.put("name", json.getString("name"));
-			map.put("id", json.getString("id"));
-			datList.add(map);
+			map.put("id", id);
+			
+			//避免重复加载
+			if(typesId.indexOf(id) < 0){
+				typesId.add(id);
+				if(isRefresh){
+					datList.add(0, map);
+				}else{
+					datList.add(map);
+				}
+			}
 		}
 
 		customAdapter = customAdapter == null ? new CustomAdapter(this,
 				datList, R.layout.template_types_item, new String[] { "name" },
 				new int[] { R.id.txt }) : customAdapter;
-		lv.setAdapter(customAdapter);
+		
+		if(isRefresh || isLoadMore){
+			customAdapter.notifyDataSetChanged();
+		}else{
+			lv.setAdapter(customAdapter);
+		}
 		
 		this.isLoadMore = false;
 		this.isRefresh = false;
+		
+		if(data.length() <= 0){
+			lv.setPullLoadEnable(false);
+			lv.setPullRefreshEnable(false);
+		}
 	}
 
 	private void bindListener2View() {
@@ -142,6 +168,15 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 		noDataAddTypeView.setOnClickListener(this);
 		((TextView) againView.findViewById(R.id.again_btn))
 				.setOnClickListener(this);
+		lv.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position,
+					long id) {
+				// TODO Auto-generated method stub
+				HashMap<String, String> map = (HashMap<String, String>) lv.getItemAtPosition(position);
+				Log.w("JZB", map.toString());
+			}});
 	}
 
 	private void initView() {
@@ -174,7 +209,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 			from = extraBundle.getString("from");
 		}
 
-		titleView.setText(R.string.SPGL_MENU1_TXT2);
+		titleView.setText(R.string.SPFL_PARENT_TITLE);
 		if (Build.VERSION.SDK_INT < 16) {
 			addView.setBackgroundDrawable(this.getResources().getDrawable(
 					R.drawable.add_small));
@@ -204,9 +239,12 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 			// TODO Auto-generated constructor stub
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
+			HashMap<String, String> map = (HashMap<String, String>) customAdapter.getItem(position);
+			
 			if (convertView == null) {
 				convertView = super.getView(position, convertView, parent);
 				holder = new ViewHolder();
@@ -221,6 +259,9 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 				holder = (ViewHolder) convertView.getTag();
 			}
 
+			
+			holder.txt.setText(map.get("name"));
+			
 			return convertView;
 		}
 	}
@@ -243,11 +284,27 @@ public class UIParentType extends BaseUiAuth implements OnClickListener, BaseLis
 	}
 
 	public void onNetworkError(int taskId) {
-		this.showToast(C.ERROR.networkException);
+		if (initQuery) {
+			lv.setVisibility(View.GONE);
+			againView.setVisibility(View.VISIBLE);
+			((TextView) againView.findViewById(R.id.txt))
+					.setText(C.ERROR.networkException);
+
+			initQuery = false;
+			return;
+		}
 	}
 
 	public void onNetworkTimeout(int taskId) {
-		this.showToast(C.ERROR.networkTimeout);
+		if (initQuery) {
+			lv.setVisibility(View.GONE);
+			againView.setVisibility(View.VISIBLE);
+			((TextView) againView.findViewById(R.id.txt))
+					.setText(C.ERROR.networkTimeout);
+
+			initQuery = false;
+			return;
+		}
 	}
 
 	public void onServerException(int taskId) {
