@@ -4,7 +4,7 @@
  * @create Mar 18, 2012 6:28:41 PM
  * @author Maxwin
  * @description An ListView support (a) Pull down to refresh, (b) Pull up to load more.
- * 		Implement IXListViewListener, and see stopRefresh() / stopLoadMore().
+ * 		Implement BaseListViewListener, and see stopRefresh() / stopLoadMore().
  */
 package com.jituofu.base;
 
@@ -31,7 +31,7 @@ public class BaseListView extends ListView implements OnScrollListener {
 	private OnScrollListener mScrollListener; // user's scroll listener
 
 	// the interface to trigger refresh and load more.
-	private IXListViewListener mListViewListener;
+	private BaseListViewListener mListViewListener;
 
 	// -- header view
 	private BaseListViewHeader mHeaderView;
@@ -353,7 +353,7 @@ public class BaseListView extends ListView implements OnScrollListener {
 		}
 	}
 
-	public void setXListViewListener(IXListViewListener l) {
+	public void setXListViewListener(BaseListViewListener l) {
 		mListViewListener = l;
 	}
 
@@ -368,7 +368,7 @@ public class BaseListView extends ListView implements OnScrollListener {
 	/**
 	 * implements this interface to get refresh/load more event.
 	 */
-	public interface IXListViewListener {
+	public interface BaseListViewListener {
 		public void onRefresh();
 
 		public void onLoadMore();

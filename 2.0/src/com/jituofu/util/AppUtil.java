@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,22 +59,36 @@ import android.widget.TextView;
 
 public class AppUtil {
 	/**
+	 * 获取当前时间：date time
+	 * @return
+	 */
+	@SuppressLint("SimpleDateFormat")
+	public static String getCurrentDateTime() {
+		// 24小时制
+		SimpleDateFormat dateFormat24 = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
+		return dateFormat24.format(Calendar.getInstance().getTime());
+	}
+
+	/**
 	 * 获取屏幕分辨率
+	 * 
 	 * @param activity
 	 * @return
 	 */
-	public static int[] getScreen(Activity activity){
+	public static int[] getScreen(Activity activity) {
 		DisplayMetrics dm = new DisplayMetrics();
-		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);        
-        
-        int width = dm.widthPixels; //当前分辨率 宽度
-        int heigth = dm.heightPixels; //当前分辨率高度
-        
-        return new int[]{width, heigth};
+		activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+		int width = dm.widthPixels; // 当前分辨率 宽度
+		int heigth = dm.heightPixels; // 当前分辨率高度
+
+		return new int[] { width, heigth };
 	}
 
 	/**
 	 * drawable转bipmap
+	 * 
 	 * @param context
 	 * @param resId
 	 * @return

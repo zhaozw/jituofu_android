@@ -23,13 +23,13 @@
             layout="@layout/template_no_data"
             android:visibility="gone" />
 
-        <ListView
+        <com.jituofu.base.BaseListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:divider="@null" >
-        </ListView>
+        </com.jituofu.base.BaseListView>
     </LinearLayout>
 
 </LinearLayout>

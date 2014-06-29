@@ -19,17 +19,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseListView;
+import com.jituofu.base.BaseListView.BaseListViewListener;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
-public class UIParentType extends BaseUiAuth implements OnClickListener {
+public class UIParentType extends BaseUiAuth implements OnClickListener, BaseListViewListener {
 	private Bundle extraBundle;
 
 	private LinearLayout topbarView, noDataView, againView;
@@ -38,7 +39,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener {
 
 	private TextView titleView, noDataAddTypeView;
 
-	private ListView lv;
+	private BaseListView lv;
 
 	// 页面来源
 	private String from;
@@ -92,10 +93,12 @@ public class UIParentType extends BaseUiAuth implements OnClickListener {
 		JSONObject operation = message.getOperation();
 
 		if (resultStatus == 100) {
+			pageNum++;
 			switch (taskId) {
 			case C.TASK.gettypes:
 				JSONArray types = operation.getJSONArray("types");
 				renderList(types);
+				onLoad();
 				break;
 			}
 		} else {
@@ -129,6 +132,9 @@ public class UIParentType extends BaseUiAuth implements OnClickListener {
 				datList, R.layout.template_types_item, new String[] { "name" },
 				new int[] { R.id.txt }) : customAdapter;
 		lv.setAdapter(customAdapter);
+		
+		this.isLoadMore = false;
+		this.isRefresh = false;
 	}
 
 	private void bindListener2View() {
@@ -148,7 +154,10 @@ public class UIParentType extends BaseUiAuth implements OnClickListener {
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
 
-		lv = (ListView) this.findViewById(R.id.listView);
+		lv = (BaseListView) this.findViewById(R.id.listView);
+		lv.setPullLoadEnable(true);
+		lv.setPullRefreshEnable(true);
+		lv.setXListViewListener(this);
 
 		noDataAddTypeView = (TextView) noDataView.findViewById(R.id.action_btn);
 	}
@@ -251,5 +260,25 @@ public class UIParentType extends BaseUiAuth implements OnClickListener {
 			initQuery = false;
 			return;
 		}
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		this.isRefresh = true;
+		doQueryTask();
+	}
+
+	@Override
+	public void onLoadMore() {
+		// TODO Auto-generated method stub
+		this.isLoadMore = true;
+		doQueryTask();
+	}
+	
+	private void onLoad() {
+		lv.stopRefresh();
+		lv.stopLoadMore();
+		lv.setRefreshTime(AppUtil.getCurrentDateTime());
 	}
 }
