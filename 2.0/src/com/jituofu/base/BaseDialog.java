@@ -1,13 +1,17 @@
 package com.jituofu.base;
 
 import com.jituofu.R;
+import com.jituofu.util.AppUtil;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,7 +36,7 @@ public class BaseDialog extends Dialog {
         private String message;
         private String positiveButtonText;
         private String negativeButtonText;
-        private View contentView;
+        public View contentView;
  
         private DialogInterface.OnClickListener 
                         positiveButtonClickListener,
@@ -157,9 +161,12 @@ public class BaseDialog extends Dialog {
             // instantiate the dialog with the custom Theme
             final BaseDialog dialog = new BaseDialog(context, 
             		R.style.BaseDialog);
-            View layout = inflater.inflate(R.layout.ui_base_dialog, null);
+            View layout = inflater.inflate(R.layout.template_base_dialog, null);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            lp.leftMargin = 0;
+            lp.rightMargin = 0;
+     
             dialog.addContentView(layout, lp);
             // set the dialog title
             if(title == null){
@@ -219,6 +226,9 @@ public class BaseDialog extends Dialog {
                 ((TextView) layout.findViewById(
                 		R.id.message)).setText(message);
             } else if (contentView != null) {
+            	//隐藏message
+            	((TextView) layout.findViewById(
+                		R.id.message)).setVisibility(View.GONE);
                 // if no message set
                 // add the contentView to the dialog body
                 ((LinearLayout) layout.findViewById(R.id.content))
