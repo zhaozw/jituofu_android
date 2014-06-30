@@ -147,6 +147,8 @@
     <string name="SPFL_PARENT_TITLE">大分类</string>
     <string name="SPFL_PARENT_SPECIFY">请填写大分类名称</string>
     <string name="SPFL_PARENT_INVALID">大分类名称为大于1位小于10位的中英文或数字</string>
+    <string name="SPFL_DELETE_PARENT_TYPE1">同时删除所有小分类及商品</string>
+    <string name="SPFL_DELETE_PARENT_TYPE2">把所有小分类及商品移到</string>
     
     <!-- 自定义listview -->
     <string name="BASE_LISTVIEW_HEADER_HINT_NORMAL">下拉刷新</string>

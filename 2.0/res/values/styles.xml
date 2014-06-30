@@ -227,4 +227,28 @@
         <item name="android:textColor">@color/normalTxt</item>
         <item name="android:background">@drawable/round_edit_bg</item>
     </style>
+    
+    <!-- 单选按钮 -->
+    <style name="radio_button">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@drawable/base_radio</item>
+        <item name="android:textColor">@color/normalTxt</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">22dp</item>
+    </style>
+    
+    <!-- 下拉框 -->
+    <style name="spinner">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:background">@null</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:textColor">@color/normalTxt</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    
 </resources>

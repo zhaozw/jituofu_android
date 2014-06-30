@@ -23,11 +23,15 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.jituofu.R;
@@ -64,16 +68,20 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 	private CustomAdapter customAdapter;
 
-	private boolean isRefresh, isLoadMore, isLoading, isEditint;
+	private boolean isRefresh, isLoadMore, isLoading, isEditing;
 
 	private ArrayList<String> typesId = new ArrayList<String>();// 存储所有分类的id，以免重复加载
+	
+	private int whichRadio;//删除对话框中选择了哪一项
+	private String whichOtherTypeId;//要移动到的分类id
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (isEditint) {
-			isEditint = false;
+		if (isEditing) {
+			isEditing = false;
 			if(customAdapter != null){
 				customAdapter.notifyDataSetChanged();
+				return false;
 			}
 
 		}
@@ -145,6 +153,81 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 	}
 
+	private void doDeleteTask(HashMap<String, String> map){
+		String id = map.get("id");
+		String name = map.get("name");
+		whichRadio = 1;
+		
+		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
+				R.layout.template_delete_type, null);
+		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setTitle("删除"+name);
+		
+		RadioGroup rg = (RadioGroup) baseDialogBuilder.contentView.findViewById(R.id.radioGroup);
+		Spinner spinner = (Spinner) baseDialogBuilder.contentView.findViewById(R.id.spinner);
+		final LinearLayout spinnerParent = (LinearLayout) spinner.getParent();
+		
+		SimpleAdapter adapter = new SimpleAdapter(this, datList, R.layout.template_spinner_item, new String[]{"name"}, new int[]{R.id.txt});
+		spinner.setAdapter(adapter);
+		
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View v,
+					int pos, long row) {
+				// TODO Auto-generated method stub
+				@SuppressWarnings("unchecked")
+				HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(pos);
+				whichOtherTypeId = map.get("id");
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// TODO Auto-generated method stub
+				
+			}});
+		rg.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			@Override
+			public void onCheckedChanged(RadioGroup rg, int id) {
+				// TODO Auto-generated method stub
+				if(id == R.id.radio0){
+					whichRadio = 0;
+					spinnerParent.setVisibility(View.GONE);
+				}else if(id == R.id.radio1){
+					whichRadio = 1;
+					spinnerParent.setVisibility(View.VISIBLE);
+				}
+			}});
+		
+		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						// TODO Auto-generated method stub
+						Log.w("JZB", whichRadio+" "+whichOtherTypeId);
+					}
+				});
+		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						baseDialog.dismiss();
+					}
+				});
+		baseDialog = baseDialogBuilder.create();
+		baseDialog.show();
+
+		// 修改dialog宽度
+		Window dialogWindow = baseDialog.getWindow();
+		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
+		int[] screenDisplay = AppUtil.getScreen(this);
+		wmlp.width = screenDisplay[0] - 20;
+		dialogWindow.setAttributes(wmlp);
+	}
+	
 	private void doAddTask(String typeName) {
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
@@ -307,6 +390,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		this.onCustomBack();
 		noDataAddTypeView.setOnClickListener(this);
 		addView.setOnClickListener(this);
+		editView.setOnClickListener(this);
 
 		((TextView) againView.findViewById(R.id.again_btn))
 				.setOnClickListener(this);
@@ -390,7 +474,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder holder;
-			HashMap<String, String> map = (HashMap<String, String>) customAdapter
+			final HashMap<String, String> map = (HashMap<String, String>) customAdapter
 					.getItem(position);
 
 			if (convertView == null) {
@@ -408,6 +492,21 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			}
 
 			holder.txt.setText(map.get("name"));
+			
+			if(isEditing){
+				holder.delete.setVisibility(View.VISIBLE);
+				holder.edit.setVisibility(View.VISIBLE);
+			}else{
+				holder.delete.setVisibility(View.GONE);
+				holder.edit.setVisibility(View.GONE);
+			}
+			
+			holder.delete.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					doDeleteTask(map);
+				}});
 
 			return convertView;
 		}
@@ -436,7 +535,10 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			addType();
 			break;
 		case R.id.rightbtn_1:
-			isEditint = true;
+			isEditing = true;
+			if(customAdapter != null){
+				customAdapter.notifyDataSetChanged();
+			}
 			break;
 		}
 	}
