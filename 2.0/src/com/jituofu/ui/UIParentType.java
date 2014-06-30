@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -63,10 +64,24 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 	private CustomAdapter customAdapter;
 
-	private boolean isRefresh, isLoadMore, isLoading;
+	private boolean isRefresh, isLoadMore, isLoading, isEditint;
 
 	private ArrayList<String> typesId = new ArrayList<String>();// 存储所有分类的id，以免重复加载
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (isEditint) {
+			isEditint = false;
+			if(customAdapter != null){
+				customAdapter.notifyDataSetChanged();
+			}
+
+		}
+
+		return super.onKeyDown(keyCode, event);
+
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,48 +96,56 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
 		doQueryTask();
 	}
-	
-	private void addType(){
-		LinearLayout view = (LinearLayout) LinearLayout.inflate(this, R.layout.template_add_type, null);
+
+	private void addType() {
+		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
+				R.layout.template_add_type, null);
 		baseDialogBuilder.setContentView(view);
 		baseDialogBuilder.setTitle(R.string.SPFL_QUERY_ADDPARENTTXT);
-		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK, new DialogInterface.OnClickListener(){
+		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
+				new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface di, int which) {
-				// TODO Auto-generated method stub
-				EditText addTypeEditView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);
-				String typeName = AppUtil.trimAll(getEditValue(addTypeEditView));
-				
-				if(typeName == null){
-					showToast(R.string.SPFL_PARENT_SPECIFY);
-					return;
-				}else if((AppUtil.getStrLen(typeName) <= 1) || (AppUtil.getStrLen(typeName) > 10)){
-					showToast(R.string.SPFL_PARENT_INVALID);
-					return;
-				}else{
-					doAddTask(typeName);
-				}
-			}});
-		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL, new DialogInterface.OnClickListener(){
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						// TODO Auto-generated method stub
+						EditText addTypeEditView = (EditText) baseDialogBuilder.contentView
+								.findViewById(R.id.editText);
+						String typeName = AppUtil
+								.trimAll(getEditValue(addTypeEditView));
 
-			@Override
-			public void onClick(DialogInterface di, int which) {
-				baseDialog.dismiss();
-			}});
+						if (typeName == null) {
+							showToast(R.string.SPFL_PARENT_SPECIFY);
+							return;
+						} else if ((AppUtil.getStrLen(typeName) <= 1)
+								|| (AppUtil.getStrLen(typeName) > 10)) {
+							showToast(R.string.SPFL_PARENT_INVALID);
+							return;
+						} else {
+							doAddTask(typeName);
+						}
+					}
+				});
+		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						baseDialog.dismiss();
+					}
+				});
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.show();
-	       
-        //修改dialog宽度
-        Window dialogWindow = baseDialog.getWindow();
-        WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
-        int[] screenDisplay = AppUtil.getScreen(this);
-        wmlp.width = screenDisplay[0] - 20;
-        dialogWindow.setAttributes(wmlp);
-        
+
+		// 修改dialog宽度
+		Window dialogWindow = baseDialog.getWindow();
+		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
+		int[] screenDisplay = AppUtil.getScreen(this);
+		wmlp.width = screenDisplay[0] - 20;
+		dialogWindow.setAttributes(wmlp);
+
 	}
-	
-	private void doAddTask(String typeName){
+
+	private void doAddTask(String typeName) {
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
@@ -160,11 +183,11 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		JSONObject operation = message.getOperation();
 
 		if (resultStatus == 100) {
-			pageNum++;
 			switch (taskId) {
 			case C.TASK.gettypes:
+				pageNum++;
 				JSONArray types = operation.getJSONArray("types");
-				
+
 				// 初始化加载时，没有数据显示无数据提示
 				if (initQuery && types.length() <= 0) {
 					lv.setVisibility(View.GONE);
@@ -178,7 +201,11 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				if (initQuery) {
 					initQuery = false;
 				}
-				
+
+				lv.setVisibility(View.VISIBLE);
+				againView.setVisibility(View.GONE);
+				noDataView.setVisibility(View.GONE);
+
 				renderList(types);
 				onLoad();
 				break;
@@ -193,14 +220,15 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
-	
+
 	/**
 	 * 添加一条分类
+	 * 
 	 * @param type
-	 * @throws JSONException 
+	 * @throws JSONException
 	 */
-	private void addList(JSONArray type) throws JSONException{
-		if(customAdapter == null){
+	private void addList(JSONArray type) throws JSONException {
+		if (customAdapter == null) {
 			for (int i = 0; i < type.length(); i++) {
 				HashMap<String, String> map = new HashMap<String, String>();
 				JSONObject json = type.getJSONObject(i);
@@ -210,17 +238,19 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 				datList.add(map);
 			}
-			
+
 			noDataView.setVisibility(View.GONE);
+			againView.setVisibility(View.GONE);
 			lv.setVisibility(View.VISIBLE);
-			customAdapter = new CustomAdapter(this,
-					datList, R.layout.template_types_item, new String[] { "name" },
+
+			customAdapter = new CustomAdapter(this, datList,
+					R.layout.template_types_item, new String[] { "name" },
 					new int[] { R.id.txt });
 			lv.setAdapter(customAdapter);
-			
+
 			lv.setPullLoadEnable(false);
 			lv.setPullRefreshEnable(false);
-		}else{
+		} else {
 			for (int i = 0; i < type.length(); i++) {
 				HashMap<String, String> map = new HashMap<String, String>();
 				JSONObject json = type.getJSONObject(i);
@@ -228,11 +258,11 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				map.put("name", json.getString("name"));
 				map.put("id", id);
 
-				datList.add(map);
+				datList.add(0, map);
 			}
 			customAdapter.notifyDataSetChanged();
 		}
-		
+
 	}
 
 	private void renderList(JSONArray data) throws JSONException {
@@ -276,6 +306,8 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	private void bindListener2View() {
 		this.onCustomBack();
 		noDataAddTypeView.setOnClickListener(this);
+		addView.setOnClickListener(this);
+
 		((TextView) againView.findViewById(R.id.again_btn))
 				.setOnClickListener(this);
 		lv.setOnItemClickListener(new OnItemClickListener() {
@@ -290,20 +322,6 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				Log.w("JZB", map.toString());
 			}
 		});
-		addView.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				addType();
-			}});
-		((TextView) addView.findViewById(R.id.action_btn)).setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				addType();
-			}});
 	}
 
 	private void initView() {
@@ -406,8 +424,19 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 		switch (vId) {
 		case R.id.action_btn:
+			addType();
 			break;
 		case R.id.again_btn:
+			AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
+			initQuery = true;
+			pageNum = 1;
+			doQueryTask();
+			break;
+		case R.id.rightbtn_2:
+			addType();
+			break;
+		case R.id.rightbtn_1:
+			isEditint = true;
 			break;
 		}
 	}
