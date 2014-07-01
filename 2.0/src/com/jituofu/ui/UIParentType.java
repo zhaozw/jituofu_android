@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -146,13 +147,6 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.show();
 
-		// 修改dialog宽度
-		Window dialogWindow = baseDialog.getWindow();
-		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
-		int[] screenDisplay = AppUtil.getScreen(this);
-		wmlp.width = screenDisplay[0] - 20;
-		dialogWindow.setAttributes(wmlp);
-
 	}
 
 	private void doDeleteTask(HashMap<String, String> map) {
@@ -196,6 +190,12 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 			}
 		});
+		//如果用户没有选择下拉框
+		if(whichOtherTypeId == null){
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> currentSpinnerData = (HashMap<String, String>) spinner.getItemAtPosition(0);
+			whichOtherTypeId = currentSpinnerData.get("id");
+		}
 		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -217,12 +217,14 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 					@Override
 					public void onClick(DialogInterface di, int which) {
 						// TODO Auto-generated method stub
-						if (whichOtherTypeId.equals(id)) {
-							showToast(R.string.SPFL_DELETE_TYPE_MOVE_ERROR);
-							return;
-						}
 						if (whichRadio == 1) {
+							if (whichOtherTypeId.equals(id)) {
+								showToast(R.string.SPFL_DELETE_TYPE_MOVE_ERROR);
+								return;
+							}
 							doMoveTask(id, whichOtherTypeId);
+						}else if(whichRadio == 0){
+							doDeletePCPTask(id);
 						}
 					}
 				});
@@ -236,13 +238,20 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				});
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.show();
+	}
+	
+	private void doDeletePCPTask(String currentTypeId){
+		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
+		HashMap<String, String> urlParams = new HashMap<String, String>();
 
-		// 修改dialog宽度
-		Window dialogWindow = baseDialog.getWindow();
-		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
-		int[] screenDisplay = AppUtil.getScreen(this);
-		wmlp.width = screenDisplay[0] - 20;
-		dialogWindow.setAttributes(wmlp);
+		urlParams.put("id", currentTypeId);
+
+		try {
+			doTaskAsync(C.TASK.typesdeletepcp, C.API.host
+					+ C.API.typesdeletepcp, urlParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void doMoveTask(String currentTypeId, String targetTypeId) {
@@ -331,6 +340,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				baseDialog.dismiss();
 				break;
 			case C.TASK.typesdeletepmc:
+			case C.TASK.typesdeletepcp:
 				this.typesId.remove(waitDeleteMap.get("id"));
 				this.dataList.remove(waitDeleteMap);
 				this.customAdapter.notifyDataSetChanged();
@@ -362,13 +372,6 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				});
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.show();
-
-		// 修改dialog宽度
-		Window dialogWindow = baseDialog.getWindow();
-		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
-		int[] screenDisplay = AppUtil.getScreen(this);
-		wmlp.width = screenDisplay[0] - 20;
-		dialogWindow.setAttributes(wmlp);
 	}
 
 	/**
@@ -571,6 +574,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 				@Override
 				public void onClick(View v) {
+					whichOtherTypeId = null;//重置下拉框选项的值
 					doDeleteTask(map);
 				}
 			});

@@ -5,6 +5,7 @@
 
     <LinearLayout
         style="@style/BaseDialogBackground"
+        android:minWidth="220dp"
         android:layout_margin="10dp" >
 
         <LinearLayout

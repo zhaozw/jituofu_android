@@ -46,6 +46,7 @@ public final class C {
 		public static final String gettypes = "/types/index";
 		public static final String typeadd = "/types/create";
 		public static final String typesdeletepmc = "/types/deletepmc";
+		public static final String typesdeletepcp = "/types/deletepcp";
 	}
 
 	public static final class ERROR {
@@ -70,6 +71,7 @@ public final class C {
 		public static final int gettypes = 1012;
 		public static final int typeadd = 1013;
 		public static final int typesdeletepmc = 1014;
+		public static final int typesdeletepcp = 1015;
 	}
 	
 	public static final class PASSWORDLENGTH{
