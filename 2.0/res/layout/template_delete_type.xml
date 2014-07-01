@@ -28,10 +28,20 @@
         android:layout_marginTop="15dp"
         android:background="@drawable/round_bg" >
 
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:text="@string/SPFL_DELETE_TARGET_TYPETXT" />
+
         <Spinner
             android:id="@+id/spinner"
+            style="@style/spinner"
             android:layout_weight="1"
-            style="@style/spinner" />
+            android:textAlignment="textStart" />
 
         <ImageView
             android:id="@+id/imageView1"

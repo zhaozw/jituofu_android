@@ -64,22 +64,23 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	// 查询分类相关
 	private int pageNum = 1;
 	private boolean initQuery = false;// 是首次查询还是分页查询
-	private ArrayList<HashMap<String, String>> datList = new ArrayList<HashMap<String, String>>();
+	private ArrayList<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
 
 	private CustomAdapter customAdapter;
 
 	private boolean isRefresh, isLoadMore, isLoading, isEditing;
 
 	private ArrayList<String> typesId = new ArrayList<String>();// 存储所有分类的id，以免重复加载
-	
-	private int whichRadio;//删除对话框中选择了哪一项
-	private String whichOtherTypeId;//要移动到的分类id
+
+	private int whichRadio;// 删除对话框中选择了哪一项
+	private String whichOtherTypeId;// 要移动到的分类id
+	private HashMap<String, String> waitDeleteMap;// 等待被删除的分类map数据
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (isEditing) {
 			isEditing = false;
-			if(customAdapter != null){
+			if (customAdapter != null) {
 				customAdapter.notifyDataSetChanged();
 				return false;
 			}
@@ -89,7 +90,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		return super.onKeyDown(keyCode, event);
 
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -108,6 +109,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	private void addType() {
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_add_type, null);
+		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
 		baseDialogBuilder.setTitle(R.string.SPFL_QUERY_ADDPARENTTXT);
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
@@ -153,60 +155,75 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 	}
 
-	private void doDeleteTask(HashMap<String, String> map){
-		String id = map.get("id");
+	private void doDeleteTask(HashMap<String, String> map) {
+		waitDeleteMap = map;
+		final String id = map.get("id");
 		String name = map.get("name");
 		whichRadio = 1;
-		
+
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_delete_type, null);
+		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
-		baseDialogBuilder.setTitle("删除"+name);
-		
-		RadioGroup rg = (RadioGroup) baseDialogBuilder.contentView.findViewById(R.id.radioGroup);
-		Spinner spinner = (Spinner) baseDialogBuilder.contentView.findViewById(R.id.spinner);
+		baseDialogBuilder.setTitle("删除" + name);
+
+		RadioGroup rg = (RadioGroup) baseDialogBuilder.contentView
+				.findViewById(R.id.radioGroup);
+		Spinner spinner = (Spinner) baseDialogBuilder.contentView
+				.findViewById(R.id.spinner);
 		final LinearLayout spinnerParent = (LinearLayout) spinner.getParent();
-		
-		SimpleAdapter adapter = new SimpleAdapter(this, datList, R.layout.template_spinner_item, new String[]{"name"}, new int[]{R.id.txt});
+
+		SimpleAdapter adapter = new SimpleAdapter(this, dataList,
+				R.layout.template_spinner_item, new String[] { "name" },
+				new int[] { R.id.txt });
 		spinner.setAdapter(adapter);
-		
-		spinner.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
-			public void onItemSelected(AdapterView<?> parent, View v,
-					int pos, long row) {
+			public void onItemSelected(AdapterView<?> parent, View v, int pos,
+					long row) {
 				// TODO Auto-generated method stub
 				@SuppressWarnings("unchecked")
-				HashMap<String, String> map = (HashMap<String, String>) parent.getItemAtPosition(pos);
+				HashMap<String, String> map = (HashMap<String, String>) parent
+						.getItemAtPosition(pos);
 				whichOtherTypeId = map.get("id");
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
+			public void onNothingSelected(AdapterView<?> parent) {
 				// TODO Auto-generated method stub
-				
-			}});
-		rg.setOnCheckedChangeListener(new OnCheckedChangeListener(){
+
+			}
+		});
+		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
 			public void onCheckedChanged(RadioGroup rg, int id) {
 				// TODO Auto-generated method stub
-				if(id == R.id.radio0){
+				if (id == R.id.radio0) {
 					whichRadio = 0;
 					spinnerParent.setVisibility(View.GONE);
-				}else if(id == R.id.radio1){
+				} else if (id == R.id.radio1) {
 					whichRadio = 1;
 					spinnerParent.setVisibility(View.VISIBLE);
 				}
-			}});
-		
+			}
+		});
+
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
 				new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface di, int which) {
 						// TODO Auto-generated method stub
-						Log.w("JZB", whichRadio+" "+whichOtherTypeId);
+						if (whichOtherTypeId.equals(id)) {
+							showToast(R.string.SPFL_DELETE_TYPE_MOVE_ERROR);
+							return;
+						}
+						if (whichRadio == 1) {
+							doMoveTask(id, whichOtherTypeId);
+						}
 					}
 				});
 		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
@@ -227,7 +244,22 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		wmlp.width = screenDisplay[0] - 20;
 		dialogWindow.setAttributes(wmlp);
 	}
-	
+
+	private void doMoveTask(String currentTypeId, String targetTypeId) {
+		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+
+		urlParams.put("id", currentTypeId);
+		urlParams.put("to", targetTypeId);
+
+		try {
+			doTaskAsync(C.TASK.typesdeletepmc, C.API.host
+					+ C.API.typesdeletepmc, urlParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void doAddTask(String typeName) {
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
@@ -298,10 +330,45 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				addList(type);
 				baseDialog.dismiss();
 				break;
+			case C.TASK.typesdeletepmc:
+				this.typesId.remove(waitDeleteMap.get("id"));
+				this.dataList.remove(waitDeleteMap);
+				this.customAdapter.notifyDataSetChanged();
+				baseDialog.dismiss();
+
+				showTaskResult(message.getMemo());
+				break;
 			}
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
+	}
+
+	/**
+	 * 显示任务处理结果
+	 * 
+	 * @param message
+	 */
+	private void showTaskResult(String message) {
+		baseDialogBuilder = new BaseDialog.Builder(this);
+		baseDialogBuilder.setMessage(message);
+		baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						baseDialog.dismiss();
+					}
+				});
+		baseDialog = baseDialogBuilder.create();
+		baseDialog.show();
+
+		// 修改dialog宽度
+		Window dialogWindow = baseDialog.getWindow();
+		WindowManager.LayoutParams wmlp = dialogWindow.getAttributes();
+		int[] screenDisplay = AppUtil.getScreen(this);
+		wmlp.width = screenDisplay[0] - 20;
+		dialogWindow.setAttributes(wmlp);
 	}
 
 	/**
@@ -319,14 +386,14 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				map.put("name", json.getString("name"));
 				map.put("id", id);
 
-				datList.add(map);
+				dataList.add(map);
 			}
 
 			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.GONE);
 			lv.setVisibility(View.VISIBLE);
 
-			customAdapter = new CustomAdapter(this, datList,
+			customAdapter = new CustomAdapter(this, dataList,
 					R.layout.template_types_item, new String[] { "name" },
 					new int[] { R.id.txt });
 			lv.setAdapter(customAdapter);
@@ -341,7 +408,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				map.put("name", json.getString("name"));
 				map.put("id", id);
 
-				datList.add(0, map);
+				dataList.add(0, map);
 			}
 			customAdapter.notifyDataSetChanged();
 		}
@@ -360,16 +427,17 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			if (typesId.indexOf(id) < 0) {
 				typesId.add(id);
 				if (isRefresh) {
-					datList.add(0, map);
+					dataList.add(0, map);
 				} else {
-					datList.add(map);
+					dataList.add(map);
 				}
 			}
 		}
 
 		customAdapter = customAdapter == null ? new CustomAdapter(this,
-				datList, R.layout.template_types_item, new String[] { "name" },
-				new int[] { R.id.txt }) : customAdapter;
+				dataList, R.layout.template_types_item,
+				new String[] { "name" }, new int[] { R.id.txt })
+				: customAdapter;
 
 		if (isRefresh || isLoadMore) {
 			customAdapter.notifyDataSetChanged();
@@ -424,8 +492,6 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		lv.setXListViewListener(this);
 
 		noDataAddTypeView = (TextView) noDataView.findViewById(R.id.action_btn);
-
-		baseDialogBuilder = new BaseDialog.Builder(this);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -492,21 +558,22 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			}
 
 			holder.txt.setText(map.get("name"));
-			
-			if(isEditing){
+
+			if (isEditing) {
 				holder.delete.setVisibility(View.VISIBLE);
 				holder.edit.setVisibility(View.VISIBLE);
-			}else{
+			} else {
 				holder.delete.setVisibility(View.GONE);
 				holder.edit.setVisibility(View.GONE);
 			}
-			
-			holder.delete.setOnClickListener(new OnClickListener(){
+
+			holder.delete.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					doDeleteTask(map);
-				}});
+				}
+			});
 
 			return convertView;
 		}
@@ -536,7 +603,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 			break;
 		case R.id.rightbtn_1:
 			isEditing = true;
-			if(customAdapter != null){
+			if (customAdapter != null) {
 				customAdapter.notifyDataSetChanged();
 			}
 			break;

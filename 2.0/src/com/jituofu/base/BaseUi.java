@@ -437,6 +437,7 @@ public class BaseUi extends Activity {
 			HashMap<String, String> data) throws UnsupportedEncodingException {
 		if (HttpUtil.getType(this) == 0) {
 			this.showToast(C.ERROR.networkNone);
+			this.closePopupDialog();
 		} else {
 
 			taskPool.addTask(taskId, taskUrl, getRequestData(data), baseTask, 0);
