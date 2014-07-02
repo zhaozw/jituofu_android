@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            style="@style/radio_button"
+            android:checked="false"
+            android:text="@string/SPFL_DELETE_CHILD_TYPE1" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            style="@style/radio_button"
+            android:checked="true"
+            android:text="@string/SPFL_DELETE_CHILD_TYPE2" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_bg" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:text="@string/SPFL_DELETE_TARGET_TYPETXT" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/spinner"
+            android:layout_weight="1"
+            android:textAlignment="textStart" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:rotation="90"
+            android:src="@drawable/arrow" />
+        
+    </LinearLayout>
+
+</LinearLayout>

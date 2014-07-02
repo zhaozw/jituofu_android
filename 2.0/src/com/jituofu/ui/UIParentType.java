@@ -220,7 +220,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		whichRadio = 1;
 
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
-				R.layout.template_delete_type, null);
+				R.layout.template_delete_parent_type, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
 		baseDialogBuilder.setTitle("删除" + name);
@@ -380,6 +380,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				// 初始化加载时，没有数据显示无数据提示
 				if (initQuery && types.length() <= 0) {
 					lv.setVisibility(View.GONE);
+					againView.setVisibility(View.GONE);
 					noDataView.setVisibility(View.VISIBLE);
 					((TextView) noDataView.findViewById(R.id.txt))
 							.setText(R.string.SPFL_QUERY_NODATA);
@@ -411,6 +412,16 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				this.customAdapter.notifyDataSetChanged();
 				baseDialog.dismiss();
 
+				int dataListCount = this.dataList.size();
+				if(dataListCount <= 0){
+					lv.setVisibility(View.GONE);
+					noDataView.setVisibility(View.VISIBLE);
+					((TextView) noDataView.findViewById(R.id.txt))
+							.setText(R.string.SPFL_QUERY_NODATA);
+					((TextView) noDataView.findViewById(R.id.action_btn))
+							.setText(R.string.SPFL_QUERY_ADDTXT);
+				}
+				
 				showTaskResult(message.getMemo());
 				break;
 			case C.TASK.typesupdate:
@@ -704,6 +715,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	public void onNetworkError(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.networkException);
@@ -716,6 +728,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	public void onNetworkTimeout(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.networkTimeout);
@@ -728,6 +741,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	public void onServerException(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.serverException);

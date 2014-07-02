@@ -228,7 +228,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		whichRadio = 1;
 
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
-				R.layout.template_delete_type, null);
+				R.layout.template_delete_child_type, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
 		baseDialogBuilder.setTitle("删除" + name);
@@ -296,7 +296,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 							}
 							doMoveTask(id, whichOtherTypeId);
 						}else if(whichRadio == 0){
-							doDeletePCPTask(id);
+							doDeleteCPTask(id);
 						}
 					}
 				});
@@ -312,15 +312,16 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		baseDialog.show();
 	}
 	
-	private void doDeletePCPTask(String currentTypeId){
+	private void doDeleteCPTask(String currentTypeId){
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
 		urlParams.put("id", currentTypeId);
+		urlParams.put("parent", parentId);
 
 		try {
-			doTaskAsync(C.TASK.typesdeletepcp, C.API.host
-					+ C.API.typesdeletepcp, urlParams);
+			doTaskAsync(C.TASK.typesdeletecp, C.API.host
+					+ C.API.typesdeletecp, urlParams);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -331,11 +332,12 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
 		urlParams.put("id", currentTypeId);
-		urlParams.put("to", targetTypeId);
+		urlParams.put("parent", parentId);
+		urlParams.put("targetId", targetTypeId);
 
 		try {
-			doTaskAsync(C.TASK.typesdeletepmc, C.API.host
-					+ C.API.typesdeletepmc, urlParams);
+			doTaskAsync(C.TASK.typesdeletemp, C.API.host
+					+ C.API.typesdeletemp, urlParams);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -390,6 +392,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				// 初始化加载时，没有数据显示无数据提示
 				if (initQuery && types.length() <= 0) {
 					lv.setVisibility(View.GONE);
+					againView.setVisibility(View.GONE);
 					noDataView.setVisibility(View.VISIBLE);
 					((TextView) noDataView.findViewById(R.id.txt))
 							.setText(R.string.SPFL_QUERY_NODATA);
@@ -414,13 +417,22 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				addList(type);
 				baseDialog.dismiss();
 				break;
-			case C.TASK.typesdeletepmc:
-			case C.TASK.typesdeletepcp:
+			case C.TASK.typesdeletecp:
+			case C.TASK.typesdeletemp:
 				this.typesId.remove(waitDeleteMap.get("id"));
 				this.dataList.remove(waitDeleteMap);
 				this.customAdapter.notifyDataSetChanged();
 				baseDialog.dismiss();
 
+				int dataListCount = this.dataList.size();
+				if(dataListCount <= 0){
+					lv.setVisibility(View.GONE);
+					noDataView.setVisibility(View.VISIBLE);
+					((TextView) noDataView.findViewById(R.id.txt))
+							.setText(R.string.SPFL_QUERY_NODATA);
+					((TextView) noDataView.findViewById(R.id.action_btn))
+							.setText(R.string.SPFL_QUERY_ADDTXT);
+				}
 				showTaskResult(message.getMemo());
 				break;
 			case C.TASK.typesupdate:
@@ -554,6 +566,11 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 				// TODO Auto-generated method stub
+				
+				if(from == null){
+					return;
+				}
+				
 				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
@@ -731,6 +748,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	public void onNetworkError(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.networkException);
@@ -743,6 +761,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	public void onNetworkTimeout(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.networkTimeout);
@@ -755,6 +774,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	public void onServerException(int taskId) {
 		if (initQuery) {
 			lv.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
 			againView.setVisibility(View.VISIBLE);
 			((TextView) againView.findViewById(R.id.txt))
 					.setText(C.ERROR.serverException);
