@@ -40,7 +40,7 @@ import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
-public class UIParentType extends BaseUiAuth implements OnClickListener,
+public class UIChildType extends BaseUiAuth implements OnClickListener,
 		BaseListViewListener {
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
@@ -93,16 +93,16 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.page_parent_type);
+		setContentView(R.layout.page_child_type);
 
-		initView();
-		updateView();
-		bindListener2View();
-
-		// 查询分类
-		initQuery = true;// 标记初始化查询为true
-		AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
-		doQueryTask();
+//		initView();
+//		updateView();
+//		bindListener2View();
+//
+//		// 查询分类
+//		initQuery = true;// 标记初始化查询为true
+//		AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
+//		doQueryTask();
 	}
 
 	private void addType() {

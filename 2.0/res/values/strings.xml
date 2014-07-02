@@ -147,6 +147,9 @@
     <string name="SPFL_PARENT_TITLE">大分类</string>
     <string name="SPFL_PARENT_SPECIFY">请填写大分类名称</string>
     <string name="SPFL_PARENT_INVALID">大分类名称为大于1位小于10位的中英文或数字</string>
+    <string name="SPFL_NEWTYPE_SPECIFY">请填写新的分类名称</string>
+    <string name="SPFL_NEWTYPE_INVALID">新分类名称为大于1位小于10位的中英文或数字</string>
+    <string name="SPFL_NEWTYPE_EUQAL_OLDTYPE">新分类名称和旧分类名称相同</string>
     <string name="SPFL_DELETE_PARENT_TYPE1">同时删除所有小分类及商品</string>
     <string name="SPFL_DELETE_PARENT_TYPE2">同时把所有小分类及商品移到</string>
     <string name="SPFL_DELETE_TYPE_MOVE_ERROR">目标分类和当前分类相同，请重新选择</string>
