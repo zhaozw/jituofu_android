@@ -29,6 +29,7 @@
     <string name="COMMON_EMAIL_HINT">请填写常用邮箱</string>
     <string name="COMMON_IKNOW">知道了</string>
     <string name="COMMON_AGAIN">请重试</string>
+    <string name="COMMON_OPTIONALTXT">可选</string>
 
     <!-- 注册登录 -->
 
@@ -159,6 +160,7 @@
     <string name="SPFL_DELETE_CHILD_TYPE2">同时把该分类下的所有商品移到</string>
     <string name="SPFL_DELETE_TYPE_MOVE_ERROR">目标分类和当前分类相同，请重新选择</string>
     <string name="SPFL_DELETE_TARGET_TYPETXT">目标分类：</string>
+    <string name="SPFL_SPEARATOR"> / </string>
     
     <!-- 自定义listview -->
     <string name="BASE_LISTVIEW_HEADER_HINT_NORMAL">下拉刷新</string>
@@ -167,4 +169,22 @@
     <string name="BASE_LISTVIEW_HEADER_HINT_LAST_TIME">上次更新时间：</string>
     <string name="BASE_LISTVIEW_FOOTER_HINT_NORMAL">加载更多</string>
     <string name="BASE_LISTVIEW_FOOTER_HINT_READY">松开后加载更多</string>
+    
+    <!-- 商品入库 -->
+    <string name="PRODUCT_ADD_TITLE">商品入库</string>
+    <string name="PRODUCT_PNAME">商品名称</string>
+    <string name="PRODUCT_PPRICE">进货价</string>
+    <string name="PRODUCT_PCOUNT">数量</string>
+    <string name="PRODUCT_PTYPE">商品分类</string>
+    <string name="PRODUCT_PTIME">入库时间</string>
+    <string name="PRODUCT_PPIC">商品图片</string>
+    <string name="PRODUCT_PREMARK">备注信息</string>
+    <string name="PRODUCT_PNAME_HINT">请填写商品名称</string>
+    <string name="PRODUCT_PPRICE_HINT">请填写进货价</string>
+    <string name="PRODUCT_PCOUNT_HINT">请填写进货数量</string>
+    <string name="PRODUCT_PTYPE_HINT">商品分类</string>
+    <string name="PRODUCT_PTIME_HINT">入库时间</string>
+    <string name="PRODUCT_PPIC_HINT">商品图片</string>
+    <string name="PRODUCT_PREMARK_HINT">备注信息</string>
+    <string name="PRODUCT_DELETEPIC">删除图片</string>
 </resources>

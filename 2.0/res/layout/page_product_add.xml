@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/topbar2" />
+
+    <LinearLayout style="@style/container" android:orientation="vertical" android:layout_height="match_parent"  >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <LinearLayout style="@style/box1" >
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PNAME" />
+
+                    <EditText
+                        android:id="@+id/name"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView1"
+                        android:hint="@string/PRODUCT_PNAME_HINT"
+                        android:inputType="text" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PPRICE" />
+
+                    <EditText
+                        android:id="@+id/price"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView2"
+                        android:hint="@string/PRODUCT_PPRICE_HINT"
+                        android:inputType="text" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PCOUNT" />
+
+                    <EditText
+                        android:id="@+id/count"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView3"
+                        android:hint="@string/PRODUCT_PCOUNT_HINT"
+                        android:inputType="text" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    style="@style/field"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PTYPE" />
+
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="10dp" />
+
+                    <ImageView
+                        android:layout_width="7.5dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/arrow" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/border"
+                    style="@style/field_separator"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/field"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PTIME" />
+
+                    <TextView
+                        android:id="@+id/time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="10dp" />
+
+                    <ImageView
+                        android:layout_width="7.5dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/arrow" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/field_separator"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/field"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PPIC" />
+
+                    <TextView
+                        android:id="@+id/pic"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="10dp"
+                        android:text="@string/COMMON_OPTIONALTXT" />
+
+                    <ImageView
+                        android:layout_width="7.5dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/arrow" />
+                </LinearLayout>
+                
+                <LinearLayout
+                    style="@style/field_separator"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+                
+                <LinearLayout
+                    style="@style/field"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/label"
+                        android:text="@string/PRODUCT_PPIC" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="10dp"
+                        android:gravity="right"
+                        android:orientation="horizontal" >
+                        
+                        <TextView 
+                            style="@style/link"
+                            android:layout_marginRight="15dp"
+                            android:id="@+id/deletePic"
+                            android:layout_gravity="center"
+                            android:text="@string/PRODUCT_DELETEPIC"/>
+                        
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:gravity="center"
+                            android:src="@drawable/ic_launcher" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="7.5dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/arrow" />
+                    
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/field_separator"
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical" >
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/field"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        style="@style/label"
+                        android:layout_marginTop="15dp"
+                        android:gravity="top"
+                        android:text="@string/PRODUCT_PREMARK" />
+
+                    <EditText
+                        android:id="@+id/remark"
+                        style="@style/textarea"
+                        android:layout_height="100dp"
+                        android:layout_marginRight="15dp"
+                        android:hint="@string/COMMON_OPTIONALTXT" >
+                    </EditText>
+                </LinearLayout>
+                
+                
+                
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/submitRegister"
+            style="@style/primaryBtn"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:text="@string/COMMON_OK" />
+        
+    </LinearLayout>
+
+</LinearLayout>
