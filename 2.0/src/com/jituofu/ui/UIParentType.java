@@ -62,6 +62,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 	private int pageNum = 1;
 	private boolean initQuery = false;// 是首次查询还是分页查询
 	private ArrayList<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
+	private int limit;
 
 	private CustomAdapter customAdapter;
 
@@ -350,6 +351,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 
 		int[] screenDisplay = AppUtil.getScreen(this);
 		int limit = screenDisplay[1] / 42 + 10;
+		this.limit = limit;
 
 		urlParams.put("pageNum", pageNum + "");
 		urlParams.put("limit", limit + "");
@@ -522,7 +524,7 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		this.isLoadMore = false;
 		this.isRefresh = false;
 
-		if (data.length() <= 0) {
+		if (data.length() < limit) {
 			lv.setPullLoadEnable(false);
 			lv.setPullRefreshEnable(false);
 		}

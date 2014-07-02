@@ -144,9 +144,12 @@
     <string name="SPFL_QUERY_NODATA">没有分类数据，您可以</string>
     <string name="SPFL_QUERY_ADDTXT">添加分类</string>
     <string name="SPFL_QUERY_ADDPARENTTXT">添加大分类</string>
+    <string name="SPFL_QUERY_ADDCHILDTXT">添加小分类</string>
     <string name="SPFL_PARENT_TITLE">大分类</string>
     <string name="SPFL_PARENT_SPECIFY">请填写大分类名称</string>
+    <string name="SPFL_CHILD_SPECIFY">请填写小分类名称</string>
     <string name="SPFL_PARENT_INVALID">大分类名称为大于1位小于10位的中英文或数字</string>
+    <string name="SPFL_CHILD_INVALID">小分类名称为大于1位小于10位的中英文或数字</string>
     <string name="SPFL_NEWTYPE_SPECIFY">请填写新的分类名称</string>
     <string name="SPFL_NEWTYPE_INVALID">新分类名称为大于1位小于10位的中英文或数字</string>
     <string name="SPFL_NEWTYPE_EUQAL_OLDTYPE">新分类名称和旧分类名称相同</string>

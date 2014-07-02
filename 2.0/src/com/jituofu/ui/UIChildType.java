@@ -42,6 +42,8 @@ import com.jituofu.util.AppUtil;
 
 public class UIChildType extends BaseUiAuth implements OnClickListener,
 		BaseListViewListener {
+	private String parentId, parentName;
+	
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
 
@@ -62,6 +64,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	private int pageNum = 1;
 	private boolean initQuery = false;// 是首次查询还是分页查询
 	private ArrayList<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
+	private int limit;
 
 	private CustomAdapter customAdapter;
 
@@ -95,14 +98,19 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_child_type);
 
-//		initView();
-//		updateView();
-//		bindListener2View();
-//
-//		// 查询分类
-//		initQuery = true;// 标记初始化查询为true
-//		AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
-//		doQueryTask();
+		initView();
+		try {
+			updateView();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		bindListener2View();
+
+		// 查询分类
+		initQuery = true;// 标记初始化查询为true
+		AppUtil.showLoadingPopup(this, R.string.SPFL_QUERY_LOADING);
+		doQueryTask();
 	}
 
 	private void addType() {
@@ -110,7 +118,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				R.layout.template_add_type, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
-		baseDialogBuilder.setTitle(R.string.SPFL_QUERY_ADDPARENTTXT);
+		baseDialogBuilder.setTitle(R.string.SPFL_QUERY_ADDCHILDTXT);
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
 				new DialogInterface.OnClickListener() {
 
@@ -123,11 +131,11 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 								.trimAll(getEditValue(addTypeEditView));
 
 						if (typeName == null) {
-							showToast(R.string.SPFL_PARENT_SPECIFY);
+							showToast(R.string.SPFL_CHILD_SPECIFY);
 							return;
 						} else if ((AppUtil.getStrLen(typeName) <= 1)
 								|| (AppUtil.getStrLen(typeName) > 10)) {
-							showToast(R.string.SPFL_PARENT_INVALID);
+							showToast(R.string.SPFL_CHILD_INVALID);
 							return;
 						} else {
 							doAddTask(typeName);
@@ -203,6 +211,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 
 		urlParams.put("id", currentTypeId);
 		urlParams.put("name", newName);
+		urlParams.put("parent", parentId);
 
 		try {
 			doTaskAsync(C.TASK.typesupdate, C.API.host
@@ -337,6 +346,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
 		urlParams.put("name", typeName);
+		urlParams.put("parent", parentId);
 
 		try {
 			doTaskAsync(C.TASK.typeadd, C.API.host + C.API.typeadd, urlParams);
@@ -350,9 +360,11 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 
 		int[] screenDisplay = AppUtil.getScreen(this);
 		int limit = screenDisplay[1] / 42 + 10;
+		this.limit = limit;
 
 		urlParams.put("pageNum", pageNum + "");
 		urlParams.put("limit", limit + "");
+		urlParams.put("parent", parentId);
 
 		try {
 			doTaskAsync(C.TASK.gettypes, C.API.host + C.API.gettypes, urlParams);
@@ -522,7 +534,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		this.isLoadMore = false;
 		this.isRefresh = false;
 
-		if (data.length() <= 0) {
+		if (data.length() < limit) {
 			lv.setPullLoadEnable(false);
 			lv.setPullRefreshEnable(false);
 		}
@@ -576,7 +588,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
-	private void updateView() {
+	private void updateView() throws JSONException {
 		extraBundle = this.getIntent().getExtras();
 
 		if (extraBundle == null) {
@@ -584,9 +596,21 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 			editView.setVisibility(View.VISIBLE);
 		} else {
 			from = extraBundle.getString("from");
+			
+			//如果来自商品录入或者商品编辑页面，也要隐藏增加和编辑按钮
+			if(from != null && (from.equals(C.COMMON.productSubmit) || from.equals(C.COMMON.productEdit))){
+				addView.setVisibility(View.GONE);
+				editView.setVisibility(View.GONE);
+			}
+			String data = extraBundle.getString("data");
+			if(data != null){
+				JSONObject map = new JSONObject(data);
+				this.parentId = map.getString("id");
+				this.parentName = map.getString("name");
+			}
 		}
 
-		titleView.setText(R.string.SPFL_PARENT_TITLE);
+		titleView.setText(parentName);
 		if (Build.VERSION.SDK_INT < 16) {
 			addView.setBackgroundDrawable(this.getResources().getDrawable(
 					R.drawable.add_small));
@@ -630,11 +654,16 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				holder.delete = (ImageView) convertView
 						.findViewById(R.id.delete);
 				holder.edit = (ImageView) convertView.findViewById(R.id.edit);
+				holder.arrow = (ImageView) convertView.findViewById(R.id.arrow);
 				// 保存视图项
 				convertView.setTag(holder);
 			} else {
 				// 取出现有的视图项
 				holder = (ViewHolder) convertView.getTag();
+			}
+			
+			if(from == null){
+				holder.arrow.setVisibility(View.GONE);
 			}
 
 			holder.txt.setText(map.get("name"));
@@ -669,7 +698,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	}
 
 	static class ViewHolder {
-		ImageView delete, edit;
+		ImageView delete, edit, arrow;
 		TextView txt;
 	}
 
