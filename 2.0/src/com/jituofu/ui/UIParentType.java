@@ -619,6 +619,12 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		} else {
 			from = extraBundle.getString("from");
 		}
+		
+		//如果来自商品录入或者商品编辑页面，也要隐藏增加和编辑按钮
+		if(from != null && (from.equals(C.COMMON.productSubmit) || from.equals(C.COMMON.productEdit))){
+			addView.setVisibility(View.GONE);
+			editView.setVisibility(View.GONE);
+		}
 
 		titleView.setText(R.string.SPFL_PARENT_TITLE);
 		if (Build.VERSION.SDK_INT < 16) {

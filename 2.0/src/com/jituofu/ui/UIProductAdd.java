@@ -1,14 +1,19 @@
 package com.jituofu.ui;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseUiBuilder;
 import com.jituofu.base.BaseUiFormBuilder;
@@ -24,11 +29,14 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 	
 	//表单值
 	private String name, price, count, remark, typeId, typeName, picPath, time;
+	private int year, month, day, hour, minute, second;
 	
 	//表单提交
 	private boolean validated = false;
 	
 	public static int selectTypeRequestCode = 1;//分类选择
+	
+	private BaseDateTimePicker dateTimePicker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +151,20 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 				bundle.putString("from", C.COMMON.productSubmit);
 				forwardForResult(UIParentType.class, selectTypeRequestCode, bundle);
 			}});
+		((LinearLayout) timeView.getParent()).setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(year > 0 && month > 0 && day > 0){
+					if(hour > 0 && minute > 0 && second > 0){
+						dateTimePicker.setHMS(hour, minute, second);
+					}
+					dateTimePicker.showDateDialog(year, month, day);
+				}else{
+					dateTimePicker.showDateDialog();
+				}
+			}});
 	}
 	
 	@Override
@@ -196,6 +218,27 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 		priceView = (EditText) findViewById(R.id.price);
 		countView = (EditText) findViewById(R.id.count);
 		remarkView = (EditText) findViewById(R.id.remark);
+		
+		dateTimePicker = new BaseDateTimePicker(this);
+		dateTimePicker.setTimeDismissListener(new OnDismissListener(){
+
+			@Override
+			public void onDismiss(DialogInterface di) {
+				// TODO Auto-generated method stub
+				int[] ymd = dateTimePicker.getYMD();
+				int[] hms = dateTimePicker.getHMS();
+				
+				year = ymd[0];
+				month = ymd[1];
+				day = ymd[2];
+				
+				hour = hms[0];
+				minute = hms[1];
+				second = hms[2];
+				
+				time = year+"-"+AppUtil.to2bit(month)+"-"+AppUtil.to2bit(day)+" "+AppUtil.to2bit(hour)+":"+AppUtil.to2bit(minute)+":"+AppUtil.to2bit(second);
+				timeView.setText(time);
+			}});
 	}
 
 }

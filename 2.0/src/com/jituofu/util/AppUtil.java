@@ -32,6 +32,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -58,6 +59,36 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 public class AppUtil {
+	/**
+	 * 强制转换个位到十位
+	 * @param value
+	 * @return
+	 */
+	public static String to2bit(int value){
+		if(value < 10){
+			return "0"+value;
+		}
+		
+		return value+"";
+	}
+	
+	/**
+	 * 是否是24小时制
+	 * @param context
+	 * @return
+	 */
+	public static boolean is24(Context context){
+		ContentResolver cv = context.getContentResolver();
+        String strTimeFormat = android.provider.Settings.System.getString(cv,
+                                           android.provider.Settings.System.TIME_12_24);
+        
+        if(strTimeFormat.equals("24"))       {
+              return true;
+        }
+        
+        return false;
+	}
+	
 	/**
 	 * 获取当前时间：date time
 	 * 
