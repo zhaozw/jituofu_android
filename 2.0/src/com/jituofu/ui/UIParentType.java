@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -558,15 +559,35 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
+				
+				Bundle bundle = new Bundle();
+				bundle.putString("from", from);
+				bundle.putString("data", map.toString());
+				
 				if(from == null){
-					Bundle bundle = new Bundle();
-					bundle.putString("from", from);
-					bundle.putString("data", map.toString());
-					
 					forward(UIChildType.class, bundle);
+				}else{
+					int requestCode = 0;
+					
+					if(from.equals(C.COMMON.productSubmit)){
+						requestCode = UIProductAdd.selectTypeRequestCode;
+					}
+					
+					forwardForResult(UIChildType.class, requestCode, bundle);
 				}
 			}
 		});
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		//商品入库
+		if(resultCode == UIProductAdd.selectTypeRequestCode){
+			this.backForResult(requestCode, data);
+			this.finish();
+		}
 	}
 
 	private void initView() {

@@ -60,6 +60,7 @@ import android.widget.TextView;
 public class AppUtil {
 	/**
 	 * 获取当前时间：date time
+	 * 
 	 * @return
 	 */
 	@SuppressLint("SimpleDateFormat")
@@ -492,6 +493,58 @@ public class AppUtil {
 	public static String gzipToString(final HttpEntity entity)
 			throws IOException, ParseException {
 		return gzipToString(entity, null);
+	}
+
+	/**
+	 * 检查字符串是否是数字
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumeric(String str) {
+		for (int i = str.length(); --i >= 0;) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * 四舍五入
+	 * @return
+	 */
+	@SuppressLint("DefaultLocale")
+	public static String toFixed(double value){
+		String result = String.format("%.2f", value);
+		
+		return result;
+	}
+
+	/**
+	 * 是否是个有效的商品价格
+	 * 
+	 * @param price
+	 * @return
+	 */
+	public static boolean isAvailablePrice(String price) {
+		boolean result = true;
+
+		if (price == null) {
+			result = false;
+		} else if ((price.indexOf(".") == 0)
+				|| (price.indexOf(".") == price.length() - 1)) {
+			result = false;
+		} else if (price.indexOf(".") != -1){
+			String[] priceSplit = price.split("\\.");
+			
+			if(!AppUtil.isNumeric(priceSplit[0]) || !AppUtil.isNumeric(priceSplit[1])){
+				result = false;
+			}
+		}else if(!AppUtil.isNumeric(price)){
+			result = false;
+		}
+
+			return result;
 	}
 
 	/**

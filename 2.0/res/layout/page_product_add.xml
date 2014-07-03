@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    style="@style/container"
+    android:orientation="vertical"
+    android:paddingTop="0dp" >
 
     <include layout="@layout/topbar2" />
 
-    <LinearLayout style="@style/container" android:orientation="vertical" android:layout_height="match_parent"  >
+    <LinearLayout
+        style="@style/box1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/activity_horizontal_margin" >
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
+            android:layout_height="match_parent" >
 
-            <LinearLayout style="@style/box1" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
                 <RelativeLayout style="@style/field" >
 
@@ -49,7 +57,7 @@
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView2"
                         android:hint="@string/PRODUCT_PPRICE_HINT"
-                        android:inputType="text" >
+                        android:inputType="number|numberDecimal" >
                     </EditText>
 
                     <LinearLayout
@@ -71,7 +79,7 @@
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView3"
                         android:hint="@string/PRODUCT_PCOUNT_HINT"
-                        android:inputType="text" >
+                        android:inputType="number|numberDecimal" >
                     </EditText>
 
                     <LinearLayout
@@ -108,7 +116,7 @@
                 <LinearLayout
                     android:id="@+id/border"
                     style="@style/field_separator"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -138,7 +146,7 @@
 
                 <LinearLayout
                     style="@style/field_separator"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -166,19 +174,19 @@
                         android:layout_marginRight="15dp"
                         android:src="@drawable/arrow" />
                 </LinearLayout>
-                
+
                 <LinearLayout
                     style="@style/field_separator"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:orientation="vertical" >
                 </LinearLayout>
-                
+
                 <LinearLayout
                     style="@style/field"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
+                    android:orientation="horizontal"
                     android:paddingBottom="10dp"
-                    android:orientation="horizontal" >
+                    android:paddingTop="10dp" >
 
                     <TextView
                         style="@style/label"
@@ -187,24 +195,23 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1"
                         android:gravity="right"
                         android:orientation="horizontal" >
-                        
-                        <TextView 
-                            style="@style/link"
-                            android:layout_marginRight="15dp"
+
+                        <TextView
                             android:id="@+id/deletePic"
+                            style="@style/link"
                             android:layout_gravity="center"
-                            android:text="@string/PRODUCT_DELETEPIC"/>
-                        
+                            android:layout_marginRight="15dp"
+                            android:text="@string/PRODUCT_DELETEPIC" />
+
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:gravity="center"
                             android:src="@drawable/ic_launcher" />
-
                     </LinearLayout>
 
                     <ImageView
@@ -213,12 +220,11 @@
                         android:layout_gravity="center"
                         android:layout_marginRight="15dp"
                         android:src="@drawable/arrow" />
-                    
                 </LinearLayout>
 
                 <LinearLayout
                     style="@style/field_separator"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="15dp"
                     android:orientation="vertical" >
                 </LinearLayout>
 
@@ -238,23 +244,20 @@
                         style="@style/textarea"
                         android:layout_height="100dp"
                         android:layout_marginRight="15dp"
+                        android:inputType="text"
                         android:hint="@string/COMMON_OPTIONALTXT" >
                     </EditText>
                 </LinearLayout>
-                
-                
-                
             </LinearLayout>
         </ScrollView>
-
-        <Button
-            android:id="@+id/submitRegister"
-            style="@style/primaryBtn"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="@string/COMMON_OK" />
-        
     </LinearLayout>
+
+    <Button
+        android:id="@+id/okBtn"
+        style="@style/primaryBtn"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:text="@string/COMMON_OK" />
 
 </LinearLayout>

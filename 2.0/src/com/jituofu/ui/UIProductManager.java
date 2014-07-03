@@ -56,6 +56,9 @@ public class UIProductManager extends BaseUiAuth implements OnClickListener {
 		case R.id.flgl:
 			this.forward(UIParentType.class);
 			break;
+		case R.id.sprk:
+			this.forward(UIProductAdd.class);
+			break;
 		}
 	}
 }

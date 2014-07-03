@@ -144,6 +144,7 @@
     <string name="SPFL_QUERY_LOADING">正在获取分类...</string>
     <string name="SPFL_QUERY_NODATA">没有分类数据，您可以</string>
     <string name="SPFL_QUERY_ADDTXT">添加分类</string>
+    <string name="SPFL_USE_PARENT">选中大分类</string>
     <string name="SPFL_QUERY_ADDPARENTTXT">添加大分类</string>
     <string name="SPFL_QUERY_ADDCHILDTXT">添加小分类</string>
     <string name="SPFL_PARENT_TITLE">大分类</string>
@@ -180,9 +181,14 @@
     <string name="PRODUCT_PPIC">商品图片</string>
     <string name="PRODUCT_PREMARK">备注信息</string>
     <string name="PRODUCT_PNAME_HINT">请填写商品名称</string>
+    <string name="PRODUCT_PNAME_ERROR">商品名称为2到15位中英文字符</string>
     <string name="PRODUCT_PPRICE_HINT">请填写进货价</string>
+    <string name="PRODUCT_PPRICE_ERROR">进货价为整数或有一位小数点</string>
     <string name="PRODUCT_PCOUNT_HINT">请填写进货数量</string>
+    <string name="PRODUCT_PTIME_ERROR">请填写入库时间</string>
+    <string name="PRODUCT_PCOUNT_ERROR">商品数量不正确</string>
     <string name="PRODUCT_PTYPE_HINT">商品分类</string>
+    <string name="PRODUCT_PTYPE_ERROR">请选择商品分类</string>
     <string name="PRODUCT_PTIME_HINT">入库时间</string>
     <string name="PRODUCT_PPIC_HINT">商品图片</string>
     <string name="PRODUCT_PREMARK_HINT">备注信息</string>

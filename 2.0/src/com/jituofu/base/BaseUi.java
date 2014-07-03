@@ -60,13 +60,6 @@ public class BaseUi extends Activity {
 		}
 	};
 
-	public void forwardForResult(Class<?> obj, int requestCode) {
-		Intent intent = new Intent();
-		intent.setClass(this, obj);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		this.startActivityForResult(intent, requestCode);
-	}
-
 	/**
 	 * 广播对象的接收器
 	 * 
@@ -75,6 +68,10 @@ public class BaseUi extends Activity {
 	 */
 	protected void onBrReceive(String type) {
 
+	}
+	
+	public void backForResult(int requestCode, Intent data) {
+		super.setResult(requestCode, data);
 	}
 
 	@Override
@@ -191,6 +188,21 @@ public class BaseUi extends Activity {
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtras(params);
 		this.startActivity(intent);
+	}
+	
+	public void forwardForResult(Class<?> obj, int requestCode) {
+		Intent intent = new Intent();
+		intent.setClass(this, obj);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		this.startActivityForResult(intent, requestCode);
+	}
+	
+	public void forwardForResult(Class<?> obj, int requestCode, Bundle params) {
+		Intent intent = new Intent();
+		intent.setClass(this, obj);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtras(params);
+		this.startActivityForResult(intent, requestCode);
 	}
 
 	/**

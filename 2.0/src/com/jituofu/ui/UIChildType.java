@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -398,6 +399,27 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 							.setText(R.string.SPFL_QUERY_NODATA);
 					((TextView) noDataView.findViewById(R.id.action_btn))
 							.setText(R.string.SPFL_QUERY_ADDTXT);
+					
+					//直接使用大分类
+					if(from != null && from.equals(C.COMMON.productSubmit)){
+						noDataAddTypeView.setOnClickListener(null);
+						noDataAddTypeView.setOnClickListener(new OnClickListener(){
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent();
+								intent.putExtra("from", from);
+								intent.putExtra("parentTypeId", parentId);
+								intent.putExtra("parentTypeName", parentName);
+								
+								backForResult(UIProductAdd.selectTypeRequestCode, intent);
+								finish();
+							}});
+						((TextView) noDataView.findViewById(R.id.action_btn))
+						.setText(R.string.SPFL_USE_PARENT);
+					}
+					
 					return;
 				}
 				if (initQuery) {
@@ -574,12 +596,17 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
-				if(from == null){
-					Bundle bundle = new Bundle();
-					bundle.putString("from", from);
-					bundle.putString("data", map.toString());
+				
+				if(from != null && from.equals(C.COMMON.productSubmit)){
+					Intent intent = new Intent();
+					intent.putExtra("from", from);
+					intent.putExtra("parentTypeId", parentId);
+					intent.putExtra("childTypeId", map.get("id"));
+					intent.putExtra("parentTypeName", parentName);
+					intent.putExtra("childTypeName", map.get("name"));
 					
-					forward(UIChildType.class, bundle);
+					backForResult(UIProductAdd.selectTypeRequestCode, intent);
+					finish();
 				}
 			}
 		});
