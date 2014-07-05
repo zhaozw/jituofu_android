@@ -11,6 +11,8 @@ import com.jituofu.R;
 public final class C {
 	public static final class DIRS {
 		public static final String rootdir = "/jituofu";
+		public static final String productDir = "/product";
+		public static final String productFileName = "p.png";// 临时的上传商品的文件名
 		public static final String feedbackDir = "/feedback";
 		public static final String waitUploadFeedbackDir = "/wufd";// 存储等待上传的截图文件
 		public static final String feedbackFileName = "screenshot.png";// 临时的截图文件名
@@ -33,7 +35,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://10.1.10.167";
+		public static final String host = "http://192.168.1.101";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";

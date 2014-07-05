@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_bg"
+            android:alpha="0.9"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/btn1"
+                style="@style/bottom2topMenu"
+                android:text="@string/COMMON_IMAGEPICKERGALLERY" />
+
+            <LinearLayout
+                android:id="@+id/border"
+                style="@style/field_separator"
+                android:background="#e2e2e6"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btn2"
+                style="@style/bottom2topMenu"
+                android:text="@string/COMMON_IMAGEPICKERCAMMERA" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/round_bg"
+            android:alpha="0.9"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/cancel"
+                style="@style/bottom2topMenu"
+                android:text="@string/COMMON_CANCEL"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

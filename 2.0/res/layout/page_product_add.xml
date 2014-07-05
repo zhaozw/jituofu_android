@@ -10,9 +10,9 @@
         style="@style/box1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/activity_horizontal_margin" >
+        android:orientation="vertical" >
 
         <ScrollView
             android:layout_width="match_parent"
@@ -158,60 +158,40 @@
                         style="@style/label"
                         android:text="@string/PRODUCT_PPIC" />
 
-                    <TextView
-                        android:id="@+id/pic"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="right"
-                        android:paddingRight="10dp"
-                        android:text="@string/COMMON_OPTIONALTXT" />
-
-                    <ImageView
-                        android:layout_width="7.5dp"
-                        android:layout_height="10dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="15dp"
-                        android:src="@drawable/arrow" />
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/field_separator"
-                    android:layout_marginLeft="15dp"
-                    android:orientation="vertical" >
-                </LinearLayout>
-
-                <LinearLayout
-                    style="@style/field"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp" >
-
-                    <TextView
-                        style="@style/label"
-                        android:text="@string/PRODUCT_PPIC" />
-
                     <LinearLayout
+                        android:id="@+id/imgPreview"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:gravity="right"
                         android:orientation="horizontal" >
 
                         <TextView
+                            android:id="@+id/defaultTxt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="15dp"
+                            android:gravity="right"
+                            android:text="@string/COMMON_OPTIONALTXT" />
+
+                        <TextView
                             android:id="@+id/deletePic"
                             style="@style/link"
                             android:layout_gravity="center"
                             android:layout_marginRight="15dp"
-                            android:text="@string/PRODUCT_DELETEPIC" />
+                            android:text="@string/PRODUCT_DELETEPIC"
+                            android:visibility="gone" />
 
                         <ImageView
+                            android:id="@+id/imgPic"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
+                            android:layout_gravity="center"
                             android:gravity="center"
-                            android:src="@drawable/ic_launcher" />
+                            android:src="@drawable/ic_launcher"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <ImageView
@@ -244,8 +224,8 @@
                         style="@style/textarea"
                         android:layout_height="100dp"
                         android:layout_marginRight="15dp"
-                        android:inputType="text"
-                        android:hint="@string/COMMON_OPTIONALTXT" >
+                        android:hint="@string/COMMON_OPTIONALTXT"
+                        android:inputType="text" >
                     </EditText>
                 </LinearLayout>
             </LinearLayout>
