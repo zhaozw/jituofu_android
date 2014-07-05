@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.TimerTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.DialogInterface;
@@ -141,7 +142,14 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 	}
 	
 	private void submitSuccess(JSONObject data){
-		
+		Bundle bundle = new Bundle();
+		try {
+			bundle.putString("id", data.getString("id"));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.forward(UIProductDetail.class, bundle);
 	}
 
 	@Override

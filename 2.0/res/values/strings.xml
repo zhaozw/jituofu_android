@@ -30,6 +30,7 @@
     <string name="COMMON_IKNOW">知道了</string>
     <string name="COMMON_AGAIN">请重试</string>
     <string name="COMMON_OPTIONALTXT">可选</string>
+    <string name="COMMON_DELETETXT">删除</string>
 
     <!-- 注册登录 -->
 

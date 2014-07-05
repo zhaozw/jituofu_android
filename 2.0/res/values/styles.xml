@@ -126,6 +126,16 @@
         <item name="android:background">@drawable/primary_btn</item>
     </style>
     
+    <!-- 删除按钮 -->
+    <style name="deleteBtn">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">@dimen/normal_btn_height</item>
+        <item name="android:textSize">@dimen/normal_btn_text_size</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/base_delete_btn_bg</item>
+    </style>
+    
     <!-- 次按钮 -->
     <style name="negativeButton">
         <item name="android:layout_width">fill_parent</item>
