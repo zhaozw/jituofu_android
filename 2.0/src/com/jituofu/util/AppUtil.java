@@ -82,7 +82,7 @@ public class AppUtil {
         String strTimeFormat = android.provider.Settings.System.getString(cv,
                                            android.provider.Settings.System.TIME_12_24);
         
-        if(strTimeFormat.equals("24"))       {
+        if(strTimeFormat != null && strTimeFormat.equals("24"))       {
               return true;
         }
         

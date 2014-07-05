@@ -27,8 +27,8 @@ public final class C {
 		public static final String channelId = "官方";
 		public static final String versionName = "2.0.0";
 		public static final String localKey = "JTF_ANDROID";// 必须与服务端的localKey对应
-		public static final int camera = 0;// 从相机上传图片
-		public static final int gallery = 1;// 从图库片上传图片
+		public static final int camera = 10;// 从相机上传图片
+		public static final int gallery = 11;// 从图库片上传图片
 		public static final String productSubmit = "productSubmit";
 		public static final String productEdit = "productEdit";
 	}
