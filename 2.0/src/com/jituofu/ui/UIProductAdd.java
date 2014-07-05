@@ -4,6 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TimerTask;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -24,6 +31,7 @@ import android.widget.TextView;
 import com.jituofu.R;
 import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseMenuBottom2Top;
+import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseUiBuilder;
 import com.jituofu.base.BaseUiFormBuilder;
@@ -67,7 +75,73 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 	@Override
 	public void doSubmit() {
 		// TODO Auto-generated method stub
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+		
+		String price = priceView.getText()+"";
+		
+		urlParams.put("name", name);
+		urlParams.put("count", count);
+		urlParams.put("price", price);
+		urlParams.put("type", typeId);
+		urlParams.put("date", time);
+		urlParams.put("remark", remark);
+		if(picPath != null){
+			ArrayList<String> filesList = new ArrayList<String>();
+			filesList.add(picPath);
+			try {
+				this.doUploadTaskAsync(C.TASK.productcreate, C.API.host
+						+ C.API.productcreate, urlParams, filesList);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			try {
+				this.doTaskAsync(C.TASK.productcreate, C.API.host
+							+ C.API.productcreate, urlParams);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	public void onTaskComplete(int taskId, BaseMessage message,
+			ArrayList<String> filesPath) throws Exception {
+		super.onTaskComplete(taskId, message, filesPath);
 
+		int resultStatus = message.getResultStatus();
+		JSONObject operation = message.getOperation();
+		if (resultStatus == 100) {
+			File img = new File(picPath);
+			if(img != null){
+				String productDirPath = AppUtil.getExternalStorageDirectory()
+						+ C.DIRS.rootdir + C.DIRS.productDir;
+				String newFileName = productDirPath+"/"+operation.getString("id")+".png";
+				img.renameTo(new File(newFileName));
+				submitSuccess(operation);
+			}
+		} else {
+			this.showToast(message.getFirstOperationErrorMessage());
+		}
+	}
+	
+	@Override
+	public void onTaskComplete(int taskId, BaseMessage message) throws Exception {
+		super.onTaskComplete(taskId, message);
+
+		int resultStatus = message.getResultStatus();
+		JSONObject operation = message.getOperation();
+		if (resultStatus == 100) {
+			submitSuccess(operation);
+		} else {
+			this.showToast(message.getFirstOperationErrorMessage());
+		}
+	}
+	
+	private void submitSuccess(JSONObject data){
+		
 	}
 
 	@Override
@@ -240,10 +314,7 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 
 				typeView.setText(typeName);
 			}
-		}
-
-		// 拍照返回
-		if (requestCode == C.COMMON.camera) {
+		}else if (requestCode == C.COMMON.camera) {
 			String path = AppUtil.getExternalStorageDirectory()
 					+ C.DIRS.rootdir + C.DIRS.productDir + "/"
 					+ C.DIRS.productFileName;
