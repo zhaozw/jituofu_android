@@ -8,9 +8,9 @@
 
     <LinearLayout
         style="@style/container"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="0dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,14 +29,199 @@
                     android:orientation="vertical" >
 
                     <RelativeLayout
+                        android:id="@+id/imgBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="200dp" >
+
+                        <ImageView
+                            android:id="@+id/imageView1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/default_img_placeholder" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:alpha="0.75"
+                            android:background="#000000"
+                            android:gravity="center"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/PRODUCT_DETAIL_UPDATETXT"
+                                android:textColor="#ffffff"
+                                android:textSize="14sp" />
+                        </LinearLayout>
                     </RelativeLayout>
-                    
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout style="@style/field" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PNAME" />
+
+                            <EditText
+                                android:id="@+id/name"
+                                style="@style/commonEditText"
+                                android:layout_toRightOf="@+id/textView1"
+                                android:inputType="text" >
+                            </EditText>
+
+                            <LinearLayout
+                                style="@style/field_separator"
+                                android:layout_alignParentBottom="true"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout style="@style/field" >
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PPRICE" />
+
+                            <EditText
+                                android:id="@+id/price"
+                                style="@style/commonEditText"
+                                android:layout_toRightOf="@+id/textView2"
+                                android:inputType="number|numberDecimal" >
+                            </EditText>
+
+                            <LinearLayout
+                                style="@style/field_separator"
+                                android:layout_alignParentBottom="true"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout style="@style/field" >
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PCOUNT" />
+
+                            <EditText
+                                android:id="@+id/count"
+                                style="@style/commonEditText"
+                                android:layout_toRightOf="@+id/textView3"
+                                android:inputType="number|numberDecimal" >
+                            </EditText>
+
+                            <LinearLayout
+                                style="@style/field_separator"
+                                android:layout_alignParentBottom="true"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PTYPE" />
+
+                            <TextView
+                                android:id="@+id/type"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:paddingRight="10dp" />
+
+                            <ImageView
+                                android:layout_width="7.5dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="15dp"
+                                android:src="@drawable/arrow" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/border"
+                            style="@style/field_separator"
+                            android:layout_marginLeft="15dp"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PTIME" />
+
+                            <TextView
+                                android:id="@+id/time"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:paddingRight="10dp" />
+
+                            <ImageView
+                                android:layout_width="7.5dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="15dp"
+                                android:src="@drawable/arrow" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field_separator"
+                            android:layout_marginLeft="15dp"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:layout_marginTop="15dp"
+                                android:gravity="top"
+                                android:text="@string/PRODUCT_PREMARK" />
+
+                            <EditText
+                                android:id="@+id/remark"
+                                style="@style/textarea"
+                                android:layout_height="100dp"
+                                android:layout_marginRight="15dp"
+                                android:hint="@string/COMMON_OPTIONALTXT"
+                                android:inputType="text" >
+                            </EditText>
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
-        
+
+        <LinearLayout
+            style="@style/field_separator"
+            android:orientation="vertical" >
+        </LinearLayout>
+
         <Button
             android:id="@+id/goQuickHelp"
             style="@style/deleteBtn"

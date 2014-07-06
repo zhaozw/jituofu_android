@@ -194,4 +194,7 @@
     <string name="PRODUCT_PPIC_HINT">商品图片</string>
     <string name="PRODUCT_PREMARK_HINT">备注信息</string>
     <string name="PRODUCT_DELETEPIC">删除图片</string>
+    
+    <!-- 商品详情 -->
+    <string name="PRODUCT_DETAIL_UPDATETXT">点击更新图片</string>
 </resources>
