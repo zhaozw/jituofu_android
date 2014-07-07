@@ -176,9 +176,11 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		priceView.setText(operation.getString("price"));
 		countView.setText(operation.getString("count"));
 		timeView.setText(operation.getString("date"));
+		remarkView.setText(operation.getString("remark"));
 		
 		typeId = operation.getString("typeId");
 		time = operation.getString("date");
+		remark = operation.getString("remark");
 
 		JSONObject type = operation.getJSONObject("type");
 		String typeName = "";
