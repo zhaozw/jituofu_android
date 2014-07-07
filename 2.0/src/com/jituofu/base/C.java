@@ -35,7 +35,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://192.168.1.101";
+		public static final String host = "http://10.1.10.42";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";
@@ -55,6 +55,8 @@ public final class C {
 		public static final String typesdeletecp = "/types/deletecp";
 		public static final String typesdeletemp = "/types/deletemp";
 		public static final String productcreate = "/products/create";
+		public static final String productquery = "/products/query";
+		public static final String productupdate = "/products/update";
 	}
 
 	public static final class ERROR {
@@ -84,6 +86,8 @@ public final class C {
 		public static final int typesdeletecp = 1017;
 		public static final int typesdeletemp = 1018;
 		public static final int productcreate = 1019;
+		public static final int productquery = 1020;
+		public static final int productupdate = 1021;
 	}
 	
 	public static final class PASSWORDLENGTH{

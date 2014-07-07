@@ -401,7 +401,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 							.setText(R.string.SPFL_QUERY_ADDTXT);
 					
 					//直接使用大分类
-					if(from != null && from.equals(C.COMMON.productSubmit)){
+					if(from != null && (from.equals(C.COMMON.productSubmit) || from.equals(C.COMMON.productEdit))){
 						noDataAddTypeView.setOnClickListener(null);
 						noDataAddTypeView.setOnClickListener(new OnClickListener(){
 
@@ -413,7 +413,12 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 								intent.putExtra("parentTypeId", parentId);
 								intent.putExtra("parentTypeName", parentName);
 								
-								backForResult(UIProductAdd.selectTypeRequestCode, intent);
+								if(from.equals(C.COMMON.productSubmit)){
+									backForResult(UIProductAdd.selectTypeRequestCode, intent);
+								}else if(from.equals(C.COMMON.productEdit)){
+									backForResult(UIProductDetail.updateTypeRequestCode, intent);
+								}
+								
 								finish();
 							}});
 						((TextView) noDataView.findViewById(R.id.action_btn))
@@ -597,7 +602,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
 				
-				if(from != null && from.equals(C.COMMON.productSubmit)){
+				if(from != null){
 					Intent intent = new Intent();
 					intent.putExtra("from", from);
 					intent.putExtra("parentTypeId", parentId);
@@ -605,7 +610,12 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 					intent.putExtra("parentTypeName", parentName);
 					intent.putExtra("childTypeName", map.get("name"));
 					
-					backForResult(UIProductAdd.selectTypeRequestCode, intent);
+					if(from.equals(C.COMMON.productSubmit)){
+						backForResult(UIProductAdd.selectTypeRequestCode, intent);
+					}else if(from.equals(C.COMMON.productEdit)){
+						backForResult(UIProductDetail.updateTypeRequestCode, intent);
+					}
+						
 					finish();
 				}
 			}

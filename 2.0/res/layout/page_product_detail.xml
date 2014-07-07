@@ -10,6 +10,7 @@
         style="@style/container"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:paddingBottom="0dp"
         android:paddingTop="0dp" >
 
         <LinearLayout
@@ -34,7 +35,7 @@
                         android:layout_height="200dp" >
 
                         <ImageView
-                            android:id="@+id/imageView1"
+                            android:id="@+id/imageView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_alignParentLeft="true"
@@ -43,6 +44,7 @@
                             android:src="@drawable/default_img_placeholder" />
 
                         <LinearLayout
+                            android:id="@+id/updateImgBtn"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_alignParentLeft="true"
@@ -50,7 +52,8 @@
                             android:alpha="0.75"
                             android:background="#000000"
                             android:gravity="center"
-                            android:orientation="vertical" >
+                            android:orientation="vertical"
+                            android:visibility="gone" >
 
                             <TextView
                                 android:id="@+id/textView1"
@@ -62,6 +65,11 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
                     </RelativeLayout>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:orientation="vertical" >
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -79,7 +87,8 @@
                                 android:id="@+id/name"
                                 style="@style/commonEditText"
                                 android:layout_toRightOf="@+id/textView1"
-                                android:inputType="text" >
+                                android:inputType="text"
+                                android:focusable="false" >
                             </EditText>
 
                             <LinearLayout
@@ -97,6 +106,7 @@
                                 android:text="@string/PRODUCT_PPRICE" />
 
                             <EditText
+                                android:focusable="false"
                                 android:id="@+id/price"
                                 style="@style/commonEditText"
                                 android:layout_toRightOf="@+id/textView2"
@@ -118,6 +128,7 @@
                                 android:text="@string/PRODUCT_PCOUNT" />
 
                             <EditText
+                                android:focusable="false"
                                 android:id="@+id/count"
                                 style="@style/commonEditText"
                                 android:layout_toRightOf="@+id/textView3"
@@ -204,11 +215,11 @@
                                 android:text="@string/PRODUCT_PREMARK" />
 
                             <EditText
+                                android:focusable="false"
                                 android:id="@+id/remark"
                                 style="@style/textarea"
                                 android:layout_height="100dp"
                                 android:layout_marginRight="15dp"
-                                android:hint="@string/COMMON_OPTIONALTXT"
                                 android:inputType="text" >
                             </EditText>
                         </LinearLayout>
@@ -223,12 +234,14 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/goQuickHelp"
+            android:id="@+id/deleteBtn"
             style="@style/deleteBtn"
+            android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
-            android:text="@string/COMMON_DELETETXT" />
+            android:text="@string/COMMON_DELETETXT"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

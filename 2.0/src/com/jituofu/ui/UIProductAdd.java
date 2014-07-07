@@ -258,7 +258,7 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						if (year > 0 && month > 0 && day > 0) {
-							if (hour > 0 && minute > 0 && second > 0) {
+							if (hour > 0 && minute > 0) {
 								dateTimePicker.setHMS(hour, minute, second);
 							}
 							dateTimePicker.showDateDialog(year, month, day);

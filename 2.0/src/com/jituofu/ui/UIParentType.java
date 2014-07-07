@@ -571,6 +571,8 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 					
 					if(from.equals(C.COMMON.productSubmit)){
 						requestCode = UIProductAdd.selectTypeRequestCode;
+					}else if(from.equals(C.COMMON.productEdit)){
+						requestCode = UIProductDetail.updateTypeRequestCode;
 					}
 					
 					forwardForResult(UIChildType.class, requestCode, bundle);
@@ -585,6 +587,11 @@ public class UIParentType extends BaseUiAuth implements OnClickListener,
 		
 		//商品入库
 		if(resultCode == UIProductAdd.selectTypeRequestCode){
+			this.backForResult(requestCode, data);
+			this.finish();
+		}
+		//商品编辑
+		if(resultCode == UIProductDetail.updateTypeRequestCode){
 			this.backForResult(requestCode, data);
 			this.finish();
 		}

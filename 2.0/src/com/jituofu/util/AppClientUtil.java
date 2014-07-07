@@ -42,7 +42,7 @@ public class AppClientUtil {
 	private String apiUrl;
 	private HttpParams httpParams;
 	private HttpClient httpClient;
-	private int timeoutConnection = 1000*60;
+	public static int timeoutConnection = 1000*60;
 	private int timeoutSocket = 1000*60;
 	private int compress = CS_NONE;
 

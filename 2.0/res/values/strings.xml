@@ -31,6 +31,8 @@
     <string name="COMMON_AGAIN">请重试</string>
     <string name="COMMON_OPTIONALTXT">可选</string>
     <string name="COMMON_DELETETXT">删除</string>
+    <string name="COMMON_EDITTXT">编辑</string>
+    <string name="COMMON_COMPLETETXT">完成</string>
 
     <!-- 注册登录 -->
 
@@ -197,4 +199,6 @@
     
     <!-- 商品详情 -->
     <string name="PRODUCT_DETAIL_UPDATETXT">点击更新图片</string>
+    <string name="PRODUCT_DETAIL_QUERYLOADING">获取商品信息...</string>
+    <string name="PRODUCT_DETAIL_UPDATINGLOADING">更新商品...</string>
 </resources>

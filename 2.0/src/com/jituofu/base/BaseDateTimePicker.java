@@ -90,7 +90,7 @@ public class BaseDateTimePicker {
                 }
             }, 
             y, // 传入年份
-            m, // 传入月份
+            m-1, // 传入月份
             d // 传入天数
         );
 		dateDialog.show();
