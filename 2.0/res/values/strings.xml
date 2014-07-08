@@ -201,4 +201,5 @@
     <string name="PRODUCT_DETAIL_UPDATETXT">点击更新图片</string>
     <string name="PRODUCT_DETAIL_QUERYLOADING">获取商品信息...</string>
     <string name="PRODUCT_DETAIL_UPDATINGLOADING">更新商品...</string>
+    <string name="PRODUCT_DETAIL_DELETINGLOADING">删除商品...</string>
 </resources>

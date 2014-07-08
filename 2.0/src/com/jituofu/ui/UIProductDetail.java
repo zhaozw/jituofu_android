@@ -44,7 +44,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		BaseUiFormBuilder {
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
-	
+
 	// view对象
 	private TextView titleView, timeView, typeView, titleRightView;
 	private EditText nameView, priceView, countView, remarkView;
@@ -59,6 +59,8 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 
 	// 表单提交
 	private boolean validated = false;
+	
+	private boolean isDeleted = false;
 
 	public static int updateTypeRequestCode = 2;// 分类更新
 
@@ -97,7 +99,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void onTaskComplete(int taskId, BaseMessage message,
 			ArrayList<String> filesPath) throws Exception {
@@ -107,10 +109,11 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
 			File img = new File(picPath);
-			if(img != null){
+			if (img != null) {
 				String productDirPath = AppUtil.getExternalStorageDirectory()
 						+ C.DIRS.rootdir + C.DIRS.productDir;
-				String newFileName = productDirPath+"/"+operation.getString("id")+".png";
+				String newFileName = productDirPath + "/"
+						+ operation.getString("id") + ".png";
 				img.renameTo(new File(newFileName));
 				showUpdateResult(message);
 			}
@@ -130,21 +133,24 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		if (resultStatus == 100) {
 			if (taskId == C.TASK.productquery) {
 				showProductInfo(operation);
-			}else if(taskId == C.TASK.productupdate){
+			} else if (taskId == C.TASK.productupdate) {
+				showUpdateResult(message);
+			}else if(taskId == C.TASK.productsdelete){
+				isDeleted = true;
 				showUpdateResult(message);
 			}
 		} else {
-			//更新商品信息失败时，标识编辑状态，让用户继续提交
-			if(taskId == C.TASK.productupdate){
+			// 更新商品信息失败时，标识编辑状态，让用户继续提交
+			if (taskId == C.TASK.productupdate) {
 				isEditing = true;
 			}
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
-	
-	private void showUpdateResult(BaseMessage message) throws Exception{
+
+	private void showUpdateResult(BaseMessage message) throws Exception {
 		updateFormStatus();
-		
+
 		baseDialogBuilder.setMessage(message.getMemo());
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.setCanceledOnTouchOutside(false);
@@ -155,22 +161,22 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		String pic = operation.getString("pic");
 		String date = operation.getString("date");
 		String[] dateSplit = date.split("\\s+");
-		
-		if(dateSplit != null){
+
+		if (dateSplit != null) {
 			String ymd = dateSplit[0];
 			String hms = dateSplit[1];
-			
-			if(ymd != null){
+
+			if (ymd != null) {
 				String[] ymdSplit = ymd.split("-");
-				if(ymdSplit != null){
+				if (ymdSplit != null) {
 					this.year = Integer.parseInt(ymdSplit[0]);
 					this.month = Integer.parseInt(ymdSplit[1]);
 					this.day = Integer.parseInt(ymdSplit[2]);
 				}
 			}
-			if(hms != null){
+			if (hms != null) {
 				String[] hmsSplit = hms.split(":");
-				if(hmsSplit != null){
+				if (hmsSplit != null) {
 					this.hour = Integer.parseInt(hmsSplit[0]);
 					this.minute = Integer.parseInt(hmsSplit[1]);
 					this.second = Integer.parseInt(hmsSplit[2]);
@@ -184,10 +190,11 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		countView.setText(operation.getString("count"));
 		timeView.setText(operation.getString("date"));
 		remarkView.setText(operation.getString("remark"));
-		
+
 		typeId = operation.getString("typeId");
 		time = operation.getString("date");
 		remark = operation.getString("remark");
+		name = operation.getString("name");
 
 		JSONObject type = operation.getJSONObject("type");
 		String typeName = "";
@@ -219,11 +226,11 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 	public void doSubmit() {
 		// TODO Auto-generated method stub
 		AppUtil.showLoadingPopup(this, R.string.PRODUCT_DETAIL_UPDATINGLOADING);
-		
+
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
 		String price = priceView.getText() + "";
-		
+
 		urlParams.put("id", id);
 		urlParams.put("name", name);
 		urlParams.put("count", count);
@@ -331,7 +338,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 	public void onBind() {
 		// TODO Auto-generated method stub
 		this.onCustomBack();
-		
+
 		titleRightView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -342,12 +349,12 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 				} else {
 					isEditing = true;
 				}
-				
+
 				if (isEditing) {
 					updateFormStatus();
 				}
-				
-				if(!isEditing){
+
+				if (!isEditing) {
 					beforeSubmit();
 				}
 			}
@@ -400,9 +407,40 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 
 			@Override
 			public void onClick(View v) {
-				
+				String mes = "您确认删除 " + name;
+				showConfirmDialog(mes, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						doDeleteTask();
+					}
+
+				}, new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+
+				});
 			}
 		});
+	}
+
+	private void doDeleteTask() {
+		AppUtil.showLoadingPopup(this, R.string.PRODUCT_DETAIL_DELETINGLOADING);
+
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+
+		urlParams.put("id", id);
+
+		try {
+			this.doTaskAsync(C.TASK.productsdelete, C.API.host
+					+ C.API.productsdelete, urlParams);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -646,7 +684,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 						baseBottomMenu.dismiss();
 					}
 				});
-		
+
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
 				new DialogInterface.OnClickListener() {
@@ -655,6 +693,9 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 					public void onClick(DialogInterface di, int which) {
 						// TODO Auto-generated method stub
 						baseDialog.dismiss();
+						if(isDeleted){
+							finish();
+						}
 					}
 				});
 

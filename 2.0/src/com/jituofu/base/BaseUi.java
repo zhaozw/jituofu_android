@@ -288,6 +288,25 @@ public class BaseUi extends Activity {
 		confirmDialog.setPositiveButton("确认", firstListener);
 		confirmDialog.setNegativeButton("取消", secondListener);
 		confirmDialog.create().show();
+	} 
+	@SuppressLint("NewApi")
+	public void showConfirmDialog(String mes,
+			DialogInterface.OnClickListener firstListener,
+			DialogInterface.OnClickListener secondListener) {
+		ContextThemeWrapper themedContext;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			themedContext = new ContextThemeWrapper(this,
+					android.R.style.Theme_Holo_Light_Dialog_NoActionBar);
+		} else {
+			themedContext = new ContextThemeWrapper(this,
+					android.R.style.Theme_Light_NoTitleBar);
+		}
+		confirmDialog = new AlertDialog.Builder(themedContext);
+		confirmDialog.setMessage(mes);
+
+		confirmDialog.setPositiveButton("确认", firstListener);
+		confirmDialog.setNegativeButton("取消", secondListener);
+		confirmDialog.create().show();
 	}
 
 	/**
