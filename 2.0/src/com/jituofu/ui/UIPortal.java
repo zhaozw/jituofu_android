@@ -16,16 +16,12 @@ public class UIPortal extends BaseUi {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.portal);
-		
-		Bundle bundle = new Bundle();
-		bundle.putString("id", "657");
-		this.forward(UIProductDetail.class, bundle);
 	}
 	
 	@Override
 	protected void onResume(){
 		super.onResume();
-		//AppUtil.fetchUserFromServer(getApplicationContext(), this);
+		AppUtil.fetchUserFromServer(getApplicationContext(), this);
 	}
 	
 	@Override

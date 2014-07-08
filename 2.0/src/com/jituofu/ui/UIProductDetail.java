@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -72,6 +73,19 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 
 	private boolean isEditing = false;
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (isEditing) {
+			isEditing = false;
+			updateFormStatus();
+			return false;
+
+		}
+
+		return super.onKeyDown(keyCode, event);
+
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
