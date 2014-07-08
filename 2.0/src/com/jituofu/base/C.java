@@ -57,6 +57,7 @@ public final class C {
 		public static final String productcreate = "/products/create";
 		public static final String productquery = "/products/query";
 		public static final String productupdate = "/products/update";
+		public static final String productsdelete = "/products/delete";
 	}
 
 	public static final class ERROR {
@@ -88,6 +89,7 @@ public final class C {
 		public static final int productcreate = 1019;
 		public static final int productquery = 1020;
 		public static final int productupdate = 1021;
+		public static final int productsdelete = 1022;
 	}
 	
 	public static final class PASSWORDLENGTH{

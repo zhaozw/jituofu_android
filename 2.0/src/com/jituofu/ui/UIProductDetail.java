@@ -114,6 +114,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 				img.renameTo(new File(newFileName));
 				showUpdateResult(message);
 			}
+			picPath = null;
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
@@ -133,11 +134,17 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 				showUpdateResult(message);
 			}
 		} else {
+			//更新商品信息失败时，标识编辑状态，让用户继续提交
+			if(taskId == C.TASK.productupdate){
+				isEditing = true;
+			}
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
 	
 	private void showUpdateResult(BaseMessage message) throws Exception{
+		updateFormStatus();
+		
 		baseDialogBuilder.setMessage(message.getMemo());
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.setCanceledOnTouchOutside(false);
@@ -323,6 +330,8 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 	@Override
 	public void onBind() {
 		// TODO Auto-generated method stub
+		this.onCustomBack();
+		
 		titleRightView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -333,7 +342,10 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 				} else {
 					isEditing = true;
 				}
-				updateFormStatus();
+				
+				if (isEditing) {
+					updateFormStatus();
+				}
 				
 				if(!isEditing){
 					beforeSubmit();
