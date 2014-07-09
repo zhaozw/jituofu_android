@@ -33,6 +33,7 @@
     <string name="COMMON_DELETETXT">删除</string>
     <string name="COMMON_EDITTXT">编辑</string>
     <string name="COMMON_COMPLETETXT">完成</string>
+    <string name="COMMON_SEARCHTXT">搜索</string>
 
     <!-- 注册登录 -->
 
@@ -202,4 +203,7 @@
     <string name="PRODUCT_DETAIL_QUERYLOADING">获取商品信息...</string>
     <string name="PRODUCT_DETAIL_UPDATINGLOADING">更新商品...</string>
     <string name="PRODUCT_DETAIL_DELETINGLOADING">删除商品...</string>
+    
+    <!-- 仓库管理 -->
+    <string name="WAREHOUSE_TITLE">仓库</string>
 </resources>

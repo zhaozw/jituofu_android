@@ -14,4 +14,7 @@
     
     <!-- 细线 -->
     <color name="spacelinear">#bababa</color>
+    
+    <!-- 搜索框的背景 -->
+    <color name="searchbox_bg">#dadade</color>
 </resources>

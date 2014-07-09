@@ -273,5 +273,19 @@
     	<item name="android:windowEnterAnimation">@anim/push_bottom_in</item>
         <item name="android:windowExitAnimation">@anim/push_bottom_out</item>
 	</style>
+	
+    <!-- 搜索文本框 -->
+    <style name="searchEditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:background">@drawable/round_bg</item>
+        <item name="android:textColor">#999999</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">text</item>
+        <item name="android:hint">@string/COMMON_SEARCHTXT</item>
+        <item name="android:editable">false</item>
+        <item name="android:focusable">false</item>
+    </style>
     
 </resources>

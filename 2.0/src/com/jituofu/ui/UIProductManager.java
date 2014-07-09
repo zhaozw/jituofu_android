@@ -28,6 +28,7 @@ public class UIProductManager extends BaseUiAuth implements OnClickListener {
 		this.ckglView.setOnClickListener(this);
 		this.flglView.setOnClickListener(this);
 		this.sprkView.setOnClickListener(this);
+		this.ckglView.setOnClickListener(this);
 	}
 
 	private void updateView() {
@@ -58,6 +59,9 @@ public class UIProductManager extends BaseUiAuth implements OnClickListener {
 			break;
 		case R.id.sprk:
 			this.forward(UIProductAdd.class);
+			break;
+		case R.id.ckgl:
+			this.forward(UIWareHouse.class);
 			break;
 		}
 	}
