@@ -41,6 +41,13 @@
                 android:hint=""
                 android:focusable="true" >
             </EditText>
+
+            <ImageView
+                android:id="@+id/searchBtn"
+                android:layout_width="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="30dp"
+                android:src="@android:drawable/ic_search_category_default" />
             
         </LinearLayout>
 

@@ -206,4 +206,5 @@
     
     <!-- 仓库管理 -->
     <string name="WAREHOUSE_TITLE">仓库</string>
+    <string name="WAREHOUSE_SPSS">商品搜索</string>
 </resources>
