@@ -3,6 +3,7 @@ package com.jituofu.base;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -10,16 +11,24 @@ import org.apache.http.HttpStatus;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 
+import com.jituofu.R;
 import com.jituofu.util.AppClientUtil;
 import com.jituofu.util.AppUtil;
 
 public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 	private String productId, productImgPath;
 	
-	public BaseGetProductImageTask(String productImgPath, String productId) {
+	private final WeakReference<ImageView> imageViewReference;
+	
+	public BaseGetProductImageTask(ImageView view, String productImgPath, String productId) {
 		this.productId = productId;
 		this.productImgPath = productImgPath;
+		imageViewReference = new WeakReference<ImageView>(view);
 	}
 
 	// 后台运行的子线程子线程
@@ -37,6 +46,19 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 	@Override
 	protected void onPostExecute(Uri result) {
 		super.onPostExecute(result); 
+		if(this.isCancelled()){
+			return;
+		}
+		if(imageViewReference != null){
+			ImageView view = (ImageView) imageViewReference.get();
+			if(result != null){
+				view.setImageURI(result);
+				view.setBackgroundResource(0);
+			}else{
+				view.setImageURI(null);
+				view.setBackgroundResource(R.drawable.default_img_placeholder);
+			}
+		}
 	}
 	
 	/**

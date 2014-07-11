@@ -27,7 +27,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout.LayoutParams;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseDateTimePicker;
@@ -60,7 +63,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 
 	// 表单提交
 	private boolean validated = false;
-	
+
 	private boolean isDeleted = false;
 
 	public static int updateTypeRequestCode = 2;// 分类更新
@@ -85,7 +88,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		return super.onKeyDown(keyCode, event);
 
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -145,11 +148,13 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
+			titleRightView.setVisibility(View.VISIBLE);
+			
 			if (taskId == C.TASK.productquery) {
 				showProductInfo(operation);
 			} else if (taskId == C.TASK.productupdate) {
 				showUpdateResult(message);
-			}else if(taskId == C.TASK.productsdelete){
+			} else if (taskId == C.TASK.productsdelete) {
 				isDeleted = true;
 				showUpdateResult(message);
 			}
@@ -157,6 +162,8 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 			// 更新商品信息失败时，标识编辑状态，让用户继续提交
 			if (taskId == C.TASK.productupdate) {
 				isEditing = true;
+			}else if(taskId == C.TASK.productquery){
+				titleRightView.setVisibility(View.GONE);
 			}
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
@@ -198,16 +205,18 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 			}
 		}
 
+		String remark = operation.getString("remark");
+
 		titleView.setText(operation.getString("name"));
 		nameView.setText(operation.getString("name"));
 		priceView.setText(operation.getString("price"));
 		countView.setText(operation.getString("count"));
 		timeView.setText(operation.getString("date"));
-		remarkView.setText(operation.getString("remark"));
+		remarkView.setText(remark != null ? remark : "");
 
 		typeId = operation.getString("typeId");
 		time = operation.getString("date");
-		remark = operation.getString("remark");
+		remark = remark != null ? remark : "";
 		name = operation.getString("name");
 
 		JSONObject type = operation.getJSONObject("type");
@@ -222,17 +231,23 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		typeView.setText(typeName);
 
 		if (pic != null) {
-			bpit = new BaseGetProductImageTask(pic, id) {
-				@Override
-				protected void onPostExecute(Uri result) {
-					super.onPostExecute(result);
-					if (result != null) {
-						imgPicView.setImageURI(result);
-					}
-				}
-
-			};
+			bpit = new BaseGetProductImageTask(imgPicView, pic, id);
 			bpit.execute();
+		}
+
+		if (pic == null || pic.length() <= 0) {
+			imgPicView.setScaleType(ScaleType.CENTER);
+
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+					RelativeLayout.LayoutParams.WRAP_CONTENT,
+					RelativeLayout.LayoutParams.WRAP_CONTENT);
+			lp.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+			lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+			lp.alignWithParent = true;
+			lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+			lp.addRule(RelativeLayout.CENTER_VERTICAL);
+			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+			imgPicView.setLayoutParams(lp);
 		}
 	}
 
@@ -707,7 +722,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 					public void onClick(DialogInterface di, int which) {
 						// TODO Auto-generated method stub
 						baseDialog.dismiss();
-						if(isDeleted){
+						if (isDeleted) {
 							finish();
 						}
 					}

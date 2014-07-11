@@ -207,4 +207,7 @@
     <!-- 仓库管理 -->
     <string name="WAREHOUSE_TITLE">仓库</string>
     <string name="WAREHOUSE_SPSS">商品搜索</string>
+    <string name="WAREHOUSE_SPSS_PRODUCTNAME_SPECIFY">输入一些内容后，再尝试</string>
+    <string name="WAREHOUSE_SPSS_QUERYLOADING">搜索中...</string>
+    <string name="WAREHOUSE_SPSS_NODATA">没有相关商品</string>
 </resources>
