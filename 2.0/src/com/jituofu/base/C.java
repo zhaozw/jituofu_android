@@ -31,6 +31,7 @@ public final class C {
 		public static final int gallery = 11;// 从图库片上传图片
 		public static final String productSubmit = "productSubmit";
 		public static final String productEdit = "productEdit";
+		public static final String warehouse = "warehouse";
 	}
 
 	public static final class API {

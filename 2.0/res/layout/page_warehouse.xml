@@ -8,20 +8,10 @@
         android:id="@+id/topbar3"
         layout="@layout/topbar3" />
 
-    <include
-        android:id="@+id/noData"
-        layout="@layout/template_no_data"
-        android:visibility="gone" />
-
     <LinearLayout
         style="@style/container"
         android:orientation="vertical"
         android:padding="0dp" >
-
-        <include
-            android:id="@+id/again"
-            layout="@layout/template_again"
-            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,11 +25,20 @@
 
             <EditText
                 android:id="@+id/search"
-                android:layout_weight="1"
-                style="@style/searchEditText" >
+                style="@style/searchEditText"
+                android:layout_weight="1" >
             </EditText>
-            
         </LinearLayout>
+
+        <include
+            android:id="@+id/again"
+            layout="@layout/template_again"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/noData"
+            layout="@layout/template_no_data"
+            android:visibility="gone" />
 
         <com.jituofu.base.BaseListView
             android:id="@+id/listView"
