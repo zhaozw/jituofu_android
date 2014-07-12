@@ -101,9 +101,11 @@ public class UIWareHouse extends BaseUiAuth implements BaseListViewListener {
 				if (initQuery && types.length() <= 0) {
 					lv.setVisibility(View.GONE);
 					againView.setVisibility(View.GONE);
+					((LinearLayout) searchView.getParent()).setVisibility(View.GONE);
 					noDataView.setVisibility(View.VISIBLE);
 					((TextView) noDataView.findViewById(R.id.txt))
 							.setText(R.string.WAREHOUSE_NOPARENT);
+					((TextView) noDataView.findViewById(R.id.action_btn)).setText(R.string.WAREHOUSE_SUBMITPRDOCT);
 					return;
 				}
 				if (initQuery) {
@@ -171,6 +173,13 @@ public class UIWareHouse extends BaseUiAuth implements BaseListViewListener {
 
 	private void onBind() {
 		onCustomBack();
+		((TextView) noDataView.findViewById(R.id.action_btn)).setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				forward(UIProductAdd.class);
+			}});
 		searchView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -198,10 +207,9 @@ public class UIWareHouse extends BaseUiAuth implements BaseListViewListener {
 						.getItemAtPosition(position);
 				
 				Bundle bundle = new Bundle();
-				bundle.putString("from", C.COMMON.warehouse);
 				bundle.putString("data", map.toString());
 				
-				forward(UIChildType.class, bundle);
+				forward(UIWareHouseParentTypeDetail.class, bundle);
 			}
 		});
 	}
@@ -217,8 +225,6 @@ public class UIWareHouse extends BaseUiAuth implements BaseListViewListener {
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
-		((TextView) noDataView.findViewById(R.id.action_btn))
-				.setVisibility(View.GONE);
 
 		lv = (BaseListView) this.findViewById(R.id.listView);
 		lv.setPullLoadEnable(true);
