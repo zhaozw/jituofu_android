@@ -214,4 +214,6 @@
     <string name="WAREHOUSE_SUBMITPRDOCT">上传商品</string>
     <string name="WAREHOUSE_QUERYPARENTDETAIL_LOADING">获取大分类详情...</string>
     <string name="WAREHOUSE_QUERYPARENTDETAIL_NODATA">当前大分类下没有商品和小分类</string>
+    <string name="WAREHOUSE_JJTXT">进价</string>
+    <string name="WAREHOUSE_RKSJTXT">入库时间</string>
 </resources>

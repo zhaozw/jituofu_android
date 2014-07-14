@@ -1,16 +1,25 @@
 package com.jituofu.ui;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +54,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 	private boolean initQuery = false;
 	private ArrayList<HashMap<String, String>> dataList = new ArrayList<HashMap<String, String>>();
 	private int limit;
+	private String sort = "1";
 	private CustomAdapter customAdapter;
 	private CustomProductsAdapter customProductsAdapter;
 	private boolean onlyChildTypes = false;
@@ -64,10 +74,16 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 	private JSONObject parentTypeData;
 	private String parentTypeId;
 
+	private LinearLayout borderView, sortContainerView, jjView, rksjView;
+	SimpleDateFormat simpleDateFormat;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_warehouse_parenttype_detail);
+
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.CHINA);
 
 		extraBundle = this.getIntent().getExtras();
 		if (extraBundle != null) {
@@ -97,6 +113,77 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 	private void onBind() {
 		this.onCustomBack();
+
+		rksjView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				jjView.setBackgroundResource(0);
+				TextView jjViewTxt = (TextView) jjView.findViewById(R.id.txt);
+				ImageView jjViewArrow = (ImageView) jjView
+						.findViewById(R.id.arrow);
+				jjViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				jjViewArrow.setImageResource(R.drawable.icon_arrow_down);
+
+				Collections.sort(dataList, new SortByDate());
+				customProductsAdapter.notifyDataSetChanged();
+				
+				// TODO Auto-generated method stub
+				if (sort.equals("1")) {
+					sort = "2";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) rksjView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
+				} else {
+					sort = "1";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) rksjView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				}
+			}
+		});
+
+		jjView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				rksjView.setBackgroundResource(0);
+				TextView rksjViewTxt = (TextView) rksjView
+						.findViewById(R.id.txt);
+				ImageView rksjViewArrow = (ImageView) rksjView
+						.findViewById(R.id.arrow);
+				rksjViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				rksjViewArrow.setImageResource(R.drawable.icon_arrow_down);
+
+				Collections.sort(dataList, new SortByPrice());
+				customProductsAdapter.notifyDataSetChanged();
+				
+				// TODO Auto-generated method stub
+				if (sort.equals("3")) {
+					sort = "4";
+					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					TextView txt = (TextView) jjView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) jjView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
+				} else {
+					sort = "3";
+					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					TextView txt = (TextView) jjView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) jjView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				}
+			}
+		});
 
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -145,6 +232,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		urlParams.put("pageNum", pageNum + "");
 		urlParams.put("limit", limit + "");
 		urlParams.put("id", parentTypeId);
+		urlParams.put("sort", sort);
 
 		try {
 			doTaskAsync(C.TASK.parenttypedetail, C.API.host
@@ -170,6 +258,8 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				onlyChildTypes = true;
 			} else if (operation.has("products") && !operation.has("types")) {// 只有商品
 				onlyProducts = true;
+				borderView.setVisibility(View.VISIBLE);
+				sortContainerView.setVisibility(View.VISIBLE);
 			} else if (operation.has("products") && operation.has("types")) {
 				childTypesAndProducts = true;
 			}
@@ -272,6 +362,8 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				map.put("count", "库存：" + json.getString("count") + " 个");
 				map.put("pic", json.getString("pic"));
 				map.put("date", "时间：" + json.getString("date"));
+				map.put("time", json.getString("date"));
+				map.put("money", json.getString("price"));
 
 				// 避免重复加载
 				if (productsId.indexOf(id) < 0) {
@@ -304,10 +396,88 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		}
 	}
 
+	class SortByDate implements Comparator {
+		public int compare(Object o1, Object o2) {
+			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			HashMap<String, String> h2 = (HashMap<String, String>) o2;
+
+			Date h1d = null;
+			try {
+				h1d = simpleDateFormat.parse(h1.get("time"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Date h2d = null;
+			try {
+				h2d = simpleDateFormat.parse(h2.get("time"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if(sort.equals("1")){
+				if (h1d.getTime() > h2d.getTime()) {
+					return 1;
+				} else if (h1d.getTime() == h2d.getTime()) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}else if(sort.equals("2")){
+				if (h1d.getTime() > h2d.getTime()) {
+					return -1;
+				} else if (h1d.getTime() == h2d.getTime()) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+			return -1;
+		}
+	}
+
+	class SortByPrice implements Comparator {
+		public int compare(Object o1, Object o2) {
+			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			HashMap<String, String> h2 = (HashMap<String, String>) o2;
+
+			Double h1money = Double.parseDouble(h1.get("money"));
+			Double h2money = Double.parseDouble(h2.get("money"));
+
+			if(sort.equals("3")){
+				if (h1money == h2money) {
+					return 0;
+				} else if (h1money > h2money) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}else if(sort.equals("4")){
+				if (h1money == h2money) {
+					return 0;
+				} else if (h1money > h2money) {
+					return -1;
+				} else {
+					return 1;
+				}
+			}
+			
+			return -1;
+		}
+	}
+
 	private void updateView() throws JSONException {
 		titleView.setText(this.parentTypeData.getString("name"));
 		((TextView) noDataView.findViewById(R.id.action_btn))
 				.setVisibility(View.GONE);
+		if (sort.equals("1")) {
+			rksjView.setBackgroundResource(R.drawable.base_rt_rb_round);
+			TextView txt = (TextView) rksjView.findViewById(R.id.txt);
+			ImageView arrow = (ImageView) rksjView.findViewById(R.id.arrow);
+			txt.setTextColor(Color.rgb(255, 255, 255));
+			arrow.setImageResource(R.drawable.icon_arrow_down_white);
+		}
 	}
 
 	private void initView() {
@@ -316,6 +486,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
+
+		this.borderView = (LinearLayout) this.findViewById(R.id.border);
+		this.sortContainerView = (LinearLayout) this
+				.findViewById(R.id.sortContainer);
+		this.jjView = (LinearLayout) this.findViewById(R.id.jj);
+		this.rksjView = (LinearLayout) this.findViewById(R.id.rksj);
 
 		lv = (BaseListView) this.findViewById(R.id.listView);
 		lv.setPullLoadEnable(true);
