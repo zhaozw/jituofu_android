@@ -79,8 +79,13 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 				typeData = new JSONObject(extraBundle.getString("data"));
 				typeId = typeData.getString("id");
 
-				parentTypeData = new JSONObject(
-						extraBundle.getString("parentTypeData"));
+				String extraParentTypeData = extraBundle
+						.getString("parentTypeData");
+
+				if (extraParentTypeData != null) {
+					parentTypeData = new JSONObject(extraParentTypeData);
+				}
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -399,7 +404,9 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 
 	private void updateView() throws JSONException {
 		if (parentTypeData != null) {
-			titleView.setText(parentTypeData.getString("name") + this.getString(R.string.SPFL_SPEARATOR) + this.typeData.getString("name") + " 商品列表");
+			titleView.setText(parentTypeData.getString("name")
+					+ this.getString(R.string.SPFL_SPEARATOR)
+					+ this.typeData.getString("name") + " 商品列表");
 		} else {
 			titleView.setText(this.typeData.getString("name") + " 商品列表");
 		}
