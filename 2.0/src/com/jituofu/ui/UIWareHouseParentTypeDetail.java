@@ -432,8 +432,15 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return 1;
 				}
+			}else{
+				if (h1d.getTime() > h2d.getTime()) {
+					return -1;
+				} else if (h1d.getTime() == h2d.getTime()) {
+					return 0;
+				} else {
+					return 1;
+				}
 			}
-			return -1;
 		}
 	}
 
@@ -461,9 +468,15 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return 1;
 				}
+			}else{
+				if (h1money == h2money) {
+					return 0;
+				} else if (h1money > h2money) {
+					return -1;
+				} else {
+					return 1;
+				}
 			}
-			
-			return -1;
 		}
 	}
 
