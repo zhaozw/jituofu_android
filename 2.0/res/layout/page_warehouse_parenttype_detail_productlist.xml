@@ -15,6 +15,7 @@
 
         <LinearLayout
             android:id="@+id/sortContainer"
+            android:visibility="gone"
             style="@style/sortContainer" >
 
             <LinearLayout
@@ -34,7 +35,7 @@
                     android:src="@drawable/icon_arrow_down" />
             </LinearLayout>
 
-            <LinearLayout style="@style/sortContainerMenuSeparator" >
+            <LinearLayout style="@style/sortContainerMenuSeparator" android:visibility="gone" >
             </LinearLayout>
 
             <LinearLayout

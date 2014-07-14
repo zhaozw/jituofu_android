@@ -55,7 +55,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 	private boolean onlyProducts = false;
 	private boolean childTypesAndProducts = false;
 
-	private boolean isRefresh, isLoadMore, isLoading, isEditing;
+	private boolean isRefresh, isLoadMore, isLoading;
 
 	private ArrayList<String> typesId = new ArrayList<String>();// 存储所有分类的id，以免重复加载
 	private ArrayList<String> productsId = new ArrayList<String>();// 存储所有商品的id，以免重复加载
@@ -110,6 +110,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 		rksjView.setOnClickListener(new OnClickListener() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v) {
 				jjView.setBackgroundResource(0);
@@ -121,7 +122,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 				Collections.sort(dataList, new SortByDate());
 				customProductsAdapter.notifyDataSetChanged();
-				
+
 				// TODO Auto-generated method stub
 				if (sort.equals("1")) {
 					sort = "2";
@@ -145,6 +146,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 		jjView.setOnClickListener(new OnClickListener() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v) {
 				rksjView.setBackgroundResource(0);
@@ -157,7 +159,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 				Collections.sort(dataList, new SortByPrice());
 				customProductsAdapter.notifyDataSetChanged();
-				
+
 				// TODO Auto-generated method stub
 				if (sort.equals("3")) {
 					sort = "4";
@@ -189,11 +191,19 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
 				Bundle bundle = new Bundle();
-				bundle.putString("id", map.get("id"));
-				if (onlyProducts) {
-					forward(UIProductDetail.class, bundle);
-				} else {
 
+				if (onlyProducts) {
+					bundle.putString("id", map.get("id"));
+					forward(UIProductDetail.class, bundle);
+				} else if (childTypesAndProducts) {
+					bundle.putString("data", parentTypeData.toString());
+					if (map.get("type").equals("products")) {
+						forward(UIWareHouseParentTypeDetailProductsList.class,
+								bundle);
+					}else if (map.get("type").equals("child")) {
+						forward(UIWareHouseParentTypeDetailChildtypeList.class,
+								bundle);
+					}
 				}
 			}
 		});
@@ -204,6 +214,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						initQuery = true;
 						AppUtil.showLoadingPopup(
 								UIWareHouseParentTypeDetail.this,
 								R.string.WAREHOUSE_QUERYPARENTDETAIL_LOADING);
@@ -375,7 +386,11 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		}
 
 		if (isRefresh || isLoadMore) {
-			customAdapter.notifyDataSetChanged();
+			if (onlyChildTypes) {
+				customAdapter.notifyDataSetChanged();
+			} else if (onlyProducts) {
+				customProductsAdapter.notifyDataSetChanged();
+			}
 		} else {
 			lv.setAdapter(onlyChildTypes ? customAdapter
 					: onlyProducts ? customProductsAdapter : null);
@@ -392,7 +407,9 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 	class SortByDate implements Comparator {
 		public int compare(Object o1, Object o2) {
+			@SuppressWarnings("unchecked")
 			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			@SuppressWarnings("unchecked")
 			HashMap<String, String> h2 = (HashMap<String, String>) o2;
 
 			Date h1d = null;
@@ -410,7 +427,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				e.printStackTrace();
 			}
 
-			if(sort.equals("1")){
+			if (sort.equals("1")) {
 				if (h1d.getTime() > h2d.getTime()) {
 					return 1;
 				} else if (h1d.getTime() == h2d.getTime()) {
@@ -418,7 +435,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return -1;
 				}
-			}else if(sort.equals("2")){
+			} else if (sort.equals("2")) {
 				if (h1d.getTime() > h2d.getTime()) {
 					return -1;
 				} else if (h1d.getTime() == h2d.getTime()) {
@@ -426,7 +443,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return 1;
 				}
-			}else{
+			} else {
 				if (h1d.getTime() > h2d.getTime()) {
 					return -1;
 				} else if (h1d.getTime() == h2d.getTime()) {
@@ -440,13 +457,15 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 	class SortByPrice implements Comparator {
 		public int compare(Object o1, Object o2) {
+			@SuppressWarnings("unchecked")
 			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			@SuppressWarnings("unchecked")
 			HashMap<String, String> h2 = (HashMap<String, String>) o2;
 
 			Double h1money = Double.parseDouble(h1.get("money"));
 			Double h2money = Double.parseDouble(h2.get("money"));
 
-			if(sort.equals("3")){
+			if (sort.equals("3")) {
 				if (h1money == h2money) {
 					return 0;
 				} else if (h1money > h2money) {
@@ -454,7 +473,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return -1;
 				}
-			}else if(sort.equals("4")){
+			} else if (sort.equals("4")) {
 				if (h1money == h2money) {
 					return 0;
 				} else if (h1money > h2money) {
@@ -462,7 +481,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return 1;
 				}
-			}else{
+			} else {
 				if (h1money == h2money) {
 					return 0;
 				} else if (h1money > h2money) {

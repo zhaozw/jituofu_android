@@ -212,7 +212,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 		priceView.setText(operation.getString("price"));
 		countView.setText(operation.getString("count"));
 		timeView.setText(operation.getString("date"));
-		remarkView.setText(remark != null ? remark : "");
+		remarkView.setText(remark != null && !remark.equals("null") && remark.length()>0 ? remark : "");
 
 		typeId = operation.getString("typeId");
 		time = operation.getString("date");
