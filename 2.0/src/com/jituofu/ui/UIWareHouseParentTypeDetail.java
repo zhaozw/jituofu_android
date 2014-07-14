@@ -15,19 +15,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
@@ -41,8 +37,6 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.base.BaseListView.BaseListViewListener;
-import com.jituofu.ui.UIProductSearchList.CustomAdapter;
-import com.jituofu.ui.UIProductSearchList.ViewHolder;
 import com.jituofu.util.AppUtil;
 
 public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
