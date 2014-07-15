@@ -6,12 +6,53 @@
 
     <include layout="@layout/cashier_topbar" />
 
-    <ScrollView style="@style/container" >
+    <ScrollView
+        style="@style/container"
+        android:paddingBottom="0dp" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/productpreview"
+                style="@style/box1"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:padding="15dp" >
+
+                <ImageView
+                    android:id="@+id/productpreview_img"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginRight="10dp "
+                    android:src="@drawable/default_img_placeholder" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"
+                        android:text="商品分类信息"
+                        android:textColor="@color/normalTxt"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="入库时间信息"
+                        android:textColor="@color/normalTxt"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout style="@style/box1" >
 
@@ -25,9 +66,9 @@
                     <EditText
                         android:id="@+id/name"
                         style="@style/commonEditText"
+                        android:layout_marginRight="38dp"
                         android:layout_toRightOf="@+id/textView1"
                         android:hint="@string/CASHIER_PNAME_HINT"
-                        android:layout_marginRight="38dp"
                         android:inputType="text" >
                     </EditText>
 
@@ -37,15 +78,14 @@
                         android:orientation="vertical" >
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/imageView1"
+                    <ImageButton
+                        android:id="@+id/cangku"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
                         android:background="@drawable/base_cangku_icon" />
-
                 </RelativeLayout>
 
                 <RelativeLayout style="@style/field" >
@@ -133,24 +173,23 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_height="wrap_content" >
+                android:layout_marginTop="10dp" >
 
                 <Button
                     android:id="@+id/add2hebinglist"
                     style="@style/negativeButton"
-                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="1"
                     android:text="@string/CASHIER_ADD2HEBINGBTNTXT" />
 
                 <Button
                     android:id="@+id/okBtn"
-                    android:layout_width="wrap_content"
                     style="@style/primaryBtn"
+                    android:layout_width="wrap_content"
                     android:paddingLeft="25dp"
                     android:paddingRight="25dp"
                     android:text="@string/CASHIER_JIBTNTXT" />
