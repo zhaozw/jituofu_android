@@ -34,9 +34,9 @@ public class UIGlobalTabView extends UITabActivity {
 		Intent moreIntent = new Intent(this, UIMore.class);
 
 		tabHost.addTab(tabHost
-				.newTabSpec(R.string.cashiertitle + "")
+				.newTabSpec(R.string.CASHIER_TITLE + "")
 				.setContent(cashierIntent)
-				.setIndicator(this.getString(R.string.cashiertitle),
+				.setIndicator(this.getString(R.string.CASHIER_TITLE),
 						this.getResources().getDrawable(R.drawable.cashier_tab)));
 
 		tabHost.addTab(tabHost

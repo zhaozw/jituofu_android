@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/topBar"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_height="fill_parent"
+        android:gravity="center" >
+
+        <ImageButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:background="@drawable/base_hebing_icon" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:paddingLeft="@dimen/title_center_padding"
+        android:paddingRight="@dimen/title_center_padding"
+        android:textColor="@color/white"
+        android:text="@string/CASHIER_TITLE"
+        android:textSize="@dimen/normal_btn_text_size" />
+
+    <TextView
+        android:id="@+id/topBar2Right"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_right_text_size"
+        android:text="@string/CASHIER_JRXSZK" />
+
+</LinearLayout>

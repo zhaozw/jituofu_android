@@ -94,9 +94,6 @@
     <string name="FORGOT_NEW_PWD">新密码</string>
     <string name="FORGOT_ERROR">找回密码失败，请重试</string>
 
-    <!-- 记账台 -->
-    <string name="cashiertitle">记账台</string>
-
     <!-- 我的小店 -->
     <string name="ihometitle">我的小店</string>
 
@@ -219,4 +216,19 @@
     <string name="WAREHOUSE_QUERYPARENTDETAIL_NODATA">当前大分类下没有商品和小分类</string>
     <string name="WAREHOUSE_JJTXT">进价</string>
     <string name="WAREHOUSE_RKSJTXT">入库时间</string>
+    
+    <!-- 记账台 -->
+    <string name="CASHIER_JRXSZK">今日销售</string>
+    <string name="CASHIER_TITLE">记账台</string>
+    <string name="CASHIER_ADD2HEBINGBTNTXT">添加到合并列表</string>
+    <string name="CASHIER_JIBTNTXT">记一笔</string>
+    <string name="CASHIER_PNAME">商品名称</string>
+    <string name="CASHIER_PPRICE">进货价</string>
+    <string name="CASHIER_SELLING_COUNT">销售数量</string>
+    <string name="CASHIER_SELLING_PRICE">销售价</string>
+    <string name="CASHIER_SELLING_REMARK">备注</string>
+    <string name="CASHIER_PNAME_HINT">请填写商品名称</string>
+    <string name="CASHIER_PPRICE_HINT">请填写进货价</string>
+    <string name="CASHIER_SELLING_COUNT_HINT">请填写销售数量</string>
+    <string name="CASHIER_SELLING_PRICE_HINT">请填写销售价</string>
 </resources>

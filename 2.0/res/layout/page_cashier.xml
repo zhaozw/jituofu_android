@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/cashier_topbar" />
+
+    <ScrollView style="@style/container" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout style="@style/box1" >
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        style="@style/label"
+                        android:text="@string/CASHIER_PNAME" />
+
+                    <EditText
+                        android:id="@+id/name"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView1"
+                        android:hint="@string/CASHIER_PNAME_HINT"
+                        android:layout_marginRight="38dp"
+                        android:inputType="text" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageView1"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/base_cangku_icon" />
+
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        style="@style/label"
+                        android:text="@string/CASHIER_PPRICE" />
+
+                    <EditText
+                        android:id="@+id/price"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView2"
+                        android:hint="@string/CASHIER_PPRICE_HINT"
+                        android:inputType="number|numberDecimal" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        style="@style/label"
+                        android:text="@string/CASHIER_SELLING_COUNT" />
+
+                    <EditText
+                        android:id="@+id/count"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView3"
+                        android:hint="@string/CASHIER_SELLING_COUNT_HINT"
+                        android:inputType="number|numberDecimal" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        style="@style/label"
+                        android:text="@string/CASHIER_SELLING_PRICE" />
+
+                    <EditText
+                        android:id="@+id/sellingprice"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView4"
+                        android:hint="@string/CASHIER_SELLING_PRICE_HINT"
+                        android:inputType="number|numberDecimal" >
+                    </EditText>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        style="@style/label"
+                        android:text="@string/CASHIER_SELLING_REMARK" />
+
+                    <EditText
+                        android:id="@+id/remark"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView5"
+                        android:hint="@string/COMMON_OPTIONALTXT"
+                        android:inputType="text" >
+                    </EditText>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/add2hebinglist"
+                    style="@style/negativeButton"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_marginRight="10dp"
+                    android:text="@string/CASHIER_ADD2HEBINGBTNTXT" />
+
+                <Button
+                    android:id="@+id/okBtn"
+                    android:layout_width="wrap_content"
+                    style="@style/primaryBtn"
+                    android:paddingLeft="25dp"
+                    android:paddingRight="25dp"
+                    android:text="@string/CASHIER_JIBTNTXT" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -61,6 +61,7 @@ public class UIIhome extends BaseUiAuth {
 
 		security.setOnClickListener(new LinearLayoutClick());
 		spgl.setOnClickListener(new LinearLayoutClick());
+		spgl.setOnClickListener(new LinearLayoutClick());
 	}
 
 	private void initView() {
@@ -70,7 +71,8 @@ public class UIIhome extends BaseUiAuth {
 		TextView jztTxt = (TextView) jzt.findViewById(R.id.txt);
 		jztIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.jizhangtai_icon));
-		jztTxt.setText(R.string.cashiertitle);
+		jztTxt.setText(R.string.CASHIER_TITLE);
+		jzt.setVisibility(View.GONE);
 
 		// 商品管理
 		LinearLayout spgl = (LinearLayout) findViewById(R.id.spgl);
