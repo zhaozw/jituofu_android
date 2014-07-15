@@ -11,27 +11,28 @@ import android.widget.ImageButton;
 
 public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private ImageButton cangkuBtnView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_cashier);
-		
+
 		initView();
 		onBind();
 	}
-	
-	private void onBind(){
-		cangkuBtnView.setOnClickListener(new OnClickListener(){
+
+	private void onBind() {
+		cangkuBtnView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
-			}});
+
+			}
+		});
 	}
-	
-	private void initView(){
+
+	private void initView() {
 		cangkuBtnView = (ImageButton) this.findViewById(R.id.cangku);
 	}
 
