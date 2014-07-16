@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -190,10 +191,26 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
-				Bundle bundle = new Bundle();
 
-				bundle.putString("id", map.get("id"));
-				forward(UIProductDetail.class, bundle);
+				if (extraBundle != null
+						&& extraBundle.getString("from").equals(
+								C.COMMON.cashier)) {//来自记账台查询商品页面
+					Intent intent = new Intent();
+					intent.putExtra("from", extraBundle.getString("from"));
+					intent.putExtra("id", map.get("id"));
+					intent.putExtra("name", map.get("name"));
+					intent.putExtra("pic", map.get("pic"));
+					intent.putExtra("price", map.get("price"));
+					intent.putExtra("count", map.get("count"));
+
+					backForResult(UICashier.TAG, intent);
+					finish();
+				} else {
+					Bundle bundle = new Bundle();
+
+					bundle.putString("id", map.get("id"));
+					forward(UIProductDetail.class, bundle);
+				}
 			}
 		});
 
@@ -426,6 +443,12 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 		titleView = (TextView) topbarView.findViewById(R.id.title);
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
+		// 来自记账台页面查询商品
+		if (extraBundle != null
+				&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+			((TextView) noDataView.findViewById(R.id.action_btn))
+					.setVisibility(View.GONE);
+		}
 		againView = (LinearLayout) this.findViewById(R.id.again);
 
 		this.borderView = (LinearLayout) this.findViewById(R.id.border);

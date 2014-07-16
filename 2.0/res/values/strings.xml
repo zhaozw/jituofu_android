@@ -221,6 +221,7 @@
     <string name="CASHIER_JRXSZK">今日销售</string>
     <string name="CASHIER_TITLE">记账台</string>
     <string name="CASHIER_ADD2HEBINGBTNTXT">添加到合并列表</string>
+    <string name="CASHIER_HEBINGJIZHANGTXT">合并记账列表</string>
     <string name="CASHIER_JIBTNTXT">记一笔</string>
     <string name="CASHIER_PNAME">商品名称</string>
     <string name="CASHIER_PPRICE">进货价</string>
@@ -231,4 +232,5 @@
     <string name="CASHIER_PPRICE_HINT">请填写进货价</string>
     <string name="CASHIER_SELLING_COUNT_HINT">请填写销售数量</string>
     <string name="CASHIER_SELLING_PRICE_HINT">请填写销售价</string>
+    <string name="CASHIER_SELECT_PRODUCT">选择商品</string>
 </resources>

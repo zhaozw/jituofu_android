@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,10 +62,14 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 	private BaseGetProductImageTask bpit;
 
+	private Bundle extraBundle;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_products_searchlist);
+
+		extraBundle = this.getIntent().getExtras();
 
 		initView();
 		updateView();
@@ -100,8 +105,25 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 				HashMap<String, String> map = (HashMap<String, String>) lv
 						.getItemAtPosition(position);
 				Bundle bundle = new Bundle();
-				bundle.putString("id", map.get("id"));
-				forward(UIProductDetail.class, bundle);
+
+				// 记账台
+				if (extraBundle != null
+						&& extraBundle.getString("from").equals(
+								C.COMMON.cashier)) {
+					Intent intent = new Intent();
+					intent.putExtra("from", extraBundle.getString("from"));
+					intent.putExtra("id", map.get("id"));
+					intent.putExtra("name", map.get("name"));
+					intent.putExtra("pic", map.get("pic"));
+					intent.putExtra("price", map.get("price"));
+					intent.putExtra("count", map.get("count"));
+					
+					backForResult(UICashier.TAG, intent);
+					finish();
+				} else {//商品详情页
+					bundle.putString("id", map.get("id"));
+					forward(UIProductDetail.class, bundle);
+				}
 			}
 		});
 	}
@@ -357,17 +379,23 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			ViewHolder holder;
-			HashMap<String, String> map = (HashMap<String, String>) data.get(position);
+			HashMap<String, String> map = (HashMap<String, String>) data
+					.get(position);
 
 			if (convertView == null) {
 				convertView = LayoutInflater.from(context).inflate(
 						R.layout.template_product_searchlist_item, null);
 				holder = new ViewHolder(convertView);
-				holder.setCountView((TextView)convertView.findViewById(R.id.count));
-				holder.setNameView((TextView)convertView.findViewById(R.id.name));
-				holder.setPriceView((TextView)convertView.findViewById(R.id.price));
-				holder.setDateView((TextView)convertView.findViewById(R.id.date));
-				holder.setPicView((ImageView)convertView.findViewById(R.id.pic));
+				holder.setCountView((TextView) convertView
+						.findViewById(R.id.count));
+				holder.setNameView((TextView) convertView
+						.findViewById(R.id.name));
+				holder.setPriceView((TextView) convertView
+						.findViewById(R.id.price));
+				holder.setDateView((TextView) convertView
+						.findViewById(R.id.date));
+				holder.setPicView((ImageView) convertView
+						.findViewById(R.id.pic));
 				// 保存视图项
 				convertView.setTag(holder);
 			} else {
@@ -381,7 +409,8 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 			holder.getPriceView().setText(map.get("price"));
 
 			holder.getPicView().setImageURI(null);
-			holder.getPicView().setBackgroundResource(R.drawable.default_img_placeholder);
+			holder.getPicView().setBackgroundResource(
+					R.drawable.default_img_placeholder);
 			getProductImg(holder.getPicView(), map.get("pic"), map.get("id"));
 
 			return convertView;
@@ -441,7 +470,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 			return priceView;
 		}
-		
+
 		public void setPriceView(TextView view) {
 			priceView = view;
 		}
@@ -453,7 +482,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 			return countView;
 		}
-		
+
 		public void setCountView(TextView view) {
 			countView = view;
 		}
@@ -465,7 +494,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 			return dateView;
 		}
-		
+
 		public void setDateView(TextView view) {
 			dateView = view;
 		}
@@ -477,7 +506,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 			return picView;
 		}
-		
+
 		public void setPicView(ImageView view) {
 			picView = view;
 		}

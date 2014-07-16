@@ -1,10 +1,8 @@
 package com.jituofu.ui;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -12,27 +10,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-
+import android.content.Intent;
 import android.os.Bundle;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.jituofu.R;
-
 import com.jituofu.base.BaseListView;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.base.BaseListView.BaseListViewListener;
-
 import com.jituofu.util.AppUtil;
 
 public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
@@ -87,6 +81,16 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == UICashier.TAG) {
+			this.backForResult(requestCode, data);
+			this.finish();
+		}
+	}
 
 	private void onBind() {
 		this.onCustomBack();
@@ -104,7 +108,17 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 
 				bundle.putString("data", map.toString());
 				bundle.putString("parentTypeData", parentTypeData.toString());
-				forward(UIWareHouseParentTypeDetailProductsList.class, bundle);
+				
+				
+				// 来自记账台页面查询商品
+				if (extraBundle != null
+						&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+					bundle.putString("from", extraBundle.getString("from"));
+					forwardForResult(UIWareHouseParentTypeDetailProductsList.class, UICashier.TAG, 
+							bundle);
+				}else{
+					forward(UIWareHouseParentTypeDetailProductsList.class, bundle);
+				}
 			}
 		});
 
@@ -235,6 +249,12 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 		titleView = (TextView) topbarView.findViewById(R.id.title);
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
+		// 来自记账台页面查询商品
+		if (extraBundle != null
+				&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+			((TextView) noDataView.findViewById(R.id.action_btn))
+					.setVisibility(View.GONE);
+		}
 		againView = (LinearLayout) this.findViewById(R.id.again);
 
 		lv = (BaseListView) this.findViewById(R.id.listView);

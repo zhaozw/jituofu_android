@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -102,6 +103,16 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == UICashier.TAG) {
+			this.backForResult(requestCode, data);
+			this.finish();
 		}
 	}
 
@@ -192,19 +203,47 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 						.getItemAtPosition(position);
 				Bundle bundle = new Bundle();
 
-				if (onlyProducts) {
-					bundle.putString("id", map.get("id"));
-					forward(UIProductDetail.class, bundle);
-				} else if (childTypesAndProducts) {
-					bundle.putString("data", parentTypeData.toString());
-					if (map.get("type").equals("products")) {
-						forward(UIWareHouseParentTypeDetailProductsList.class,
-								bundle);
-					}else if (map.get("type").equals("child")) {
-						forward(UIWareHouseParentTypeDetailChildtypeList.class,
-								bundle);
+				if (extraBundle != null
+						&& extraBundle.getString("from").equals(
+								C.COMMON.cashier)) {// 来自记账台查找商品
+					bundle.putString("from", extraBundle.getString("from"));
+					if (onlyProducts) {
+						Intent intent = new Intent();
+						intent.putExtra("from", extraBundle.getString("from"));
+						intent.putExtra("id", map.get("id"));
+						intent.putExtra("name", map.get("name"));
+						intent.putExtra("pic", map.get("pic"));
+						intent.putExtra("price", map.get("price"));
+						intent.putExtra("count", map.get("count"));
+						
+						backForResult(UICashier.TAG, intent);
+						finish();
+					} else if (childTypesAndProducts) {
+						bundle.putString("data", parentTypeData.toString());
+						if (map.get("type").equals("products")) {
+							forwardForResult(UIWareHouseParentTypeDetailProductsList.class, UICashier.TAG, 
+									bundle);
+						} else if (map.get("type").equals("child")) {
+							forwardForResult(UIWareHouseParentTypeDetailChildtypeList.class, UICashier.TAG, 
+									bundle);
+						}
+					}
+				} else {
+					if (onlyProducts) {
+						bundle.putString("id", map.get("id"));
+						forward(UIProductDetail.class, bundle);
+					} else if (childTypesAndProducts) {
+						bundle.putString("data", parentTypeData.toString());
+						if (map.get("type").equals("products")) {
+							forward(UIWareHouseParentTypeDetailProductsList.class,
+									bundle);
+						} else if (map.get("type").equals("child")) {
+							forward(UIWareHouseParentTypeDetailChildtypeList.class,
+									bundle);
+						}
 					}
 				}
+
 			}
 		});
 
@@ -511,6 +550,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		titleView = (TextView) topbarView.findViewById(R.id.title);
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
+		// 来自记账台页面查询商品
+		if (extraBundle != null
+				&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+			((TextView) noDataView.findViewById(R.id.action_btn))
+					.setVisibility(View.GONE);
+		}
 		againView = (LinearLayout) this.findViewById(R.id.again);
 
 		this.borderView = (LinearLayout) this.findViewById(R.id.border);

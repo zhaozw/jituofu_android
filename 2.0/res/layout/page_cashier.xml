@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/cashier_topbar" />
+    <include layout="@layout/cashier_topbar" android:id="@+id/cashier_topbar"/>
 
     <ScrollView
         style="@style/container"
@@ -194,6 +194,29 @@
                     android:paddingRight="25dp"
                     android:text="@string/CASHIER_JIBTNTXT" />
             </LinearLayout>
+            
+            <LinearLayout
+                android:id="@+id/sdk8"
+                android:visibility="gone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/gotohblb"
+                    style="@style/link"
+                    android:layout_weight="1"
+                    android:text="@string/CASHIER_HEBINGJIZHANGTXT" />
+
+                <TextView
+                    android:id="@+id/gotojrxs"
+                    style="@style/link"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="@string/CASHIER_JRXSZK" />
+            </LinearLayout>
+            
         </LinearLayout>
     </ScrollView>
 
