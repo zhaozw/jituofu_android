@@ -240,4 +240,5 @@
     <string name="CASHIER_SELLINGCOUNT_ERROR">销售数量不正确</string>
     <string name="CASHIER_SELLINGPRICE_HINT">请填写销售价格</string>
     <string name="CASHIER_SELLINGPRICE_ERROR">销售价格不正确</string>
+    <string name="CASHIER_NO_HBLIST">没有合并记账清单</string>
 </resources>

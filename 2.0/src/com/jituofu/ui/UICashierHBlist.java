@@ -6,8 +6,10 @@ import java.util.Map;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,7 +30,9 @@ import com.jituofu.ui.UIWareHouseParentTypeDetailProductsList.ProductsViewHolder
 import com.jituofu.util.AppUtil;
 
 public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
-	private TextView products_numView, hjView, countView;
+	private LinearLayout noDataView, borderView, border2View, totalBoxView;
+	private Button okBtnView;
+	private TextView products_numView, hjView, countView, titleView;
 
 	private BaseGetProductImageTask bpit;
 	private BaseListView lv;
@@ -49,7 +53,24 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 		onBind();
 	}
 	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (isDeleting) {
+			isDeleting = false;
+			if (customProductsAdapter != null) {
+				customProductsAdapter.notifyDataSetChanged();
+				return false;
+			}
+
+		}
+
+		return super.onKeyDown(keyCode, event);
+
+	}
+	
 	private void onBind(){
+		this.onCustomBack();
+		
 		lv.setOnItemLongClickListener(new OnItemLongClickListener(){
 
 			@Override
@@ -63,6 +84,11 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 				
 				Button deleteView = (Button) v.findViewById(R.id.delete);
 				deleteView.setVisibility(View.VISIBLE);
+				
+				LinearLayout itemView = (LinearLayout) v.findViewById(R.id.item);
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				lp.setMargins(AppUtil.getActualMeasure(getApplicationContext(), -70), 0, 0, 0);
+				itemView.setLayoutParams(lp);
 				return false;
 			}});
 	}
@@ -72,9 +98,19 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 				this, UICashier.hbList) : customProductsAdapter;
 		lv.setAdapter(customProductsAdapter);
 		updateTotal();
+		
+		titleView.setText(R.string.CASHIER_HBTITLE);
 	}
 
 	private void updateTotal() {
+		if(UICashier.hbList.size() <= 0){
+			noData();
+			return;
+		}
+		
+		totalCount = 0;
+		totalPrice = 0;
+		
 		products_numView.setText("共计 " + UICashier.hbList.size() + " 种商品");
 
 		for (int i = 0; i < UICashier.hbList.size(); i++) {
@@ -88,7 +124,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 			totalCount += sellingCount;
 		}
 		hjView.setText(totalPrice + "");
-		countView.setText("数量 " + AppUtil.toFixed(totalCount));
+		countView.setText("数量 " + totalCount);
 	}
 
 	private void initView() {
@@ -99,6 +135,30 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 		products_numView = (TextView) findViewById(R.id.products_num);
 		hjView = (TextView) findViewById(R.id.hj);
 		countView = (TextView) findViewById(R.id.count);
+		noDataView = (LinearLayout) findViewById(R.id.noData);
+
+		titleView = (TextView) this.findViewById(R.id.title);
+		
+		borderView = (LinearLayout) this.findViewById(R.id.border);
+		border2View = (LinearLayout) this.findViewById(R.id.border2);
+		totalBoxView = (LinearLayout) this.findViewById(R.id.totalBox);
+		
+		okBtnView = (Button) this.findViewById(R.id.okBtn);
+		
+		if(UICashier.hbList.size() <= 0){
+			noData();
+		}
+	}
+	
+	private void noData(){
+		noDataView.setVisibility(View.VISIBLE);
+		((TextView) noDataView.findViewById(R.id.txt)).setText(R.string.CASHIER_NO_HBLIST);
+		((TextView) noDataView.findViewById(R.id.action_btn)).setVisibility(View.GONE);
+		lv.setVisibility(View.GONE);
+		okBtnView.setVisibility(View.GONE);
+		borderView.setVisibility(View.GONE);
+		border2View.setVisibility(View.GONE);
+		totalBoxView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -141,7 +201,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			ProductsViewHolder holder;
-			HashMap<String, String> map = (HashMap<String, String>) data
+			final HashMap<String, String> map = (HashMap<String, String>) data
 					.get(position);
 
 			if (convertView == null) {
@@ -181,6 +241,25 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 					R.drawable.default_img_placeholder);
 			getProductImg(holder.getPicView(), map.get("pic"), map.get("pid"));
 
+			if(!isDeleting){
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				lp.setMargins(0, 0, 0, 0);
+				holder.getItemView().setLayoutParams(lp);
+				holder.getDeleteView().setVisibility(View.GONE);
+			}
+			
+			holder.getDeleteView().setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if(UICashier.hbList.remove(map)){
+						isDeleting = false;
+						updateTotal();
+						customProductsAdapter.notifyDataSetChanged();
+					}
+				}});
+			
 			return convertView;
 		}
 
@@ -214,9 +293,29 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 		private View baseView;
 		private ImageView picView;
 		private TextView nameView, priceView, countView, djView;
+		
+		private LinearLayout itemView;
 
+		private Button deleteView;
+		
 		public ProductsViewHolder(View baseView) {
 			this.baseView = baseView;
+		}
+		
+		public LinearLayout getItemView() {
+			if (itemView == null) {
+				itemView = (LinearLayout) baseView.findViewById(R.id.item);
+			}
+
+			return itemView;
+		}
+		
+		public Button getDeleteView() {
+			if (deleteView == null) {
+				deleteView = (Button) baseView.findViewById(R.id.delete);
+			}
+
+			return deleteView;
 		}
 
 		public TextView getNameView() {

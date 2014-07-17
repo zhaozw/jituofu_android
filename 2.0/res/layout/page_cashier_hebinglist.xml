@@ -13,6 +13,11 @@
         android:paddingTop="0dp"
         android:orientation="vertical" >
 
+        <include
+            android:id="@+id/noData"
+            layout="@layout/template_no_data"
+            android:visibility="gone" />
+        
         <com.jituofu.base.BaseListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
@@ -21,8 +26,9 @@
             android:divider="@null" >
         </com.jituofu.base.BaseListView>
 
-        <include layout="@layout/border"/>
+        <include layout="@layout/border" android:id="@+id/border" />
         <LinearLayout
+             android:id="@+id/totalBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -80,7 +86,7 @@
             </LinearLayout>
             
         </LinearLayout>
-        <include layout="@layout/border"/>
+        <include layout="@layout/border" android:id="@+id/border2"/>
 
         <Button
             android:id="@+id/okBtn"
