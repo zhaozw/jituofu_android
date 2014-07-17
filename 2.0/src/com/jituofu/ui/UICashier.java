@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
+	private LinearLayout hbView;
+	
 	private int sysVersion = Build.VERSION.SDK_INT;
 	private ImageButton cangkuBtnView;
 	public static int TAG = 110;
@@ -57,10 +59,20 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				forwardForResult(UICashierProductSearch.class, TAG);
 			}
 		});
+		
+		hbView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				forwardForResult(UICashierHBlist.class, TAG);
+			}
+		});
 	}
 
 	private void initView() {
 		cangkuBtnView = (ImageButton) this.findViewById(R.id.cangku);
+		hbView = (LinearLayout) findViewById(R.id.hb);
 	}
 
 	@Override

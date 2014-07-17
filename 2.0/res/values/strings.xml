@@ -220,6 +220,8 @@
     <!-- 记账台 -->
     <string name="CASHIER_JRXSZK">今日销售</string>
     <string name="CASHIER_TITLE">记账台</string>
+    <string name="CASHIER_HBTITLE">待合并记账</string>
+    <string name="CASHIER_HBBTNTXT">合并记账</string>
     <string name="CASHIER_ADD2HEBINGBTNTXT">添加到合并列表</string>
     <string name="CASHIER_HEBINGJIZHANGTXT">合并记账列表</string>
     <string name="CASHIER_JIBTNTXT">记一笔</string>
