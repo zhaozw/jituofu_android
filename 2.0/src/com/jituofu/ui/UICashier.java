@@ -12,16 +12,22 @@ import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.BaseUiFormBuilder;
 import com.jituofu.util.AppUtil;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
@@ -32,6 +38,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private TextView gotohblbBtnView;
 	private EditText nameView, priceView, sellingCountView, sellingPriceView,
 			remarkView;
+	private RelativeLayout flyView;
 
 	// 表单值
 	private String name, price, sellingCount, sellingPrice, remark;
@@ -69,7 +76,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			remarkView.setText("");
 			sellingPriceView.setText("");
 			sellingCountView.setText("");
-			
+
 			if (product != null) {
 				JSONObject productData;
 				try {
@@ -117,7 +124,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			bpit = new BaseGetProductImageTask(pic, currentProduct.get("pic"),
 					currentProduct.get("pid"));
 			bpit.execute();
-		}else{
+		} else {
 			pic.setImageURI(null);
 			pic.setBackgroundResource(R.drawable.default_img_placeholder);
 		}
@@ -150,6 +157,23 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			((LinearLayout) findViewById(R.id.sdk8))
 					.setVisibility(View.VISIBLE);
 		}
+
+		ViewTreeObserver vto = gotohblbBtnView.getViewTreeObserver();
+		vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+			public boolean onPreDraw() {
+				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+						AppUtil.getActualMeasure(getApplicationContext(), 30),
+						AppUtil.getActualMeasure(getApplicationContext(), 30));
+				int[] gotohblbBtnViewLocation = new int[2];
+				gotohblbBtnView.getLocationOnScreen(gotohblbBtnViewLocation);
+				lp.setMargins(
+						gotohblbBtnViewLocation[0] + gotohblbBtnView.getWidth(),
+						gotohblbBtnViewLocation[1], 0, 0);
+				flyView.setLayoutParams(lp);
+				return true;
+			}
+		});
+
 	}
 
 	private void onBind() {
@@ -182,6 +206,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		gotohblbBtnView.setOnClickListener(new OnClickListener() {
 
+			@SuppressLint("NewApi")
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -194,6 +219,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
+						fly();
 						resetForm();
 					}
 				}
@@ -201,7 +227,25 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		});
 	}
 	
-	private void resetForm(){
+	private void fly(){
+		int[] flyViewLocation = new int[2];
+		flyView.getLocationOnScreen(flyViewLocation);
+		int[] hbViewLocation = new int[2];
+		hbView.getLocationOnScreen(hbViewLocation);
+
+		int fromX = flyViewLocation[0];
+		int toX = 15;
+		int fromY = flyViewLocation[1];
+		int toY = hbViewLocation[1];
+		Animation am = new TranslateAnimation(0, -(fromX - toX), 0,
+				-(fromY - toY));
+		am.setDuration(1200);
+		flyView.setAnimation(am);
+		am.setFillAfter(true);
+		flyView.startAnimation(am);
+	}
+
+	private void resetForm() {
 		currentProduct = null;
 		productpreviewView.setVisibility(View.GONE);
 		nameView.setText("");
@@ -209,7 +253,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		sellingCountView.setText("");
 		sellingPriceView.setText("");
 		remarkView.setText("");
-		
+
 		enableEditText();
 	}
 
@@ -224,6 +268,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		sellingCountView = (EditText) findViewById(R.id.sellingcount);
 		sellingPriceView = (EditText) findViewById(R.id.sellingprice);
 		remarkView = (EditText) findViewById(R.id.remark);
+
+		flyView = (RelativeLayout) findViewById(R.id.fly);
 	}
 
 	@Override
@@ -259,8 +305,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		sellingCount = AppUtil.trimAll(getEditValue(sellingCountView));
 		sellingPrice = AppUtil.trimAll(getEditValue(sellingPriceView));
 		remark = getEditValue(remarkView);
-		
-		if(remark == null){
+
+		if (remark == null) {
 			remark = "";
 		}
 
