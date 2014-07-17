@@ -36,19 +36,19 @@
                     android:orientation="vertical" >
 
                     <TextView
-                        android:id="@+id/type"
+                        android:id="@+id/count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="3dp"
-                        android:text="商品分类信息"
+                        android:text=""
                         android:textColor="@color/normalTxt"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/date"
+                        android:id="@+id/price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="入库时间信息"
+                        android:text=""
                         android:textColor="@color/normalTxt"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -96,7 +96,7 @@
                         android:text="@string/CASHIER_PPRICE" />
 
                     <EditText
-                        android:id="@+id/price"
+                        android:id="@+id/jjprice"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView2"
                         android:hint="@string/CASHIER_PPRICE_HINT"
@@ -118,7 +118,7 @@
                         android:text="@string/CASHIER_SELLING_COUNT" />
 
                     <EditText
-                        android:id="@+id/count"
+                        android:id="@+id/sellingcount"
                         style="@style/commonEditText"
                         android:layout_toRightOf="@+id/textView3"
                         android:hint="@string/CASHIER_SELLING_COUNT_HINT"

@@ -112,11 +112,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 								C.COMMON.cashier)) {
 					Intent intent = new Intent();
 					intent.putExtra("from", extraBundle.getString("from"));
-					intent.putExtra("id", map.get("id"));
-					intent.putExtra("name", map.get("name"));
-					intent.putExtra("pic", map.get("pic"));
-					intent.putExtra("price", map.get("price"));
-					intent.putExtra("count", map.get("count"));
+					intent.putExtra("data", map.get("metaData"));
 					
 					backForResult(UICashier.TAG, intent);
 					finish();
@@ -239,6 +235,7 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 			HashMap<String, String> map = new HashMap<String, String>();
 			JSONObject json = productsList.getJSONObject(i);
 			String id = json.getString("id");
+			map.put("metaData", json.toString());
 			map.put("name", json.getString("name"));
 			map.put("id", id);
 			map.put("price", "进价：" + json.getString("price") + " 元");

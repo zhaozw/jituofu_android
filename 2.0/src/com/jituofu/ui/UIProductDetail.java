@@ -615,7 +615,7 @@ public class UIProductDetail extends BaseUi implements BaseUiBuilder,
 			updateImgBtnView.setVisibility(View.VISIBLE);
 			deleteBtnView.setVisibility(View.VISIBLE);
 
-			// 开户输入
+			// 开启输入
 			nameView.setFocusableInTouchMode(true);
 			priceView.setFocusableInTouchMode(true);
 			countView.setFocusableInTouchMode(true);
