@@ -194,12 +194,23 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
+						resetForm();
 					}
-
-					Log.w("JZB", hbList.toString());
 				}
 			}
 		});
+	}
+	
+	private void resetForm(){
+		currentProduct = null;
+		productpreviewView.setVisibility(View.GONE);
+		nameView.setText("");
+		priceView.setText("");
+		sellingCountView.setText("");
+		sellingPriceView.setText("");
+		remarkView.setText("");
+		
+		enableEditText();
 	}
 
 	private void initView() {

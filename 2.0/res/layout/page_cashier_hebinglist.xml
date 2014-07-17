@@ -10,11 +10,12 @@
 
     <LinearLayout
         style="@style/container"
+        android:paddingTop="0dp"
         android:orientation="vertical" >
 
         <com.jituofu.base.BaseListView
             android:id="@+id/listView"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:divider="@null" >
