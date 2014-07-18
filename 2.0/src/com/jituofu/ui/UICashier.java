@@ -38,11 +38,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	// 表单提交
 	private boolean validated = false;
 
-	private LinearLayout hbView, productpreviewView;
+	private LinearLayout productpreviewView;
 	private TextView gotohblbBtnView;
 	private EditText nameView, priceView, sellingCountView, sellingPriceView,
 			remarkView;
-	private RelativeLayout flyView;
+	private RelativeLayout flyView, hbView;
 
 	// 表单值
 	private String name, price, sellingCount, sellingPrice, remark;
@@ -63,6 +63,12 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private int fromX, fromY;
 	private boolean isFly = false;
 
+	@Override
+	protected void onResume(){
+		super.onResume();
+		updateHBListCount();
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -237,12 +243,21 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (currentProduct != null && validation()) {
-					currentProduct.put("name", name);
-					currentProduct.put("sellingCount", sellingCount);
-					currentProduct.put("price", price);
-					currentProduct.put("sellingPrice", sellingPrice);
-					currentProduct.put("remark", remark);
+				if (validation()) {
+					if(currentProduct != null){
+						currentProduct.put("name", name);
+						currentProduct.put("sellingCount", sellingCount);
+						currentProduct.put("price", price);
+						currentProduct.put("sellingPrice", sellingPrice);
+						currentProduct.put("remark", remark);
+					}else{
+						currentProduct = new HashMap<String, String>();
+						currentProduct.put("name", name);
+						currentProduct.put("sellingCount", sellingCount);
+						currentProduct.put("price", price);
+						currentProduct.put("sellingPrice", sellingPrice);
+						currentProduct.put("remark", remark);
+					}
 
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
@@ -251,6 +266,24 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				}
 			}
 		});
+	}
+	
+	public void updateHBListCount(){
+		TextView hblistCountView = (TextView) findViewById(R.id.hblistcount);
+		
+		if(hblistCountView == null){
+			return;
+		}
+		
+		if(hbList.size() <= 0){
+			hblistCountView.setVisibility(View.GONE);
+		}else if(hbList.size() < 100){
+			hblistCountView.setVisibility(View.VISIBLE);
+			hblistCountView.setText(hbList.size()+"");
+		}else{
+			hblistCountView.setVisibility(View.VISIBLE);
+			hblistCountView.setText("...");
+		}
 	}
 
 	private void fly() {
@@ -295,6 +328,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				flyView.setVisibility(View.GONE);
 				resetForm();
 				isFly = false;
+				updateHBListCount();
 			}
 
 			@Override
@@ -340,7 +374,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 	private void initView() {
 		cangkuBtnView = (ImageButton) this.findViewById(R.id.cangku);
-		hbView = (LinearLayout) findViewById(R.id.hb);
+		hbView = (RelativeLayout) findViewById(R.id.hb);
 		gotohblbBtnView = (TextView) findViewById(R.id.add2hebinglist);
 		productpreviewView = (LinearLayout) findViewById(R.id.productpreview);
 

@@ -239,7 +239,10 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 			holder.getPicView().setImageURI(null);
 			holder.getPicView().setBackgroundResource(
 					R.drawable.default_img_placeholder);
-			getProductImg(holder.getPicView(), map.get("pic"), map.get("pid"));
+			
+			if(map.get("pid") != null){
+				getProductImg(holder.getPicView(), map.get("pic"), map.get("pid"));
+			}
 
 			if(!isDeleting){
 				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

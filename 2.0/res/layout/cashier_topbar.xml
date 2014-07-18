@@ -3,20 +3,35 @@
     style="@style/topBar"
     android:orientation="horizontal" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/hb"
-        android:layout_width="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_height="fill_parent"
-        android:gravity="center" >
+        android:layout_width="50dp"
+        android:layout_height="fill_parent" >
 
         <ImageButton
             android:id="@+id/hbicon"
             android:layout_width="18dp"
             android:layout_height="18dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@drawable/base_hebing_icon" />
-    </LinearLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/hblistcount"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/base_hblist_count_bg"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="99"
+            android:textColor="@color/normalTxt"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/title"
@@ -28,8 +43,8 @@
         android:maxLines="1"
         android:paddingLeft="@dimen/title_center_padding"
         android:paddingRight="@dimen/title_center_padding"
-        android:textColor="@color/white"
         android:text="@string/CASHIER_TITLE"
+        android:textColor="@color/white"
         android:textSize="@dimen/normal_btn_text_size" />
 
     <TextView
@@ -38,8 +53,8 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/CASHIER_JRXSZK"
         android:textColor="@color/white"
-        android:textSize="@dimen/title_right_text_size"
-        android:text="@string/CASHIER_JRXSZK" />
+        android:textSize="@dimen/title_right_text_size" />
 
 </LinearLayout>
