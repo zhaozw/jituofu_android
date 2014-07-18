@@ -75,12 +75,14 @@
 
             <ImageView
                 android:id="@+id/plus"
+                android:visibility="gone"
                 android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/plus" />
             <ImageView
                 android:id="@+id/minus"
+                android:visibility="gone"
                 android:background="@null"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

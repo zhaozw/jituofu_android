@@ -552,6 +552,15 @@ public class AppUtil {
 	public static String toFixed(double value){
 		String result = String.format("%.2f", value);
 		
+		//去除小数点后为0的数字
+		if(result.indexOf(".") != -1){
+			String[] resultSplit = result.split("\\.");
+			if(resultSplit.length > 1){
+				if(Integer.parseInt(resultSplit[1]) <= 0){
+					result = resultSplit[0];
+				}
+			}
+		}
 		return result;
 	}
 

@@ -2,6 +2,7 @@ package com.jituofu.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TimerTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,11 +18,14 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,6 +57,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private int sysVersion = Build.VERSION.SDK_INT;
 	private ImageButton cangkuBtnView;
 	public static int TAG = 110;
+
+	// 飞动画
+	Runnable flyRunnable;
+	private int fromX, fromY;
+	private boolean isFly = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -160,15 +169,33 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		ViewTreeObserver vto = gotohblbBtnView.getViewTreeObserver();
 		vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+			@Override
 			public boolean onPreDraw() {
+				// TODO Auto-generated method stub
 				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
 						AppUtil.getActualMeasure(getApplicationContext(), 30),
 						AppUtil.getActualMeasure(getApplicationContext(), 30));
+
 				int[] gotohblbBtnViewLocation = new int[2];
+
 				gotohblbBtnView.getLocationOnScreen(gotohblbBtnViewLocation);
-				lp.setMargins(
-						gotohblbBtnViewLocation[0] + gotohblbBtnView.getWidth(),
-						gotohblbBtnViewLocation[1], 0, 0);
+				if (sysVersion >= 16) {
+					fromX = gotohblbBtnViewLocation[0]
+							+ gotohblbBtnView.getWidth()
+							- AppUtil.getActualMeasure(getApplicationContext(),
+									30);
+					fromY = gotohblbBtnViewLocation[1]
+							- AppUtil.getActualMeasure(getApplicationContext(),
+									30);
+				} else {
+					fromX = gotohblbBtnViewLocation[0]
+							+ gotohblbBtnView.getWidth()/2;
+					fromY = gotohblbBtnViewLocation[1]
+							- AppUtil.getActualMeasure(getApplicationContext(),
+									80);
+				}
+				lp.setMargins(fromX, fromY, 0, 0);
 				flyView.setLayoutParams(lp);
 				return true;
 			}
@@ -220,29 +247,83 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
 						fly();
-						resetForm();
 					}
 				}
 			}
 		});
 	}
-	
-	private void fly(){
+
+	private void fly() {
+		if (isFly) {
+			return;
+		}
+
+		flyView.setVisibility(View.VISIBLE);
+
 		int[] flyViewLocation = new int[2];
 		flyView.getLocationOnScreen(flyViewLocation);
 		int[] hbViewLocation = new int[2];
-		hbView.getLocationOnScreen(hbViewLocation);
+		Animation am;
 
-		int fromX = flyViewLocation[0];
-		int toX = 15;
-		int fromY = flyViewLocation[1];
-		int toY = hbViewLocation[1];
-		Animation am = new TranslateAnimation(0, -(fromX - toX), 0,
-				-(fromY - toY));
-		am.setDuration(1200);
+		if (sysVersion >= 16) {
+
+			hbView.findViewById(R.id.hbicon)
+					.getLocationOnScreen(hbViewLocation);
+
+			int toX = AppUtil.getActualMeasure(getApplicationContext(), 15);
+			int toY = hbViewLocation[1];
+			am = new TranslateAnimation(0,
+					-(fromX - toX - AppUtil.getActualMeasure(
+							getApplicationContext(), 21)), 0, -(fromY - (toY
+							- AppUtil.getActualMeasure(getApplicationContext(),
+									15) - AppUtil.getActualMeasure(
+							getApplicationContext(), 21))));
+		} else {
+			((TextView) findViewById(R.id.gotohblb))
+					.getLocationOnScreen(hbViewLocation);
+
+			int toX = AppUtil.getActualMeasure(getApplicationContext(), 15);
+			int toY = hbViewLocation[1]-AppUtil.getActualMeasure(getApplicationContext(), 15);
+			am = new TranslateAnimation(0, (toX - fromX), 0, (toY - fromY));
+		}
+
+		am.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation am) {
+				// TODO Auto-generated method stub
+				flyView.setVisibility(View.GONE);
+				resetForm();
+				isFly = false;
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+				isFly = true;
+			}
+		});
+		am.setDuration(1000);
 		flyView.setAnimation(am);
-		am.setFillAfter(true);
 		flyView.startAnimation(am);
+
+		// flyRunnable = flyRunnable == null ? new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		// } : flyRunnable;
+		//
+		// Thread mThread = new Thread(flyRunnable);
+		// mThread.start();
 	}
 
 	private void resetForm() {

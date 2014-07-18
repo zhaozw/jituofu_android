@@ -123,8 +123,8 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 					* sellingPrice));
 			totalCount += sellingCount;
 		}
-		hjView.setText(totalPrice + "");
-		countView.setText("数量 " + totalCount);
+		hjView.setText(AppUtil.toFixed(totalPrice) + "");
+		countView.setText("数量 " + AppUtil.toFixed(totalCount));
 	}
 
 	private void initView() {
