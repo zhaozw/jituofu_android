@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/topbar2"
+        layout="@layout/topbar2" />
+
+    <LinearLayout
+        style="@style/container"
+        android:orientation="vertical"
+        android:paddingTop="0dp" >
+
+        <TableLayout
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:paddingTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="7.5dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/CASHIER_TODAY_ZXSE" />
+
+                    <TextView
+                        android:id="@+id/zxs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="20dp"
+                        android:text="TextView" />
+                    <include layout="@layout/border"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_marginLeft="7.5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/CASHIER_TODAY_ZLR" />
+
+                    <TextView
+                        android:id="@+id/zlr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="20dp"
+                        android:text="TextView" />
+                    <include layout="@layout/border"/>
+                </LinearLayout>
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="match_parent"
+                android:paddingTop="20dp"
+                android:layout_height="wrap_content" >
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="7.5dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/CASHIER_TODAY_ZBS" />
+
+                    <TextView
+                        android:id="@+id/zbs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="20dp"
+                        android:text="TextView" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_marginLeft="7.5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/CASHIER_TODAY_ZCB" />
+
+                    <TextView
+                        android:id="@+id/zcb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textSize="20sp"
+                        android:layout_marginBottom="20dp"
+                        android:text="TextView" />
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+        <include layout="@layout/border"/>
+    </LinearLayout>
+    
+
+</LinearLayout>

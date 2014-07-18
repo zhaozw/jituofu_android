@@ -211,17 +211,19 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 						Intent intent = new Intent();
 						intent.putExtra("from", extraBundle.getString("from"));
 						intent.putExtra("data", map.get("metaData"));
-						
+
 						backForResult(UICashier.TAG, intent);
 						finish();
 					} else if (childTypesAndProducts) {
 						bundle.putString("data", parentTypeData.toString());
 						if (map.get("type").equals("products")) {
-							forwardForResult(UIWareHouseParentTypeDetailProductsList.class, UICashier.TAG, 
-									bundle);
+							forwardForResult(
+									UIWareHouseParentTypeDetailProductsList.class,
+									UICashier.TAG, bundle);
 						} else if (map.get("type").equals("child")) {
-							forwardForResult(UIWareHouseParentTypeDetailChildtypeList.class, UICashier.TAG, 
-									bundle);
+							forwardForResult(
+									UIWareHouseParentTypeDetailChildtypeList.class,
+									UICashier.TAG, bundle);
 						}
 					}
 				} else {
@@ -548,7 +550,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		// 来自记账台页面查询商品
-		if (extraBundle != null
+		if (extraBundle != null && extraBundle.getString("from") != null
 				&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
 			((TextView) noDataView.findViewById(R.id.action_btn))
 					.setVisibility(View.GONE);
