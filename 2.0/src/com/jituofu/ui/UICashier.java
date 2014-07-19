@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseGetProductImageTask;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
@@ -20,6 +21,7 @@ import com.jituofu.util.AppUtil;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -33,15 +35,24 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
+	static BaseDialog.Builder baseDialogBuilder;
+	static BaseDialog baseDialog;
+
 	// 表单提交
 	private boolean validated = false;
 
@@ -87,6 +98,66 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		initView();
 		updateView();
 		onBind();
+	}
+
+	public static void showPreview(final BaseUi context) {
+		LinearLayout view = (LinearLayout) LinearLayout.inflate(context,
+				R.layout.template_cashier_preview, null);
+		LinearLayout productsBoxView = (LinearLayout) view
+				.findViewById(R.id.productBox);
+
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(AppUtil.getActualMeasure(context, 100), AppUtil.getActualMeasure(context, 130));
+		lp.setMargins(0, 0, AppUtil.getActualMeasure(context, 30), 0);
+		for (int i = 0; i < hbList.size(); i++) {
+			RelativeLayout productItemView = (RelativeLayout) RelativeLayout.inflate(
+					context, R.layout.template_cashier_preview_product_item,
+					null);
+			productItemView.setLayoutParams(lp);
+			HashMap<String, String> map = (HashMap<String, String>) UICashier.hbList
+					.get(i);
+
+			ImageView picView = (ImageView) productItemView
+					.findViewById(R.id.pic);
+			TextView nameView = (TextView) productItemView
+					.findViewById(R.id.name);
+			TextView sellingcountView = (TextView) productItemView
+					.findViewById(R.id.sellingcount);
+			
+			sellingcountView.setText("销量："+map.get("sellingCount"));
+			nameView.setText(map.get("name"));
+			picView.setImageURI(null);
+			picView.setBackgroundResource(R.drawable.default_img_placeholder);
+
+			if (map.get("pid") != null) {
+				BaseGetProductImageTask bpit = new BaseGetProductImageTask(
+						picView, map.get("pic"), map.get("pid"));
+				bpit.execute();
+			}
+			productsBoxView.addView(productItemView);
+		}
+
+		baseDialogBuilder = new BaseDialog.Builder(context);
+		baseDialogBuilder.setContentView(view);
+
+		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						// TODO Auto-generated method stub
+						doSubmit(context);
+					}
+				});
+		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						baseDialog.dismiss();
+					}
+				});
+		baseDialog = baseDialogBuilder.create();
+		baseDialog.show();
 	}
 
 	@Override
@@ -405,15 +476,15 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 		JSONArray list = new JSONArray();
 		JSONObject sale = new JSONObject();
-		
-		if(hbList.size() <= 0){
+
+		if (hbList.size() <= 0) {
 			AppUtil.showLoadingPopup(ui, R.string.CASHIER_JZ_LOADING);
-		}else{
-			for(int i=0; i<hbList.size(); i++){
+		} else {
+			for (int i = 0; i < hbList.size(); i++) {
 				HashMap<String, String> map = hbList.get(i);
 				JSONObject saleObj = new JSONObject();
 				try {
-					if(map.get("pid") != null){
+					if (map.get("pid") != null) {
 						saleObj.put("pid", map.get("pid"));
 					}
 					saleObj.put("price", map.get("price"));
@@ -425,13 +496,13 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 				list.put(saleObj);
 			}
 			AppUtil.showLoadingPopup(ui, R.string.CASHIER_HBJZ_LOADING);
-			
+
 		}
-		
+
 		urlParams.put("list", list.toString());
 		try {
 			ui.doTaskAsync(C.TASK.cashiercreate, C.API.host
@@ -441,9 +512,10 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void onTaskComplete(int taskId, BaseMessage message) throws Exception {
+	public void onTaskComplete(int taskId, BaseMessage message)
+			throws Exception {
 		super.onTaskComplete(taskId, message);
 
 		int resultStatus = message.getResultStatus();
@@ -455,14 +527,19 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
-	
-	public static void submitSuccess(JSONObject operation){
-		
+
+	public static void submitSuccess(JSONObject operation) {
+
 	}
 
 	@Override
 	public void beforeSubmit() {
 		// TODO Auto-generated method stub
+		if(hbList.size() > 0 ){
+			showPreview(this);
+			return;
+		}
+		
 		// 防止重复点击
 		if (validated) {
 			return;
@@ -472,7 +549,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		if (validation()) {
 
-			doSubmit(this);
+			showPreview(this);
 		}
 		validated = false;
 	}
@@ -547,6 +624,6 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	@Override
 	public void doSubmit() {
 		// TODO Auto-generated method stub
-		
+		doSubmit(this);
 	}
 }
