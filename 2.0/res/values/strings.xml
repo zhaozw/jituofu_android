@@ -245,4 +245,6 @@
     <string name="CASHIER_TODAY_ZLR">总利润</string>
     <string name="CASHIER_TODAY_ZBS">总笔数</string>
     <string name="CASHIER_TODAY_ZCB">总成本</string>
+    <string name="CASHIER_HBJZ_LOADING">合并记账中...</string>
+    <string name="CASHIER_JZ_LOADING">记账中...</string>
 </resources>

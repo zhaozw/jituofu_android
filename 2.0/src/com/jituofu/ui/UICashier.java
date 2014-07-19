@@ -1,19 +1,25 @@
 package com.jituofu.ui;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TimerTask;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseGetProductImageTask;
+import com.jituofu.base.BaseMessage;
+import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.BaseUiFormBuilder;
+import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
@@ -27,6 +33,7 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -39,10 +46,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private boolean validated = false;
 
 	private LinearLayout productpreviewView;
-	private TextView gotohblbBtnView, topBar2RightView;
+	private TextView topBar2RightView;
 	private EditText nameView, priceView, sellingCountView, sellingPriceView,
 			remarkView;
 	private RelativeLayout flyView, hbView;
+	private Button okBtnView, gotohblbBtnView;
 
 	// 表单值
 	private String name, price, sellingCount, sellingPrice, remark;
@@ -64,11 +72,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private boolean isFly = false;
 
 	@Override
-	protected void onResume(){
+	protected void onResume() {
 		super.onResume();
 		updateHBListCount();
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -196,7 +204,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 									30);
 				} else {
 					fromX = gotohblbBtnViewLocation[0]
-							+ gotohblbBtnView.getWidth()/2;
+							+ gotohblbBtnView.getWidth() / 2;
 					fromY = gotohblbBtnViewLocation[1]
 							- AppUtil.getActualMeasure(getApplicationContext(),
 									80);
@@ -252,13 +260,13 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (validation()) {
-					if(currentProduct != null){
+					if (currentProduct != null) {
 						currentProduct.put("name", name);
 						currentProduct.put("sellingCount", sellingCount);
 						currentProduct.put("price", price);
 						currentProduct.put("sellingPrice", sellingPrice);
 						currentProduct.put("remark", remark);
-					}else{
+					} else {
 						currentProduct = new HashMap<String, String>();
 						currentProduct.put("name", name);
 						currentProduct.put("sellingCount", sellingCount);
@@ -274,21 +282,28 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				}
 			}
 		});
+		okBtnView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				beforeSubmit();
+			}
+		});
 	}
-	
-	public void updateHBListCount(){
+
+	public void updateHBListCount() {
 		TextView hblistCountView = (TextView) findViewById(R.id.hblistcount);
-		
-		if(hblistCountView == null){
+
+		if (hblistCountView == null) {
 			return;
 		}
-		
-		if(hbList.size() <= 0){
+
+		if (hbList.size() <= 0) {
 			hblistCountView.setVisibility(View.GONE);
-		}else if(hbList.size() < 100){
+		} else if (hbList.size() < 100) {
 			hblistCountView.setVisibility(View.VISIBLE);
-			hblistCountView.setText(hbList.size()+"");
-		}else{
+			hblistCountView.setText(hbList.size() + "");
+		} else {
 			hblistCountView.setVisibility(View.VISIBLE);
 			hblistCountView.setText("...");
 		}
@@ -324,7 +339,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					.getLocationOnScreen(hbViewLocation);
 
 			int toX = AppUtil.getActualMeasure(getApplicationContext(), 15);
-			int toY = hbViewLocation[1]-AppUtil.getActualMeasure(getApplicationContext(), 15);
+			int toY = hbViewLocation[1]
+					- AppUtil.getActualMeasure(getApplicationContext(), 15);
 			am = new TranslateAnimation(0, (toX - fromX), 0, (toY - fromY));
 		}
 
@@ -351,21 +367,9 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				isFly = true;
 			}
 		});
-		am.setDuration(1000);
+		am.setDuration(500);
 		flyView.setAnimation(am);
 		flyView.startAnimation(am);
-
-		// flyRunnable = flyRunnable == null ? new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		// } : flyRunnable;
-		//
-		// Thread mThread = new Thread(flyRunnable);
-		// mThread.start();
 	}
 
 	private void resetForm() {
@@ -383,7 +387,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private void initView() {
 		cangkuBtnView = (ImageButton) this.findViewById(R.id.cangku);
 		hbView = (RelativeLayout) findViewById(R.id.hb);
-		gotohblbBtnView = (TextView) findViewById(R.id.add2hebinglist);
+		gotohblbBtnView = (Button) findViewById(R.id.add2hebinglist);
+		okBtnView = (Button) findViewById(R.id.okBtn);
 		productpreviewView = (LinearLayout) findViewById(R.id.productpreview);
 		topBar2RightView = (TextView) findViewById(R.id.topBar2Right);
 
@@ -396,10 +401,63 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		flyView = (RelativeLayout) findViewById(R.id.fly);
 	}
 
+	public static void doSubmit(BaseUi ui) {
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+		JSONArray list = new JSONArray();
+		JSONObject sale = new JSONObject();
+		
+		if(hbList.size() <= 0){
+			AppUtil.showLoadingPopup(ui, R.string.CASHIER_JZ_LOADING);
+		}else{
+			for(int i=0; i<hbList.size(); i++){
+				HashMap<String, String> map = hbList.get(i);
+				JSONObject saleObj = new JSONObject();
+				try {
+					if(map.get("pid") != null){
+						saleObj.put("pid", map.get("pid"));
+					}
+					saleObj.put("price", map.get("price"));
+					saleObj.put("sellingPrice", map.get("sellingPrice"));
+					saleObj.put("sellingCount", map.get("sellingCount"));
+					saleObj.put("name", map.get("name"));
+					saleObj.put("remark", map.get("remark"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				list.put(saleObj);
+			}
+			AppUtil.showLoadingPopup(ui, R.string.CASHIER_HBJZ_LOADING);
+			
+		}
+		
+		urlParams.put("list", list.toString());
+		try {
+			ui.doTaskAsync(C.TASK.cashiercreate, C.API.host
+					+ C.API.cashiercreate, urlParams);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
-	public void doSubmit() {
-		// TODO Auto-generated method stub
+	public void onTaskComplete(int taskId, BaseMessage message) throws Exception {
+		super.onTaskComplete(taskId, message);
 
+		int resultStatus = message.getResultStatus();
+		JSONObject operation = message.getOperation();
+		if (resultStatus == 100) {
+
+			submitSuccess(operation);
+		} else {
+			this.showToast(message.getFirstOperationErrorMessage());
+		}
+	}
+	
+	public static void submitSuccess(JSONObject operation){
+		
 	}
 
 	@Override
@@ -414,7 +472,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		if (validation()) {
 
-			doSubmit();
+			doSubmit(this);
 		}
 		validated = false;
 	}
@@ -424,7 +482,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		// TODO Auto-generated method stub
 		boolean result = false;
 
-		name = getEditValue(nameView);
+		name = AppUtil.trimAll(getEditValue(nameView));
 		price = AppUtil.trimAll(getEditValue(priceView));
 		sellingCount = AppUtil.trimAll(getEditValue(sellingCountView));
 		sellingPrice = AppUtil.trimAll(getEditValue(sellingPriceView));
@@ -484,5 +542,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		}
 
 		return result;
+	}
+
+	@Override
+	public void doSubmit() {
+		// TODO Auto-generated method stub
+		
 	}
 }

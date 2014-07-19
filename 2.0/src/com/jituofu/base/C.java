@@ -63,6 +63,7 @@ public final class C {
 		public static final String productsearch = "/products/search";
 		public static final String parenttypedetail = "/types/queryparentdetail";
 		public static final String productquerybytype = "/products/querybytype";
+		public static final String cashiercreate = "/cashier/create";
 	}
 
 	public static final class ERROR {
@@ -98,6 +99,7 @@ public final class C {
 		public static final int productsearch = 1023;
 		public static final int parenttypedetail = 1024;
 		public static final int productquerybytype = 1025;
+		public static final int cashiercreate = 1026;
 	}
 	
 	public static final class PASSWORDLENGTH{
