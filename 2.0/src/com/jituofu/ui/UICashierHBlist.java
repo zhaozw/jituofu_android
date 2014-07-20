@@ -195,7 +195,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	private void submitSuccess(JSONObject operation) {
-		UICashier.submitSuccess(operation);
+		UICashier.submitSuccess(this, operation);
 		
 		updateTotal();
 		

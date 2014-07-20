@@ -242,6 +242,10 @@
     <string name="CASHIER_SELLINGPRICE_ERROR">销售价格不正确</string>
     <string name="CASHIER_NO_HBLIST">没有合并记账清单</string>
     <string name="CASHIER_TODAY_ZXSE">总销售额</string>
+    <string name="CASHIER_XSSP">销售商品</string>
+    <string name="CASHIER_XSSL">销售数量</string>
+    <string name="CASHIER_XSRQ">销售日期</string>
+    <string name="CASHIER_JZCG">记账成功</string>
     <string name="CASHIER_TODAY_ZLR">总利润</string>
     <string name="CASHIER_TODAY_ZBS">总笔数</string>
     <string name="CASHIER_TODAY_ZCB">总成本</string>

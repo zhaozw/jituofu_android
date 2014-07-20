@@ -66,7 +66,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private Button okBtnView, gotohblbBtnView;
 
 	// 表单值
-	private String name, price, sellingCount, sellingPrice, remark, date;
+	private static String name, price, sellingCount, sellingPrice, remark,
+			date;
 
 	// 合并记账列表
 	public static ArrayList<HashMap<String, String>> hbList;
@@ -88,6 +89,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private static int year, month, day, hour, minute, second;
 	private static TextView dateView;
 	private static String time;
+	
+	private static boolean isJYHBlist = false;//是否是借用合并列表暂时存储商品
 
 	@Override
 	protected void onResume() {
@@ -161,7 +164,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				+ " 种商品");
 		((TextView) view.findViewById(R.id.count)).setText("总数量 "
 				+ AppUtil.toFixed(totalCount));
-		((TextView) view.findViewById(R.id.xse)).setText(totalPrice + " 元");
+		((TextView) view.findViewById(R.id.xse)).setText(AppUtil
+				.toFixed(totalPrice) + " 元");
 		time = AppUtil.getCurrentDateTime();
 		dateView.setText(time);
 		dateView.setOnClickListener(null);
@@ -198,6 +202,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 					@Override
 					public void onClick(DialogInterface di, int which) {
+						//如果一条记账清单是暂时借用合并列表存储数据的，关闭对话框时就清除这个商品
+						if(isJYHBlist){
+							isJYHBlist = false;
+							hbList.clear();
+						}
 						baseDialog.dismiss();
 					}
 				});
@@ -496,6 +505,13 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		sellingCountView.setText("");
 		sellingPriceView.setText("");
 		remarkView.setText("");
+		
+		name = null;
+		price = null;
+		sellingCount = null;
+		sellingPrice = null;
+		date = null;
+		remark = null;
 
 		enableEditText();
 	}
@@ -550,6 +566,18 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		JSONObject sale = new JSONObject();
 
 		if (hbList.size() <= 0) {
+			try {
+				sale.put("price", price);
+				sale.put("sellingPrice", sellingPrice);
+				sale.put("sellingCount", sellingCount);
+				sale.put("name", name);
+				sale.put("remark", remark);
+				
+				list.put(sale);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			AppUtil.showLoadingPopup(ui, R.string.CASHIER_JZ_LOADING);
 		} else {
 			for (int i = 0; i < hbList.size(); i++) {
@@ -595,14 +623,38 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-			submitSuccess(operation);
+			submitSuccess(this, operation);
+			resetForm();
 			updateHBListCount();
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
 
-	public static void submitSuccess(JSONObject operation) {
+	public static void submitSuccess(BaseUi ui, JSONObject operation) {
+		Bundle bundle = new Bundle();
+		bundle.putString("productNum", hbList.size() + "");
+
+		double totalPrice = 0;
+		double totalCount = 0;
+
+		for (int i = 0; i < hbList.size(); i++) {
+			HashMap<String, String> map = (HashMap<String, String>) UICashier.hbList
+					.get(i);
+
+			double sellingPrice = Double.parseDouble(map.get("sellingPrice"));
+			double sellingCount = Double.parseDouble(map.get("sellingCount"));
+
+			totalPrice += Double.parseDouble(AppUtil.toFixed(sellingCount
+					* sellingPrice));
+			totalCount += sellingCount;
+		}
+		bundle.putString("totalSellingCount", AppUtil.toFixed(totalCount));
+		bundle.putString("totalSellingPrice", AppUtil.toFixed(totalPrice));
+		bundle.putString("date", time);
+
+		ui.forward(UICashierSuccess.class, bundle);
+
 		hbList.clear();
 		baseDialog.dismiss();
 	}
@@ -610,11 +662,6 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	@Override
 	public void beforeSubmit() {
 		// TODO Auto-generated method stub
-		if (hbList.size() > 0) {
-			showPreview(this);
-			return;
-		}
-
 		// 防止重复点击
 		if (validated) {
 			return;
@@ -622,11 +669,40 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		validated = true;
 
-		if (validation()) {
-
+		if (hbList.size() > 0) {
 			showPreview(this);
+		}else{
+			if (validation()) {
+				isJYHBlist = true;
+				addProduct2HBlist();
+				showPreview(this);
+			}
 		}
 		validated = false;
+	}
+	
+	private void addProduct2HBlist(){
+		if (currentProduct != null) {
+			currentProduct.put("name", name);
+			currentProduct.put("sellingCount", sellingCount);
+			currentProduct.put("price", price);
+			currentProduct.put("sellingPrice", sellingPrice);
+			currentProduct.put("remark", remark);
+		} else {
+			currentProduct = new HashMap<String, String>();
+			currentProduct.put("name", name);
+			currentProduct.put("sellingCount", sellingCount);
+			currentProduct.put("price", price);
+			currentProduct.put("sellingPrice", sellingPrice);
+			currentProduct.put("remark", remark);
+		}
+
+		if (hbList.indexOf(currentProduct) < 0) {
+			hbList.add(currentProduct);
+			if(!isJYHBlist){
+				resetForm();
+			}
+		}
 	}
 
 	@Override
