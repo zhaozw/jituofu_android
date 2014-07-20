@@ -204,7 +204,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				Bundle bundle = new Bundle();
 
 				if (extraBundle != null
-						&& extraBundle.getString("from").equals(
+						&& extraBundle.getString("from") != null && extraBundle.getString("from").equals(
 								C.COMMON.cashier)) {// 来自记账台查找商品
 					bundle.putString("from", extraBundle.getString("from"));
 					if (onlyProducts) {

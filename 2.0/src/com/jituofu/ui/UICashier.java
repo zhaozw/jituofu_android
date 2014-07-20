@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseGetProductImageTask;
 import com.jituofu.base.BaseMessage;
@@ -23,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +66,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private Button okBtnView, gotohblbBtnView;
 
 	// 表单值
-	private String name, price, sellingCount, sellingPrice, remark;
+	private String name, price, sellingCount, sellingPrice, remark, date;
 
 	// 合并记账列表
 	public static ArrayList<HashMap<String, String>> hbList;
@@ -81,6 +83,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	Runnable flyRunnable;
 	private int fromX, fromY;
 	private boolean isFly = false;
+
+	private static BaseDateTimePicker dateTimePicker;
+	private static int year, month, day, hour, minute, second;
+	private static TextView dateView;
+	private static String time;
 
 	@Override
 	protected void onResume() {
@@ -101,17 +108,24 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	public static void showPreview(final BaseUi context) {
+		double totalPrice = 0;
+		double totalCount = 0;
+
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(context,
 				R.layout.template_cashier_preview, null);
 		LinearLayout productsBoxView = (LinearLayout) view
 				.findViewById(R.id.productBox);
+		dateView = (TextView) view.findViewById(R.id.date);
 
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(AppUtil.getActualMeasure(context, 100), AppUtil.getActualMeasure(context, 130));
+		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+				AppUtil.getActualMeasure(context, 100),
+				AppUtil.getActualMeasure(context, 130));
 		lp.setMargins(0, 0, AppUtil.getActualMeasure(context, 30), 0);
 		for (int i = 0; i < hbList.size(); i++) {
-			RelativeLayout productItemView = (RelativeLayout) RelativeLayout.inflate(
-					context, R.layout.template_cashier_preview_product_item,
-					null);
+			RelativeLayout productItemView = (RelativeLayout) RelativeLayout
+					.inflate(context,
+							R.layout.template_cashier_preview_product_item,
+							null);
 			productItemView.setLayoutParams(lp);
 			HashMap<String, String> map = (HashMap<String, String>) UICashier.hbList
 					.get(i);
@@ -122,8 +136,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					.findViewById(R.id.name);
 			TextView sellingcountView = (TextView) productItemView
 					.findViewById(R.id.sellingcount);
-			
-			sellingcountView.setText("销量："+map.get("sellingCount"));
+
+			sellingcountView.setText("数量：" + map.get("sellingCount"));
 			nameView.setText(map.get("name"));
 			picView.setImageURI(null);
 			picView.setBackgroundResource(R.drawable.default_img_placeholder);
@@ -134,7 +148,38 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				bpit.execute();
 			}
 			productsBoxView.addView(productItemView);
+
+			double sellingPrice = Double.parseDouble(map.get("sellingPrice"));
+			double sellingCount = Double.parseDouble(map.get("sellingCount"));
+
+			totalPrice += Double.parseDouble(AppUtil.toFixed(sellingCount
+					* sellingPrice));
+			totalCount += sellingCount;
 		}
+
+		((TextView) view.findViewById(R.id.product_num)).setText(hbList.size()
+				+ " 种商品");
+		((TextView) view.findViewById(R.id.count)).setText("总数量 "
+				+ AppUtil.toFixed(totalCount));
+		((TextView) view.findViewById(R.id.xse)).setText(totalPrice + " 元");
+		time = AppUtil.getCurrentDateTime();
+		dateView.setText(time);
+		dateView.setOnClickListener(null);
+		dateView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (year > 0 && month > 0 && day > 0) {
+					if (hour > 0 && minute > 0) {
+						dateTimePicker.setHMS(hour, minute, second);
+					}
+					dateTimePicker.showDateDialog(year, month, day);
+				} else {
+					dateTimePicker.showDateDialog();
+				}
+			}
+		});
 
 		baseDialogBuilder = new BaseDialog.Builder(context);
 		baseDialogBuilder.setContentView(view);
@@ -470,6 +515,33 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		remarkView = (EditText) findViewById(R.id.remark);
 
 		flyView = (RelativeLayout) findViewById(R.id.fly);
+
+		dateTimePicker = new BaseDateTimePicker(this);
+		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface di) {
+				// TODO Auto-generated method stub
+				int[] ymd = dateTimePicker.getYMD();
+				int[] hms = dateTimePicker.getHMS();
+
+				year = ymd[0];
+				month = ymd[1];
+				day = ymd[2];
+
+				hour = hms[0];
+				minute = hms[1];
+				second = hms[2];
+
+				time = year + "-" + AppUtil.to2bit(month) + "-"
+						+ AppUtil.to2bit(day) + " " + AppUtil.to2bit(hour)
+						+ ":" + AppUtil.to2bit(minute) + ":"
+						+ AppUtil.to2bit(second);
+				if (dateView != null) {
+					dateView.setText(time);
+				}
+			}
+		});
 	}
 
 	public static void doSubmit(BaseUi ui) {
@@ -504,6 +576,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		}
 
 		urlParams.put("list", list.toString());
+		urlParams.put("date", time);
+
 		try {
 			ui.doTaskAsync(C.TASK.cashiercreate, C.API.host
 					+ C.API.cashiercreate, urlParams);
@@ -521,25 +595,26 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-
 			submitSuccess(operation);
+			updateHBListCount();
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
 
 	public static void submitSuccess(JSONObject operation) {
-
+		hbList.clear();
+		baseDialog.dismiss();
 	}
 
 	@Override
 	public void beforeSubmit() {
 		// TODO Auto-generated method stub
-		if(hbList.size() > 0 ){
+		if (hbList.size() > 0) {
 			showPreview(this);
 			return;
 		}
-		
+
 		// 防止重复点击
 		if (validated) {
 			return;
