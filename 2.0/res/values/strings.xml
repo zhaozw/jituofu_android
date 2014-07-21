@@ -194,6 +194,10 @@
     <string name="PRODUCT_PPIC_HINT">商品图片</string>
     <string name="PRODUCT_PREMARK_HINT">备注信息</string>
     <string name="PRODUCT_DELETEPIC">删除图片</string>
+    <string name="PRODUCT_ADD_SUCCESS">入库成功</string>
+    <string name="PRODUCT_ADD_SUCCESS_JXRK">继续入库</string>
+    <string name="PRODUCT_ADD_SUCCESS_GOTOJZT">去记账台</string>
+    <string name="PRODUCT_ADDING">入库中...</string>
     
     <!-- 商品详情 -->
     <string name="PRODUCT_DETAIL_UPDATETXT">点击更新图片</string>

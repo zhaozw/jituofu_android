@@ -34,16 +34,18 @@ import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseMenuBottom2Top;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
+import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.BaseUiBuilder;
 import com.jituofu.base.BaseUiFormBuilder;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
-public class UIProductAdd extends BaseUi implements BaseUiBuilder,
+public class UIProductAdd extends BaseUiAuth implements BaseUiBuilder,
 		BaseUiFormBuilder {
 	// view对象
-	private TextView titleView, timeView, typeView, deletePicView, defaultTxtView;
+	private TextView titleView, timeView, typeView, deletePicView,
+			defaultTxtView;
 	private EditText nameView, priceView, countView, remarkView;
 	private Button okBtnView;
 	private LinearLayout imgPreviewView;
@@ -60,7 +62,7 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 
 	private BaseDateTimePicker dateTimePicker;
 	private BaseMenuBottom2Top baseBottomMenu;
-	
+
 	private Uri imgPreview;
 
 	@Override
@@ -75,18 +77,20 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 
 	@Override
 	public void doSubmit() {
+		AppUtil.showLoadingPopup(this, R.string.PRODUCT_ADDING);
+
 		// TODO Auto-generated method stub
 		HashMap<String, String> urlParams = new HashMap<String, String>();
-		
-		String price = priceView.getText()+"";
-		
+
+		String price = priceView.getText() + "";
+
 		urlParams.put("name", name);
 		urlParams.put("count", count);
 		urlParams.put("price", price);
 		urlParams.put("type", typeId);
 		urlParams.put("date", time);
 		urlParams.put("remark", remark);
-		if(picPath != null){
+		if (picPath != null) {
 			ArrayList<String> filesList = new ArrayList<String>();
 			filesList.add(picPath);
 			try {
@@ -96,17 +100,17 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}else{
+		} else {
 			try {
 				this.doTaskAsync(C.TASK.productcreate, C.API.host
-							+ C.API.productcreate, urlParams);
+						+ C.API.productcreate, urlParams);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	@Override
 	public void onTaskComplete(int taskId, BaseMessage message,
 			ArrayList<String> filesPath) throws Exception {
@@ -116,10 +120,11 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
 			File img = new File(picPath);
-			if(img != null){
+			if (img != null) {
 				String productDirPath = AppUtil.getExternalStorageDirectory()
 						+ C.DIRS.rootdir + C.DIRS.productDir;
-				String newFileName = productDirPath+"/"+operation.getString("id")+".png";
+				String newFileName = productDirPath + "/"
+						+ operation.getString("id") + ".png";
 				img.renameTo(new File(newFileName));
 				submitSuccess(operation);
 			}
@@ -127,9 +132,10 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
-	
+
 	@Override
-	public void onTaskComplete(int taskId, BaseMessage message) throws Exception {
+	public void onTaskComplete(int taskId, BaseMessage message)
+			throws Exception {
 		super.onTaskComplete(taskId, message);
 
 		int resultStatus = message.getResultStatus();
@@ -140,16 +146,60 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
-	
-	private void submitSuccess(JSONObject data){
+
+	private void showDefaultImagePreiew() {
+		picPath = null;
+
+		defaultTxtView.setVisibility(View.VISIBLE);
+		deletePicView.setVisibility(View.GONE);
+		imgPicView.setVisibility(View.GONE);
+
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) new LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		lp.height = AppUtil.getActualMeasure(this, 42);
+		LinearLayout imgPreviewViewParent = (LinearLayout) imgPreviewView
+				.getParent();
+		imgPreviewViewParent.setLayoutParams(lp);
+		imgPreviewViewParent.setPadding(AppUtil.getActualMeasure(this, 15), 0,
+				0, 0);
+	}
+
+	private void resetForm() {
+		nameView.setText("");
+		countView.setText("");
+		priceView.setText("");
+		remarkView.setText("");
+		typeView.setText("");
+
+		showDefaultImagePreiew();
+
+		name = null;
+		count = null;
+		price = null;
+		remark = null;
+		typeName = null;
+		typeId = null;
+		imgPreview = null;
+	}
+
+	private void submitSuccess(JSONObject operation) {
 		Bundle bundle = new Bundle();
 		try {
-			bundle.putString("id", data.getString("id"));
+			bundle.putString("id", operation.getString("id"));
+			bundle.putString("name", operation.getString("name"));
+			bundle.putString("count", operation.getString("count"));
+			bundle.putString("price", operation.getString("price"));
+			bundle.putString("typeName", typeName);
+			bundle.putString("date", operation.getString("date"));
+			bundle.putString("pic", operation.getString("pic"));
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.forward(UIProductDetail.class, bundle);
+
+		forward(UIProductAddSuccess.class, bundle);
+		resetForm();
 	}
 
 	@Override
@@ -196,7 +246,8 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 				result = false;
 			} else {
 				double dp = Double.parseDouble(price);
-				priceView.setText(AppUtil.toFixed(dp));
+				price = AppUtil.toFixed(dp);
+				priceView.setText(price);
 			}
 		}
 
@@ -207,6 +258,10 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 			} else if (!AppUtil.isAvailablePrice(count)) {
 				this.showToast(R.string.PRODUCT_PCOUNT_ERROR);
 				result = false;
+			} else {
+				double dp = Double.parseDouble(count);
+				count = AppUtil.toFixed(dp);
+				countView.setText(count);
 			}
 		}
 
@@ -273,24 +328,24 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if(picPath != null){
+				if (picPath != null) {
 					return;
 				}
-				
+
 				baseBottomMenu.showAtLocation(
 						UIProductAdd.this.findViewById(R.id.imgPreview),
 						Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 			}
 		});
-		
-		deletePicView.setOnClickListener(new OnClickListener(){
+
+		deletePicView.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				deleteImg();
 			}
-			
+
 		});
 	}
 
@@ -322,7 +377,7 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 
 				typeView.setText(typeName);
 			}
-		}else if (requestCode == C.COMMON.camera) {
+		} else if (requestCode == C.COMMON.camera) {
 			String path = AppUtil.getExternalStorageDirectory()
 					+ C.DIRS.rootdir + C.DIRS.productDir + "/"
 					+ C.DIRS.productFileName;
@@ -342,8 +397,8 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 					+ C.DIRS.rootdir + C.DIRS.productDir;
 			if (AppUtil.mkdir(productDirPath)) {
 				FileOutputStream fos = null;
-				String fileName = productDirPath + "/" + AppUtil.getCurrentTime()
-						+ ".png";
+				String fileName = productDirPath + "/"
+						+ AppUtil.getCurrentTime() + ".png";
 				try {
 					fos = new FileOutputStream(fileName);
 					bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
@@ -401,8 +456,8 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 
 			if (AppUtil.mkdir(productDirPath)) {
 				FileOutputStream fos = null;
-				String fileName = productDirPath + "/" + AppUtil.getCurrentTime()
-						+ ".png";
+				String fileName = productDirPath + "/"
+						+ AppUtil.getCurrentTime() + ".png";
 
 				try {
 					fos = new FileOutputStream(fileName);
@@ -430,32 +485,28 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 			showImgPreview(imgPreview);
 		}
 	}
-	
-	private void deleteImg(){
+
+	private void deleteImg() {
 		StorageUtil.deleteFile(picPath);
-		picPath = null;
-		defaultTxtView.setVisibility(View.VISIBLE);
-		deletePicView.setVisibility(View.GONE);
-		imgPicView.setVisibility(View.GONE);
-		
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		lp.height = AppUtil.getActualMeasure(this, 42);
-		LinearLayout imgPreviewViewParent = (LinearLayout) imgPreviewView.getParent();
-		imgPreviewViewParent.setLayoutParams(lp);
-		imgPreviewViewParent.setPadding(AppUtil.getActualMeasure(this, 15), 0, 0, 0);
+		showDefaultImagePreiew();
 	}
-	
-	private void showImgPreview(Uri uri){
+
+	private void showImgPreview(Uri uri) {
 		defaultTxtView.setVisibility(View.GONE);
 		deletePicView.setVisibility(View.VISIBLE);
 		imgPicView.setVisibility(View.VISIBLE);
 		imgPicView.setImageURI(uri);
-		
-		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) new LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) new LayoutParams(
+				LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
 		lp.height = AppUtil.getActualMeasure(this, 60);
-		LinearLayout imgPreviewViewParent = (LinearLayout) imgPreviewView.getParent();
+		LinearLayout imgPreviewViewParent = (LinearLayout) imgPreviewView
+				.getParent();
 		imgPreviewViewParent.setLayoutParams(lp);
-		imgPreviewViewParent.setPadding(AppUtil.getActualMeasure(this, 15), AppUtil.getActualMeasure(this, 10), 0, AppUtil.getActualMeasure(this, 10));
+		imgPreviewViewParent.setPadding(AppUtil.getActualMeasure(this, 15),
+				AppUtil.getActualMeasure(this, 10), 0,
+				AppUtil.getActualMeasure(this, 10));
 	}
 
 	@Override
@@ -476,7 +527,7 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 		typeView = (TextView) findViewById(R.id.type);
 		timeView = (TextView) findViewById(R.id.time);
 		deletePicView = (TextView) findViewById(R.id.deletePic);
-		
+
 		imgPicView = (ImageView) findViewById(R.id.imgPic);
 
 		nameView = (EditText) findViewById(R.id.name);
@@ -485,7 +536,8 @@ public class UIProductAdd extends BaseUi implements BaseUiBuilder,
 		remarkView = (EditText) findViewById(R.id.remark);
 
 		imgPreviewView = (LinearLayout) findViewById(R.id.imgPreview);
-		defaultTxtView = (TextView) imgPreviewView.findViewById(R.id.defaultTxt);
+		defaultTxtView = (TextView) imgPreviewView
+				.findViewById(R.id.defaultTxt);
 
 		dateTimePicker = new BaseDateTimePicker(this);
 		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
