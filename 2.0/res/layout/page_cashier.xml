@@ -217,7 +217,7 @@
                             android:id="@+id/gotohblb"
                             style="@style/link"
                             android:layout_weight="1"
-                            android:text="@string/CASHIER_HEBINGJIZHANGTXT" />
+                            android:text="@string/CASHIER_HBTITLE" />
 
                         <TextView
                             android:id="@+id/gotojrxs"

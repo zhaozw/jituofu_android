@@ -24,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
 import android.location.Location;
 import android.os.Build;
@@ -89,9 +90,13 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private static int year, month, day, hour, minute, second;
 	private static TextView dateView;
 	private static String time;
-	
-	private static boolean isJYHBlist = false;//是否是借用合并列表暂时存储商品
 
+	protected void onBrReceive(String type) {
+		if (type.equals("ClearForm")) {
+			resetForm();
+		}
+	}
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -103,6 +108,10 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_cashier);
 
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("com.jituofu.ui.ClearForm");
+		this.registerReceiver(br, filter);
+		
 		hbList = new ArrayList<HashMap<String, String>>();
 
 		initView();
@@ -111,6 +120,33 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	public static void showPreview(final BaseUi context) {
+		dateTimePicker = new BaseDateTimePicker(context);
+		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface di) {
+				// TODO Auto-generated method stub
+				int[] ymd = dateTimePicker.getYMD();
+				int[] hms = dateTimePicker.getHMS();
+
+				year = ymd[0];
+				month = ymd[1];
+				day = ymd[2];
+
+				hour = hms[0];
+				minute = hms[1];
+				second = hms[2];
+
+				time = year + "-" + AppUtil.to2bit(month) + "-"
+						+ AppUtil.to2bit(day) + " " + AppUtil.to2bit(hour)
+						+ ":" + AppUtil.to2bit(minute) + ":"
+						+ AppUtil.to2bit(second);
+				if (dateView != null) {
+					dateView.setText(time);
+				}
+			}
+		});
+		
 		double totalPrice = 0;
 		double totalCount = 0;
 
@@ -202,11 +238,6 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 					@Override
 					public void onClick(DialogInterface di, int which) {
-						//如果一条记账清单是暂时借用合并列表存储数据的，关闭对话框时就清除这个商品
-						if(isJYHBlist){
-							isJYHBlist = false;
-							hbList.clear();
-						}
 						baseDialog.dismiss();
 					}
 				});
@@ -384,7 +415,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if (validation()) {
+				if (validation(true)) {
 					if (currentProduct != null) {
 						currentProduct.put("name", name);
 						currentProduct.put("sellingCount", sellingCount);
@@ -402,6 +433,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
+						fly();
+					}else{
 						fly();
 					}
 				}
@@ -505,7 +538,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		sellingCountView.setText("");
 		sellingPriceView.setText("");
 		remarkView.setText("");
-		
+
 		name = null;
 		price = null;
 		sellingCount = null;
@@ -531,33 +564,6 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		remarkView = (EditText) findViewById(R.id.remark);
 
 		flyView = (RelativeLayout) findViewById(R.id.fly);
-
-		dateTimePicker = new BaseDateTimePicker(this);
-		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface di) {
-				// TODO Auto-generated method stub
-				int[] ymd = dateTimePicker.getYMD();
-				int[] hms = dateTimePicker.getHMS();
-
-				year = ymd[0];
-				month = ymd[1];
-				day = ymd[2];
-
-				hour = hms[0];
-				minute = hms[1];
-				second = hms[2];
-
-				time = year + "-" + AppUtil.to2bit(month) + "-"
-						+ AppUtil.to2bit(day) + " " + AppUtil.to2bit(hour)
-						+ ":" + AppUtil.to2bit(minute) + ":"
-						+ AppUtil.to2bit(second);
-				if (dateView != null) {
-					dateView.setText(time);
-				}
-			}
-		});
 	}
 
 	public static void doSubmit(BaseUi ui) {
@@ -572,13 +578,12 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				sale.put("sellingCount", sellingCount);
 				sale.put("name", name);
 				sale.put("remark", remark);
-				
+
 				list.put(sale);
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			AppUtil.showLoadingPopup(ui, R.string.CASHIER_JZ_LOADING);
 		} else {
 			for (int i = 0; i < hbList.size(); i++) {
 				HashMap<String, String> map = hbList.get(i);
@@ -599,9 +604,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 				list.put(saleObj);
 			}
-			AppUtil.showLoadingPopup(ui, R.string.CASHIER_HBJZ_LOADING);
-
 		}
+		AppUtil.showLoadingPopup(ui, R.string.CASHIER_JZ_LOADING);
 
 		urlParams.put("list", list.toString());
 		urlParams.put("date", time);
@@ -670,18 +674,20 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		validated = true;
 
 		if (hbList.size() > 0) {
+			if (validation(false)) {
+				addProduct2HBlist();
+			}
 			showPreview(this);
-		}else{
-			if (validation()) {
-				isJYHBlist = true;
+		} else {
+			if (validation(true)) {
 				addProduct2HBlist();
 				showPreview(this);
 			}
 		}
 		validated = false;
 	}
-	
-	private void addProduct2HBlist(){
+
+	private void addProduct2HBlist() {
 		if (currentProduct != null) {
 			currentProduct.put("name", name);
 			currentProduct.put("sellingCount", sellingCount);
@@ -699,14 +705,10 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		if (hbList.indexOf(currentProduct) < 0) {
 			hbList.add(currentProduct);
-			if(!isJYHBlist){
-				resetForm();
-			}
 		}
 	}
 
-	@Override
-	public boolean validation() {
+	public boolean validation(boolean isShowToast) {
 		// TODO Auto-generated method stub
 		boolean result = false;
 
@@ -721,19 +723,27 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		}
 
 		if (name == null) {
-			this.showToast(R.string.PRODUCT_PNAME_HINT);
+			if (isShowToast) {
+				this.showToast(R.string.PRODUCT_PNAME_HINT);
+			}
 		} else if (AppUtil.getStrLen(name) < 2 || AppUtil.getStrLen(name) > 15) {
-			this.showToast(R.string.PRODUCT_PNAME_ERROR);
+			if (isShowToast) {
+				this.showToast(R.string.PRODUCT_PNAME_ERROR);
+			}
 		} else {
 			result = true;
 		}
 
 		if (result) {
 			if (price == null) {
-				this.showToast(R.string.PRODUCT_PPRICE_HINT);
+				if (isShowToast) {
+					this.showToast(R.string.PRODUCT_PPRICE_HINT);
+				}
 				result = false;
 			} else if (!AppUtil.isAvailablePrice(price)) {
-				this.showToast(R.string.PRODUCT_PPRICE_ERROR);
+				if (isShowToast) {
+					this.showToast(R.string.PRODUCT_PPRICE_ERROR);
+				}
 				result = false;
 			} else {
 				double dp = Double.parseDouble(price);
@@ -743,10 +753,14 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		if (result) {
 			if (sellingCount == null) {
-				this.showToast(R.string.CASHIER_SELLINGCOUNT_HINT);
+				if (isShowToast) {
+					this.showToast(R.string.CASHIER_SELLINGCOUNT_HINT);
+				}
 				result = false;
 			} else if (!AppUtil.isAvailablePrice(sellingCount)) {
-				this.showToast(R.string.CASHIER_SELLINGCOUNT_ERROR);
+				if (isShowToast) {
+					this.showToast(R.string.CASHIER_SELLINGCOUNT_ERROR);
+				}
 				result = false;
 			} else {
 				double dp = Double.parseDouble(sellingCount);
@@ -757,10 +771,14 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 		if (result) {
 			if (sellingPrice == null) {
-				this.showToast(R.string.CASHIER_SELLINGPRICE_HINT);
+				if (isShowToast) {
+					this.showToast(R.string.CASHIER_SELLINGPRICE_HINT);
+				}
 				result = false;
 			} else if (!AppUtil.isAvailablePrice(sellingPrice)) {
-				this.showToast(R.string.CASHIER_SELLINGPRICE_ERROR);
+				if (isShowToast) {
+					this.showToast(R.string.CASHIER_SELLINGPRICE_ERROR);
+				}
 				result = false;
 			} else {
 				double dp = Double.parseDouble(sellingPrice);
@@ -776,5 +794,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	public void doSubmit() {
 		// TODO Auto-generated method stub
 		doSubmit(this);
+	}
+
+	@Override
+	public boolean validation() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

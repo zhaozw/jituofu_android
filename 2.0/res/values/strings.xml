@@ -220,11 +220,9 @@
     <!-- 记账台 -->
     <string name="CASHIER_JRXSZK">今日销售</string>
     <string name="CASHIER_TITLE">记账台</string>
-    <string name="CASHIER_HBTITLE">待合并记账</string>
-    <string name="CASHIER_HBBTNTXT">合并记账</string>
-    <string name="CASHIER_ADD2HEBINGBTNTXT">添加到合并列表</string>
-    <string name="CASHIER_HEBINGJIZHANGTXT">合并记账列表</string>
-    <string name="CASHIER_JIBTNTXT">记一笔</string>
+    <string name="CASHIER_HBTITLE">记账清单</string>
+    <string name="CASHIER_ADD2HEBINGBTNTXT">添加到清单</string>
+    <string name="CASHIER_JIBTNTXT">记账</string>
     <string name="CASHIER_PNAME">商品名称</string>
     <string name="CASHIER_PPRICE">进货价</string>
     <string name="CASHIER_SELLING_COUNT">销售数量</string>
@@ -240,7 +238,7 @@
     <string name="CASHIER_SELLINGCOUNT_ERROR">销售数量不正确</string>
     <string name="CASHIER_SELLINGPRICE_HINT">请填写销售价格</string>
     <string name="CASHIER_SELLINGPRICE_ERROR">销售价格不正确</string>
-    <string name="CASHIER_NO_HBLIST">没有合并记账清单</string>
+    <string name="CASHIER_NO_HBLIST">没有记账清单</string>
     <string name="CASHIER_TODAY_ZXSE">总销售额</string>
     <string name="CASHIER_XSSP">销售商品</string>
     <string name="CASHIER_XSSL">销售数量</string>
@@ -249,7 +247,6 @@
     <string name="CASHIER_TODAY_ZLR">总利润</string>
     <string name="CASHIER_TODAY_ZBS">总笔数</string>
     <string name="CASHIER_TODAY_ZCB">总成本</string>
-    <string name="CASHIER_HBJZ_LOADING">合并记账中...</string>
     <string name="CASHIER_JZ_LOADING">记账中...</string>
     <string name="CASHIER_JZSJTXT">日期</string>
 </resources>

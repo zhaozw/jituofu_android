@@ -94,7 +94,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="20dp"
-            android:text="@string/CASHIER_HBBTNTXT" />
+            android:text="@string/CASHIER_JIBTNTXT" />
     </LinearLayout>
 
 </LinearLayout>

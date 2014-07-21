@@ -7,6 +7,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -204,7 +205,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 	@Override
 	public void doSubmit() {
 		// TODO Auto-generated method stub
-		UICashier.doSubmit(this);
+		UICashier.showPreview(this);
 	}
 
 	@Override
@@ -217,6 +218,13 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 	public boolean validation() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	private void sendDeleteBroadCase(){
+		Intent broadcast = new Intent();
+		broadcast.setAction("com.jituofu.ui.ClearForm");
+		broadcast.putExtra("type", "ClearForm");
+		this.sendBroadcast(broadcast);
 	}
 
 	/**
@@ -303,6 +311,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 						isDeleting = false;
 						updateTotal();
 						customProductsAdapter.notifyDataSetChanged();
+						sendDeleteBroadCase();
 					}
 				}
 			});

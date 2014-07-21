@@ -49,7 +49,7 @@ public class BaseUi extends Activity {
 	}
 
 	// 一个基础的广播对象
-	private BaseBroadcast br = new BaseBroadcast() {
+	public BaseBroadcast br = new BaseBroadcast() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
