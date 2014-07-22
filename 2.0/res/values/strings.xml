@@ -243,7 +243,7 @@
     <string name="CASHIER_SELLINGPRICE_HINT">请填写销售价格</string>
     <string name="CASHIER_SELLINGPRICE_ERROR">销售价格不正确</string>
     <string name="CASHIER_NO_HBLIST">没有记账清单</string>
-    <string name="CASHIER_TODAY_ZXSE">总销售额</string>
+    <string name="CASHIER_TODAY_ZXSE">总销售额(元)</string>
     <string name="CASHIER_XSSP">销售商品</string>
     <string name="CASHIER_XSSL">销售数量</string>
     <string name="CASHIER_XSRQ">销售日期</string>
@@ -253,4 +253,7 @@
     <string name="CASHIER_TODAY_ZCB">总成本</string>
     <string name="CASHIER_JZ_LOADING">记账中...</string>
     <string name="CASHIER_JZSJTXT">日期</string>
+    
+    <!-- 销售记录 -->
+    <string name="SALESREPORT_TODAY">今日</string>
 </resources>

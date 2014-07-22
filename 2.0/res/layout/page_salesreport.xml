@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/topbar2"
+        android:layout_alignParentTop="true"
+        layout="@layout/topbar2" />
+
+    <LinearLayout
+        android:id="@+id/datetype"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
+
+        <TextView
+            android:id="@+id/today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="@string/SALESREPORT_TODAY"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_arrow_down_white" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/container"
+        android:layout_below="@id/topbar2"
+        android:orientation="vertical"
+        android:paddingTop="0dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:padding="15dp" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/CASHIER_TODAY_ZXSE"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/xse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10000"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/CASHIER_TODAY_ZBS"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/xse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="23"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <include
+            
+            layout="@layout/border" />
+
+        <LinearLayout style="@style/box1" android:layout_marginTop="20dp">
+
+            <include
+                android:id="@+id/lr"
+                layout="@layout/template_salesreport_menuslist_item" />
+
+            <include
+                android:id="@+id/cb"
+                layout="@layout/template_salesreport_menuslist_item" />
+        </LinearLayout>
+        
+        <LinearLayout style="@style/box1" android:layout_marginTop="20dp">
+
+            <include
+                android:id="@+id/fl"
+                layout="@layout/template_salesreport_menuslist_item" />
+
+            <include
+                android:id="@+id/sp"
+                layout="@layout/template_salesreport_menuslist_item" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
