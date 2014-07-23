@@ -58,10 +58,11 @@ public class UIIhome extends BaseUiAuth {
 		
 		LinearLayout security = (LinearLayout) this.findViewById(R.id.security);
 		LinearLayout spgl = (LinearLayout) this.findViewById(R.id.spgl);
+		LinearLayout lsxsjl = (LinearLayout) this.findViewById(R.id.lsxsjl);
 
 		security.setOnClickListener(new LinearLayoutClick());
 		spgl.setOnClickListener(new LinearLayoutClick());
-		spgl.setOnClickListener(new LinearLayoutClick());
+		lsxsjl.setOnClickListener(new LinearLayoutClick());
 	}
 
 	private void initView() {
@@ -188,6 +189,9 @@ public class UIIhome extends BaseUiAuth {
 				break;
 			case R.id.spgl:
 				forward(UIProductManager.class);
+				break;
+			case R.id.lsxsjl:
+				forward(UISalesReport.class);
 				break;
 			default:
 				break;

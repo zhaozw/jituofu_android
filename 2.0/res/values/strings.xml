@@ -34,6 +34,8 @@
     <string name="COMMON_EDITTXT">编辑</string>
     <string name="COMMON_COMPLETETXT">完成</string>
     <string name="COMMON_SEARCHTXT">搜索</string>
+    <string name="COMMON_DAOTXT">到</string>
+    <string name="COMMON_CHAXUNTXT">查询</string>
 
     <!-- 注册登录 -->
 
