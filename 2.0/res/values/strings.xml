@@ -257,5 +257,5 @@
     <string name="CASHIER_JZSJTXT">日期</string>
     
     <!-- 销售记录 -->
-    <string name="SALESREPORT_TODAY">今日</string>
+    <string name="SALESREPORT_TITLE">销售记录</string>
 </resources>
