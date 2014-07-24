@@ -258,4 +258,9 @@
     
     <!-- 销售记录 -->
     <string name="SALESREPORT_TITLE">销售记录</string>
+    <string name="SALESREPORT_TODAY">今天</string>
+    <string name="SALESREPORT_BEFOREDAY7">前7天</string>
+    <string name="SALESREPORT_AFTERDAY7">后7天</string>
+    <string name="SALESREPORT_BEFOREMONTH1">前1个月</string>
+    <string name="SALESREPORT_AFTERMONTH1">后1个月</string>
 </resources>

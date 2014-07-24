@@ -22,10 +22,13 @@ import android.widget.TextView;
 import com.jituofu.R;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.util.AppUtil;
+import com.jituofu.util.DateUtil;
 
 public class UISalesReport extends BaseUiAuth {
-	private TextView titleView, currentdateView;
+	private TextView titleView, currentdateView, startView, endView;
 	private LinearLayout datetypeView;
+	
+	private String start, end;
 
 	// 自定义弹出窗口
 	private PopupWindow popupWindow;
@@ -39,7 +42,7 @@ public class UISalesReport extends BaseUiAuth {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_salesreport);
 
-		currentDateType = "今天";
+		currentDateType = this.getString(R.string.SALESREPORT_TODAY);
 
 		initView();
 		updateView();
@@ -68,6 +71,9 @@ public class UISalesReport extends BaseUiAuth {
 		
 		datetypeView = (LinearLayout) this.findViewById(R.id.datetype);
 		currentdateView = (TextView) this.findViewById(R.id.currentdate);
+		
+		startView = (TextView) this.findViewById(R.id.start);
+		endView = (TextView) this.findViewById(R.id.end);
 	}
 
 	private void showWindow(View parent) {
@@ -82,10 +88,11 @@ public class UISalesReport extends BaseUiAuth {
 					.findViewById(R.id.listView);
 			// 加载数据
 			dateType = new ArrayList<String>();
-			dateType.add("今天");
-			dateType.add("最近7天");
-			dateType.add("最近1个月");
-			dateType.add("最近3个月");
+			dateType.add(this.getString(R.string.SALESREPORT_TODAY));
+			dateType.add(this.getString(R.string.SALESREPORT_BEFOREDAY7));
+			dateType.add(this.getString(R.string.SALESREPORT_AFTERDAY7));
+			dateType.add(this.getString(R.string.SALESREPORT_BEFOREMONTH1));
+			dateType.add(this.getString(R.string.SALESREPORT_AFTERMONTH1));
 			
 			MenuAdapter adapter = new MenuAdapter(this, dateType);
 			popupViewListView.setAdapter(adapter);
@@ -94,13 +101,38 @@ public class UISalesReport extends BaseUiAuth {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view,
 						int position, long id) {
-
-					currentDateType = dateType.get(position);
+					String txt = dateType.get(position);
+					
+					String[] currentDateTime = AppUtil.getCurrentDateTime().split("\\s");
+					
+					currentDateType = txt;
 					currentdateView.setText(currentDateType);
 
 					if (popupWindow != null) {
 						popupWindow.dismiss();
 					}
+					
+					start = currentDateTime[0];
+					
+					//今天
+					if(txt.equals(getString(R.string.SALESREPORT_TODAY))){
+						end = start;
+					}else if(txt.equals(getString(R.string.SALESREPORT_BEFOREDAY7))){
+						end = start;
+						start = DateUtil.getBefore7(start);
+					}else if(txt.equals(getString(R.string.SALESREPORT_AFTERDAY7))){
+						end = DateUtil.getAfter7(start);
+					}else if(txt.equals(getString(R.string.SALESREPORT_BEFOREMONTH1))){
+						end = start;
+						start = DateUtil.getBefore1Month(start);
+					}else if(txt.equals(getString(R.string.SALESREPORT_AFTERMONTH1))){
+						end = DateUtil.getAfter1Month(start);
+					}else{
+						end =start;
+					}
+					
+					startView.setText(start);
+					endView.setText(end);
 				}
 			});
 

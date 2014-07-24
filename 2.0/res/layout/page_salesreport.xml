@@ -75,7 +75,7 @@
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/start"
+                android:id="@+id/end"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_weight="1"
