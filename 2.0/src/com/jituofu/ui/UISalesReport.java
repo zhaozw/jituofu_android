@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -22,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,14 +33,16 @@ import android.widget.TextView;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseDateTimePicker;
+import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.DateUtil;
 
 public class UISalesReport extends BaseUiAuth {
-	private TextView titleView, currentdateView, startView, endView, lrView, cbView;
+	private TextView titleView, currentdateView, startView, endView, lrView, cbView, xseView, countView;
 	private LinearLayout datetypeView;
+	private Button queryBtnView;
 	
 	private String start, end;
 	private BaseDateTimePicker dateTimePicker;
@@ -66,9 +71,19 @@ public class UISalesReport extends BaseUiAuth {
 		initView();
 		updateView();
 		onBind();
+		doQueryTask();
 	}
 
 	private void onBind() {
+		queryBtnView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				doQueryTask();
+			}
+		});
+		
 		datetypeView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -125,7 +140,7 @@ public class UISalesReport extends BaseUiAuth {
 		
 		LinearLayout sp = (LinearLayout) findViewById(R.id.sp);
 		TextView spKey = (TextView) sp.findViewById(R.id.key);
-		spKey.setText(R.string.CASHIER_TODAY_ZCB);
+		spKey.setText(R.string.CASHIER_SCSPMX);
 		sp.findViewById(R.id.border).setVisibility(View.GONE);
 		
 		String[] time = AppUtil.getCurrentDateTime().split("\\s");
@@ -148,6 +163,11 @@ public class UISalesReport extends BaseUiAuth {
 	private void initView() {
 		titleView = (TextView) this.findViewById(R.id.title);
 		titleView.setPadding(0, 0, AppUtil.getActualMeasure(this, 20), 0);
+		
+		queryBtnView = (Button) this.findViewById(R.id.queryBtn);
+		
+		xseView = (TextView) this.findViewById(R.id.xse);
+		countView = (TextView) this.findViewById(R.id.count);
 		
 		datetypeView = (LinearLayout) this.findViewById(R.id.datetype);
 		currentdateView = (TextView) this.findViewById(R.id.currentdate);
@@ -383,11 +403,32 @@ public class UISalesReport extends BaseUiAuth {
 		urlParams.put("end", end);
 		
 		try {
-			this.doTaskAsync(C.TASK.productcreate, C.API.host
-					+ C.API.productcreate, urlParams);
+			this.doTaskAsync(C.TASK.salesreport, C.API.host
+					+ C.API.salesreport, urlParams);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void onTaskComplete(int taskId, BaseMessage message)
+			throws Exception {
+		super.onTaskComplete(taskId, message);
+		
+		pageNum++;
+
+		int resultStatus = message.getResultStatus();
+		JSONObject operation = message.getOperation();
+		if (resultStatus == 100) {
+			xseView.setText(operation.getString("totalPrice"));
+			countView.setText(operation.getString("totalCount"));
+			cbView.setText(operation.getString("totalCost")+" 元");
+			
+			Double lr = (Double.parseDouble(operation.getString("totalPrice"))-Double.parseDouble(operation.getString("totalCost")));
+			lrView.setText(lr+" 元");
+		} else {
+			this.showToast(message.getFirstOperationErrorMessage());
 		}
 	}
 }
