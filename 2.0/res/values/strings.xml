@@ -14,6 +14,7 @@
     <string name="storesettings">小店设置</string>
     <string name="securitysettings">安全中心</string>
     <string name="COMMON_CLZ">处理中...</string>
+    <string name="COMMON_CXZ">查询中...</string>
     <string name="COMMON_IMAGEPICKERTITLE">请选择图片</string>
     <string name="COMMON_IMAGEPICKERGALLERY">图片库</string>
     <string name="COMMON_IMAGEPICKERCAMMERA">拍照</string>
@@ -266,4 +267,5 @@
     <string name="SALESREPORT_AFTERDAY7">后7天</string>
     <string name="SALESREPORT_BEFOREMONTH1">前1个月</string>
     <string name="SALESREPORT_AFTERMONTH1">后1个月</string>
+    <string name="SALESREPORT_DATEERROR">结束日期小于开始日期</string>
 </resources>

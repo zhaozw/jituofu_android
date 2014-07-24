@@ -1,7 +1,13 @@
 package com.jituofu.ui;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,6 +31,7 @@ import android.widget.TextView;
 import com.jituofu.R;
 import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseUiAuth;
+import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.DateUtil;
 
@@ -36,6 +43,9 @@ public class UISalesReport extends BaseUiAuth {
 	private BaseDateTimePicker dateTimePicker;
 	private int startyear, startmonth, startday, endyear, endmonth, endday;
 	private int whichDate;
+	private int sort = 1;
+	private int pageNum = 1;
+	private int limit = 10;
 	
 	private String totalCost, totalPrice, totalCount, salesList;
 
@@ -253,6 +263,8 @@ public class UISalesReport extends BaseUiAuth {
 					
 					startView.setText(start);
 					endView.setText(end);
+					
+					doQueryTask();
 				}
 			});
 
@@ -335,5 +347,47 @@ public class UISalesReport extends BaseUiAuth {
 
 	static class ViewHolder {
 		TextView txtView;
+	}
+	
+	private void doQueryTask() {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",
+				Locale.CHINA);
+		Date startDate = null;
+		Date endDate = null;
+		try {
+			startDate = simpleDateFormat.parse(start);
+			endDate = simpleDateFormat.parse(end);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		if(endDate != null && startDate !=null && endDate.getTime() < startDate.getTime()){
+			this.showToast(R.string.SALESREPORT_DATEERROR);
+			return;
+		}
+		
+		AppUtil.showLoadingPopup(this, R.string.COMMON_CXZ);
+
+		// TODO Auto-generated method stub
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+
+		int[] screenDisplay = AppUtil.getScreen(this);
+		limit = (screenDisplay[1] / 80) + 10;
+
+		urlParams.put("pageNum", pageNum + "");
+		urlParams.put("limit", limit + "");
+		urlParams.put("sort", sort + "");
+		urlParams.put("start", start);
+		urlParams.put("end", end);
+		
+		try {
+			this.doTaskAsync(C.TASK.productcreate, C.API.host
+					+ C.API.productcreate, urlParams);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
