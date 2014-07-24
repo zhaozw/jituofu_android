@@ -82,4 +82,10 @@ public class DateUtil {
 	    String after1Month = new SimpleDateFormat(style).format(c.getTime());
 	    return after1Month;
 	}
+	
+	public static String[] getDateArray(String specifiedDay){
+		String[] date = specifiedDay.split("-");
+		
+		return date;
+	}
 }

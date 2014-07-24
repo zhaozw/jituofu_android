@@ -253,6 +253,9 @@
     <string name="CASHIER_TODAY_ZLR">总利润</string>
     <string name="CASHIER_TODAY_ZBS">总笔数</string>
     <string name="CASHIER_TODAY_ZCB">总成本</string>
+    <string name="CASHIER_TODAY_JLR">净利润</string>
+    <string name="CASHIER_SPFLMX">商品分类明细</string>
+    <string name="CASHIER_SCSPMX">售出商品明细</string>
     <string name="CASHIER_JZ_LOADING">记账中...</string>
     <string name="CASHIER_JZSJTXT">日期</string>
     

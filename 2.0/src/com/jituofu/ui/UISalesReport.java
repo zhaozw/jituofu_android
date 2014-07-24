@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,21 +16,28 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDateTimePicker;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.DateUtil;
 
 public class UISalesReport extends BaseUiAuth {
-	private TextView titleView, currentdateView, startView, endView;
+	private TextView titleView, currentdateView, startView, endView, lrView, cbView;
 	private LinearLayout datetypeView;
 	
 	private String start, end;
+	private BaseDateTimePicker dateTimePicker;
+	private int startyear, startmonth, startday, endyear, endmonth, endday;
+	private int whichDate;
+	
+	private String totalCost, totalPrice, totalCount, salesList;
 
 	// 自定义弹出窗口
 	private PopupWindow popupWindow;
@@ -58,11 +67,72 @@ public class UISalesReport extends BaseUiAuth {
 				showWindow(v);
 			}
 		});
+		
+		startView.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				whichDate = 0;
+				// TODO Auto-generated method stub
+				if (startyear > 0 && startmonth > 0 && startday > 0) {
+					dateTimePicker.showDateDialogOnly(startyear, startmonth, startday);
+				} else {
+					dateTimePicker.showDateDialogOnly();
+				}
+			}});
+		endView.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				whichDate = 1;
+				// TODO Auto-generated method stub
+				if (endyear > 0 && endmonth > 0 && endday > 0) {
+					dateTimePicker.showDateDialogOnly(endyear, endmonth, endday);
+				} else {
+					dateTimePicker.showDateDialogOnly();
+				}
+			}});
 	}
 
 	private void updateView() {
 		titleView.setText(R.string.SALESREPORT_TITLE);
 		currentdateView.setText(currentDateType);
+		
+		LinearLayout lr = (LinearLayout) findViewById(R.id.lr);
+		TextView lrKey = (TextView) lr.findViewById(R.id.key);
+		lrView = (TextView) lr.findViewById(R.id.value);
+		lrKey.setText(R.string.CASHIER_TODAY_ZLR);
+		
+		LinearLayout cb = (LinearLayout) findViewById(R.id.cb);
+		TextView cbKey = (TextView) cb.findViewById(R.id.key);
+		cbView = (TextView) cb.findViewById(R.id.value);
+		cbKey.setText(R.string.CASHIER_TODAY_ZCB);
+		cb.findViewById(R.id.border).setVisibility(View.GONE);
+		
+		LinearLayout fl = (LinearLayout) findViewById(R.id.fl);
+		TextView flKey = (TextView) fl.findViewById(R.id.key);
+		flKey.setText(R.string.CASHIER_SPFLMX);
+		
+		LinearLayout sp = (LinearLayout) findViewById(R.id.sp);
+		TextView spKey = (TextView) sp.findViewById(R.id.key);
+		spKey.setText(R.string.CASHIER_TODAY_ZCB);
+		sp.findViewById(R.id.border).setVisibility(View.GONE);
+		
+		String[] time = AppUtil.getCurrentDateTime().split("\\s");
+		start = time[0];
+		end = time[0];
+		
+		String[] timeArray = DateUtil.getDateArray(time[0]);
+		startyear = Integer.parseInt(timeArray[0]);
+		startmonth = Integer.parseInt(timeArray[1]);
+		startday = Integer.parseInt(timeArray[2]);
+		
+		endyear = Integer.parseInt(timeArray[0]);
+		endmonth = Integer.parseInt(timeArray[1]);
+		endday = Integer.parseInt(timeArray[2]);
+		
+		startView.setText(start);
+		endView.setText(end);
 	}
 
 	private void initView() {
@@ -74,6 +144,45 @@ public class UISalesReport extends BaseUiAuth {
 		
 		startView = (TextView) this.findViewById(R.id.start);
 		endView = (TextView) this.findViewById(R.id.end);
+		
+		dateTimePicker = new BaseDateTimePicker(this);
+		dateTimePicker.setDateDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface di) {
+				if(!dateTimePicker.isSetDate){
+					return;
+				}else{
+					dateTimePicker.isSetDate = false;
+				}
+				
+				// TODO Auto-generated method stub
+				int[] ymd = dateTimePicker.getYMD();
+
+				int year = ymd[0];
+				int month = ymd[1];
+				int day = ymd[2];
+				
+				String time = year + "-" + AppUtil.to2bit(month) + "-"
+						+ AppUtil.to2bit(day);
+				
+				if(whichDate == 0){
+					startyear = year;
+					startmonth = month;
+					startday = day;
+					
+					start = time;
+					startView.setText(start);
+				}else if(whichDate == 1){
+					endyear = year;
+					endmonth = month;
+					endday = day;
+					
+					end = time;
+					endView.setText(end);
+				}
+			}
+		});
 	}
 
 	private void showWindow(View parent) {
@@ -130,6 +239,17 @@ public class UISalesReport extends BaseUiAuth {
 					}else{
 						end =start;
 					}
+					
+					String[] startDate = DateUtil.getDateArray(start);
+					String[] endDate = DateUtil.getDateArray(end);
+					
+					startyear = Integer.parseInt(startDate[0]);
+					startmonth = Integer.parseInt(startDate[1]);
+					startday = Integer.parseInt(startDate[2]);
+					
+					endyear = Integer.parseInt(endDate[0]);
+					endmonth = Integer.parseInt(endDate[1]);
+					endday = Integer.parseInt(endDate[2]);
 					
 					startView.setText(start);
 					endView.setText(end);

@@ -27,6 +27,8 @@ public class BaseDateTimePicker {
 	
 	ContextThemeWrapper themedContext;
 	
+	public boolean isSetDate = false;//是否点击了设置日期
+	
 	public BaseDateTimePicker(Context context){
 		this.context = context;
 		
@@ -75,6 +77,30 @@ public class BaseDateTimePicker {
 		dateDialog.show();
 	}
 	
+	public void showDateDialogOnly(){
+		cal = Calendar.getInstance();
+		dateDialog = new DatePickerDialog(
+				themedContext,
+            new DatePickerDialog.OnDateSetListener() {
+            	@Override
+                public void onDateSet(DatePicker dp, int y, int m, int d) {
+            		year = y;
+            		month = m+1;
+            		day = d;
+            		isSetDate = true;
+                }
+            }, 
+            cal.get(Calendar.YEAR), // 传入年份
+            cal.get(Calendar.MONTH), // 传入月份
+            cal.get(Calendar.DAY_OF_MONTH) // 传入天数
+        );
+		
+		if(dateDismissListener != null){
+			dateDialog.setOnDismissListener(dateDismissListener);
+		}
+		dateDialog.show();
+	}
+	
 	public void showDateDialog(int y, int m, int d){
 		cal = Calendar.getInstance();
 		dateDialog = new DatePickerDialog(
@@ -93,6 +119,32 @@ public class BaseDateTimePicker {
             m-1, // 传入月份
             d // 传入天数
         );
+		if(dateDismissListener != null){
+			dateDialog.setOnDismissListener(dateDismissListener);
+		}
+		dateDialog.show();
+	}
+	
+	public void showDateDialogOnly(int y, int m, int d){
+		cal = Calendar.getInstance();
+		dateDialog = new DatePickerDialog(
+				themedContext,
+            new DatePickerDialog.OnDateSetListener() {
+            	@Override
+                public void onDateSet(DatePicker dp, int y, int m, int d) {
+            		year = y;
+            		month = m+1;
+            		day = d;
+            		isSetDate = true;
+                }
+            }, 
+            y, // 传入年份
+            m-1, // 传入月份
+            d // 传入天数
+        );
+		if(dateDismissListener != null){
+			dateDialog.setOnDismissListener(dateDismissListener);
+		}
 		dateDialog.show();
 	}
 	
