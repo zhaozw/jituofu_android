@@ -129,7 +129,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				ImageView jjViewArrow = (ImageView) jjView
 						.findViewById(R.id.arrow);
 				jjViewTxt.setTextColor(Color.rgb(153, 153, 153));
-				jjViewArrow.setImageResource(R.drawable.icon_arrow_down);
+				jjViewArrow.setImageResource(R.drawable.icon_arrow_up);
 
 				Collections.sort(dataList, new SortByDate());
 				customProductsAdapter.notifyDataSetChanged();
@@ -166,21 +166,10 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				ImageView rksjViewArrow = (ImageView) rksjView
 						.findViewById(R.id.arrow);
 				rksjViewTxt.setTextColor(Color.rgb(153, 153, 153));
-				rksjViewArrow.setImageResource(R.drawable.icon_arrow_down);
-
-				Collections.sort(dataList, new SortByPrice());
-				customProductsAdapter.notifyDataSetChanged();
+				rksjViewArrow.setImageResource(R.drawable.icon_arrow_up);
 
 				// TODO Auto-generated method stub
-				if (sort.equals("3")) {
-					sort = "4";
-					v.setBackgroundResource(R.drawable.base_lt_lb_round);
-					TextView txt = (TextView) jjView.findViewById(R.id.txt);
-					ImageView arrow = (ImageView) jjView
-							.findViewById(R.id.arrow);
-					txt.setTextColor(Color.rgb(255, 255, 255));
-					arrow.setImageResource(R.drawable.icon_arrow_up_white);
-				} else {
+				if (sort.equals("4")) {
 					sort = "3";
 					v.setBackgroundResource(R.drawable.base_lt_lb_round);
 					TextView txt = (TextView) jjView.findViewById(R.id.txt);
@@ -188,7 +177,18 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				} else {
+					sort = "4";
+					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					TextView txt = (TextView) jjView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) jjView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				}
+				
+				Collections.sort(dataList, new SortByPrice());
+				customProductsAdapter.notifyDataSetChanged();
 			}
 		});
 
@@ -503,7 +503,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 			Double h1money = Double.parseDouble(h1.get("money"));
 			Double h2money = Double.parseDouble(h2.get("money"));
 
-			if (sort.equals("3")) {
+			if (sort.equals("4")) {
 				if (h1money == h2money) {
 					return 0;
 				} else if (h1money > h2money) {
@@ -511,7 +511,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				} else {
 					return -1;
 				}
-			} else if (sort.equals("4")) {
+			} else if (sort.equals("3")) {
 				if (h1money == h2money) {
 					return 0;
 				} else if (h1money > h2money) {
