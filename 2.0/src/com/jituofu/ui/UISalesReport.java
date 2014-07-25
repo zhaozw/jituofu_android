@@ -75,6 +75,8 @@ public class UISalesReport extends BaseUiAuth {
 	}
 
 	private void onBind() {
+		this.onCustomBack();
+		
 		queryBtnView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -289,7 +291,7 @@ public class UISalesReport extends BaseUiAuth {
 			});
 
 			// 创建一个PopuWidow对象
-			popupWindow = new PopupWindow(popupView, 250, 350);
+			popupWindow = new PopupWindow(popupView, 200, 350);
 
 			// 使其聚集
 			popupWindow.setFocusable(true);
