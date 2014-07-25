@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -428,7 +429,12 @@ public class UISalesReport extends BaseUiAuth {
 			cbView.setText(operation.getString("totalCost")+" 元");
 			
 			Double lr = (Double.parseDouble(operation.getString("totalPrice"))-Double.parseDouble(operation.getString("totalCost")));
-			lrView.setText(lr+" 元");
+			if(lr < 0){
+				lrView.setTextColor(Color.parseColor("#ff5500"));
+			}else{
+				lrView.setTextColor(Color.parseColor("#000000"));
+			}
+			lrView.setText(AppUtil.toFixed(lr)+" 元");
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}

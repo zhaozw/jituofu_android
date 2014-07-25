@@ -60,7 +60,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private boolean validated = false;
 
 	private LinearLayout productpreviewView;
-	private TextView topBar2RightView;
+	private TextView topBar2RightView, gotojrxsView;
 	private EditText nameView, priceView, sellingCountView, sellingPriceView,
 			remarkView;
 	private RelativeLayout flyView, hbView;
@@ -374,6 +374,14 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	private void onBind() {
+		gotojrxsView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				forwardForResult(UICashierToday.class, TAG);
+			}
+		});
 		topBar2RightView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -564,6 +572,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		remarkView = (EditText) findViewById(R.id.remark);
 
 		flyView = (RelativeLayout) findViewById(R.id.fly);
+		
+		gotojrxsView = (TextView) findViewById(R.id.gotojrxs);
 	}
 
 	public static void doSubmit(BaseUi ui) {

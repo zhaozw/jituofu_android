@@ -251,10 +251,10 @@
     <string name="CASHIER_XSSL">销售数量</string>
     <string name="CASHIER_XSRQ">销售日期</string>
     <string name="CASHIER_JZCG">记账成功</string>
-    <string name="CASHIER_TODAY_ZLR">总利润</string>
+    <string name="CASHIER_TODAY_ZLR">总利润(元)</string>
     <string name="CASHIER_TODAY_ZBS">总笔数</string>
-    <string name="CASHIER_TODAY_ZCB">总成本</string>
-    <string name="CASHIER_TODAY_JLR">净利润</string>
+    <string name="CASHIER_TODAY_ZCB">总成本(元)</string>
+    <string name="CASHIER_TODAY_JLR">净利润(元)</string>
     <string name="CASHIER_SPFLMX">商品分类明细</string>
     <string name="CASHIER_SCSPMX">售出商品明细</string>
     <string name="CASHIER_JZ_LOADING">记账中...</string>
@@ -262,6 +262,7 @@
     
     <!-- 销售记录 -->
     <string name="SALESREPORT_TITLE">销售记录</string>
+    <string name="SALESREPORT_TODAY_TITLE">今日业绩</string>
     <string name="SALESREPORT_TODAY">今天</string>
     <string name="SALESREPORT_BEFOREDAY7">前7天</string>
     <string name="SALESREPORT_AFTERDAY7">后7天</string>

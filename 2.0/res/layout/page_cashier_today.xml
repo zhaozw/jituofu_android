@@ -14,140 +14,136 @@
         android:paddingTop="0dp" >
 
         <TableLayout
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:paddingLeft="15dp"
             android:paddingRight="15dp" >
 
             <TableRow
                 android:id="@+id/tableRow1"
-                android:paddingTop="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp" >
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginRight="7.5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/CASHIER_TODAY_ZXSE" />
+                        android:text="@string/CASHIER_TODAY_ZXSE"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/zxs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
                         android:layout_marginBottom="20dp"
-                        android:text="TextView" />
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:background="@drawable/base_dotted_border" >
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_marginLeft="7.5dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="7.5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/CASHIER_TODAY_ZLR" />
+                        android:text="@string/CASHIER_TODAY_ZLR"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/zlr"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
                         android:layout_marginBottom="20dp"
-                        android:text="TextView" />
-                    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@drawable/base_dotted_border" >
-    </LinearLayout>
-                </LinearLayout>
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:background="@drawable/base_dotted_border" >
+                    </LinearLayout>
+                </LinearLayout>
             </TableRow>
 
             <TableRow
                 android:id="@+id/tableRow2"
                 android:layout_width="match_parent"
-                android:paddingTop="20dp"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp" >
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginRight="7.5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/CASHIER_TODAY_ZBS" />
+                        android:text="@string/CASHIER_TODAY_ZBS"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/zbs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
                         android:layout_marginBottom="20dp"
-                        android:text="TextView" />
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_marginLeft="7.5dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="7.5dp"
+                    android:layout_weight="1"
                     android:orientation="vertical" >
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/CASHIER_TODAY_ZCB" />
+                        android:text="@string/CASHIER_TODAY_ZCB"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/zcb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:textSize="20sp"
                         android:layout_marginBottom="20dp"
-                        android:text="TextView" />
+                        android:textColor="#000000"
+                        android:textSize="20sp" />
                 </LinearLayout>
             </TableRow>
         </TableLayout>
 
         <include layout="@layout/border" />
-
     </LinearLayout>
-    
 
 </LinearLayout>
