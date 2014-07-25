@@ -224,7 +224,7 @@
                             style="@style/link"
                             android:layout_weight="1"
                             android:gravity="right"
-                            android:text="@string/CASHIER_JRXSZK" />
+                            android:text="@string/SALESREPORT_TODAY_TITLE" />
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

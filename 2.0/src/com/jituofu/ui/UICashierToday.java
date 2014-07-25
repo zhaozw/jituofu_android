@@ -81,7 +81,7 @@ public class UICashierToday extends BaseUiAuth {
 		if (resultStatus == 100) {
 			xseView.setText(operation.getString("totalPrice"));
 			countView.setText(operation.getString("totalCount"));
-			cbView.setText(operation.getString("totalCost")+" 元");
+			cbView.setText(operation.getString("totalCost"));
 			
 			Double lr = (Double.parseDouble(operation.getString("totalPrice"))-Double.parseDouble(operation.getString("totalCost")));
 			if(lr < 0){
@@ -89,7 +89,7 @@ public class UICashierToday extends BaseUiAuth {
 			}else{
 				lrView.setTextColor(Color.parseColor("#000000"));
 			}
-			lrView.setText(AppUtil.toFixed(lr)+" 元");
+			lrView.setText(AppUtil.toFixed(lr));
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}

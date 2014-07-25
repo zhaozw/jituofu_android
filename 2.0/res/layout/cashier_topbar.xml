@@ -53,7 +53,7 @@
         android:layout_height="fill_parent"
         android:gravity="center"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:text="@string/CASHIER_JRXSZK"
+        android:text="@string/SALESREPORT_TODAY_TITLE"
         android:textColor="@color/white"
         android:textSize="@dimen/title_right_text_size" />
 

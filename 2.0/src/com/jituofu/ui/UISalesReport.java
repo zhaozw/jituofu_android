@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -53,7 +54,8 @@ public class UISalesReport extends BaseUiAuth {
 	private int pageNum = 1;
 	private int limit = 10;
 	
-	private String totalCost, totalPrice, totalCount, salesList;
+	private String totalCost, totalPrice, totalCount, totalLr;
+	private JSONArray salesList;
 
 	// 自定义弹出窗口
 	private PopupWindow popupWindow;
@@ -424,9 +426,15 @@ public class UISalesReport extends BaseUiAuth {
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-			xseView.setText(operation.getString("totalPrice"));
-			countView.setText(operation.getString("totalCount"));
-			cbView.setText(operation.getString("totalCost")+" 元");
+			salesList = operation.getJSONArray("salesList");
+			
+			totalCost = operation.getString("totalCost");
+			totalCount = operation.getString("totalCount");
+			totalPrice = operation.getString("totalPrice");
+			
+			xseView.setText(totalPrice);
+			countView.setText(totalCount);
+			cbView.setText(totalCost);
 			
 			Double lr = (Double.parseDouble(operation.getString("totalPrice"))-Double.parseDouble(operation.getString("totalCost")));
 			if(lr < 0){
@@ -434,7 +442,8 @@ public class UISalesReport extends BaseUiAuth {
 			}else{
 				lrView.setTextColor(Color.parseColor("#000000"));
 			}
-			lrView.setText(AppUtil.toFixed(lr)+" 元");
+			totalLr = AppUtil.toFixed(lr);
+			lrView.setText(totalLr);
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
