@@ -37,6 +37,7 @@ import com.jituofu.base.BaseListView.BaseListViewListener;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.CustomAdapter;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.CustomProductsAdapter;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.SortByDate;
+import com.jituofu.ui.UIWareHouseParentTypeDetail.SortByPrice;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.ViewHolder;
 import com.jituofu.util.AppUtil;
 
@@ -106,15 +107,16 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v) {
+				if(customAdapter == null){
+					return;
+				}
+				
 				lrView.setBackgroundResource(0);
-				TextView jjViewTxt = (TextView) lrView.findViewById(R.id.txt);
-				ImageView jjViewArrow = (ImageView) lrView
+				TextView lrViewTxt = (TextView) lrView.findViewById(R.id.txt);
+				ImageView lrViewArrow = (ImageView) lrView
 						.findViewById(R.id.arrow);
-				jjViewTxt.setTextColor(Color.rgb(153, 153, 153));
-				jjViewArrow.setImageResource(R.drawable.icon_arrow_up);
-
-				Collections.sort(dataList, new SortByDate());
-				customAdapter.notifyDataSetChanged();
+				lrViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				lrViewArrow.setImageResource(R.drawable.icon_arrow_up);
 
 				// TODO Auto-generated method stub
 				if (sort.equals("1")) {
@@ -134,6 +136,50 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
 				}
+				
+				Collections.sort(dataList, new SortByDate());
+				customAdapter.notifyDataSetChanged();
+			}
+		});
+		
+		lrView.setOnClickListener(new OnClickListener() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onClick(View v) {
+				if(customAdapter == null){
+					return;
+				}
+				
+				rqView.setBackgroundResource(0);
+				TextView rqViewTxt = (TextView) rqView
+						.findViewById(R.id.txt);
+				ImageView rqViewArrow = (ImageView) rqView
+						.findViewById(R.id.arrow);
+				rqViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				rqViewArrow.setImageResource(R.drawable.icon_arrow_down);
+
+				// TODO Auto-generated method stub
+				if (sort.equals("4")) {
+					sort = "3";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) lrView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) lrView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				} else {
+					sort = "4";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) lrView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) lrView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
+				}
+				
+				Collections.sort(dataList, new SortByProfit());
+				customAdapter.notifyDataSetChanged();
 			}
 		});
 	}
@@ -189,6 +235,8 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 
 		// 初始化加载没有数据
 		if (initQuery && data.length() <= 0) {
+			borderView.setVisibility(View.GONE);
+			sortContainerView.setVisibility(View.GONE);
 			lvView.setVisibility(View.GONE);
 			againView.setVisibility(View.GONE);
 			noDataView.setVisibility(View.VISIBLE);
@@ -205,7 +253,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			JSONObject json = data.getJSONObject(i);
 			String id = json.getString("id");
 			map.put("date", json.getString("date"));
-			map.put("lr", json.getString("profit"));
+			map.put("profit", json.getString("profit"));
 			map.put("id", id);
 
 			// 避免重复加载
@@ -392,14 +440,14 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			String[] date = map.get("date").split("\\s");
 			holder.date.setText(date[0].substring(5));
 
-			if (Double.parseDouble(map.get("lr")) < 0) {
+			if (Double.parseDouble(map.get("profit")) < 0) {
 				holder.lr.setTextColor(Color.parseColor("#cc0000"));
-				holder.lr.setText("亏  " + map.get("lr"));
-			} else if (Double.parseDouble(map.get("lr")) > 0) {
+				holder.lr.setText("亏  " + map.get("profit"));
+			} else if (Double.parseDouble(map.get("profit")) > 0) {
 				holder.lr.setTextColor(Color.parseColor("#669933"));
-				holder.lr.setText("赚  " + map.get("lr"));
-			} else if (Double.parseDouble(map.get("lr")) == 0) {
-				holder.lr.setText(0);
+				holder.lr.setText("赚  " + map.get("profit"));
+			} else if (Double.parseDouble(map.get("profit")) == 0) {
+				holder.lr.setText("0");
 				holder.lr.setTextColor(Color.parseColor("#000000"));
 			}
 
@@ -453,29 +501,57 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 
 			if (sort.equals("1")) {
 				if (h1d.getTime() > h2d.getTime()) {
-					return 1;
+					return -1;
 				} else if (h1d.getTime() == h2d.getTime()) {
 					return 0;
 				} else {
-					return -1;
+					return 1;
 				}
 			} else if (sort.equals("2")) {
 				if (h1d.getTime() > h2d.getTime()) {
-					return -1;
+					return 1;
 				} else if (h1d.getTime() == h2d.getTime()) {
 					return 0;
 				} else {
-					return 1;
-				}
-			} else {
-				if (h1d.getTime() > h2d.getTime()) {
 					return -1;
-				} else if (h1d.getTime() == h2d.getTime()) {
-					return 0;
-				} else {
-					return 1;
 				}
 			}
+			
+			return 0;
+		}
+	}
+	
+	class SortByProfit implements Comparator {
+		public int compare(Object o1, Object o2) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h2 = (HashMap<String, String>) o2;
+
+			Double olProfit, o2Profit;
+			
+			olProfit = Double.parseDouble(h1.get("profit"));
+			o2Profit = Double.parseDouble(h2.get("profit"));
+
+			if (sort.equals("3")) {
+				if (olProfit > o2Profit) {
+					return -1;
+				} else if (olProfit == o2Profit) {
+					return 0;
+				} else {
+					return 1;
+				}
+			} else if (sort.equals("4")) {
+				if (olProfit > o2Profit) {
+					return 1;
+				} else if (olProfit == o2Profit) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+			
+			return 0;
 		}
 	}
 }
