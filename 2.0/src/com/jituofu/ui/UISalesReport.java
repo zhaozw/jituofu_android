@@ -122,6 +122,19 @@ public class UISalesReport extends BaseUiAuth {
 					dateTimePicker.showDateDialogOnly();
 				}
 			}});
+		
+		LinearLayout lrBox = (LinearLayout) findViewById(R.id.lr);
+		lrBox.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("start", start);
+				bundle.putString("end", end);
+				bundle.putString("salesList", salesList.toString());
+				
+				forward(UISalesReportLR.class, bundle);
+			}});
 	}
 
 	private void updateView() {

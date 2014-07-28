@@ -268,4 +268,8 @@
     <string name="SALESREPORT_BEFOREMONTH1">前1个月</string>
     <string name="SALESREPORT_AFTERMONTH1">后1个月</string>
     <string name="SALESREPORT_DATEERROR">结束日期小于开始日期</string>
+    <string name="SALESREPORT_SORT_DATETXT">日期</string>
+    <string name="SALESREPORT_SORT_LRTXT">利润(元)</string>
+    <string name="SALESREPORT_QUERYLR_LOADING">获取利润列表...</string>
+    <string name="SALESREPORT_QUERYLR_NODATA">没有相关利润数据</string>
 </resources>
