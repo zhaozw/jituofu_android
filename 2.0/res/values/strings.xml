@@ -270,6 +270,8 @@
     <string name="SALESREPORT_DATEERROR">结束日期小于开始日期</string>
     <string name="SALESREPORT_SORT_DATETXT">日期</string>
     <string name="SALESREPORT_SORT_LRTXT">利润(元)</string>
+    <string name="SALESREPORT_SORT_CBTXT">成本(元)</string>
     <string name="SALESREPORT_QUERYLR_LOADING">获取利润列表...</string>
+    <string name="SALESREPORT_QUERYCB_LOADING">获取成本列表...</string>
     <string name="SALESREPORT_QUERYLR_NODATA">没有相关利润数据</string>
 </resources>

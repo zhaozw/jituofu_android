@@ -41,11 +41,11 @@ import com.jituofu.ui.UIWareHouseParentTypeDetail.SortByPrice;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.ViewHolder;
 import com.jituofu.util.AppUtil;
 
-public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener {
+public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener {
 	private TextView titleView;
 	private LinearLayout topbarView, noDataView, againView;
 	private BaseListView lvView;
-	private LinearLayout borderView, sortContainerView, rqView, lrView;
+	private LinearLayout borderView, sortContainerView, rqView, cbView;
 
 	private Bundle extraBundle;
 	private String start, end;
@@ -61,12 +61,12 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 	private String sort = "1";
 	private CustomAdapter customAdapter;
 	private boolean isRefresh, isLoadMore, isLoading;
-	private ArrayList<String> lrIds = new ArrayList<String>();// 存储所有利润列表的id，以免重复加载
+	private ArrayList<String> cbIds = new ArrayList<String>();// 存储所有成本列表的id，以免重复加载
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.page_salesreport_lr);
+		setContentView(R.layout.page_salesreport_cb);
 
 		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd",
 				Locale.CHINA);
@@ -82,7 +82,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 		updateView();
 		onBind();
 
-		AppUtil.showLoadingPopup(this, R.string.SALESREPORT_QUERYLR_LOADING);
+		AppUtil.showLoadingPopup(this, R.string.SALESREPORT_QUERYCB_LOADING);
 		initQuery = true;
 		doQueryTask();
 	}
@@ -97,8 +97,8 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						initQuery = true;
-						AppUtil.showLoadingPopup(UISalesReportLR.this,
-								R.string.SALESREPORT_QUERYLR_LOADING);
+						AppUtil.showLoadingPopup(UISalesReportCB.this,
+								R.string.SALESREPORT_QUERYCB_LOADING);
 						doQueryTask();
 					}
 				});
@@ -112,12 +112,12 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 					return;
 				}
 				
-				lrView.setBackgroundResource(0);
-				TextView lrViewTxt = (TextView) lrView.findViewById(R.id.txt);
-				ImageView lrViewArrow = (ImageView) lrView
+				cbView.setBackgroundResource(0);
+				TextView cbViewTxt = (TextView) cbView.findViewById(R.id.txt);
+				ImageView cbViewArrow = (ImageView) cbView
 						.findViewById(R.id.arrow);
-				lrViewTxt.setTextColor(Color.rgb(153, 153, 153));
-				lrViewArrow.setImageResource(R.drawable.icon_arrow_up);
+				cbViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				cbViewArrow.setImageResource(R.drawable.icon_arrow_up);
 
 				// TODO Auto-generated method stub
 				if (sort.equals("1")) {
@@ -143,7 +143,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			}
 		});
 		
-		lrView.setOnClickListener(new OnClickListener() {
+		cbView.setOnClickListener(new OnClickListener() {
 
 			@SuppressWarnings("unchecked")
 			@Override
@@ -164,22 +164,22 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 				if (sort.equals("4")) {
 					sort = "3";
 					v.setBackgroundResource(R.drawable.base_rt_rb_round);
-					TextView txt = (TextView) lrView.findViewById(R.id.txt);
-					ImageView arrow = (ImageView) lrView
+					TextView txt = (TextView) cbView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) cbView
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
 				} else {
 					sort = "4";
 					v.setBackgroundResource(R.drawable.base_rt_rb_round);
-					TextView txt = (TextView) lrView.findViewById(R.id.txt);
-					ImageView arrow = (ImageView) lrView
+					TextView txt = (TextView) cbView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) cbView
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				}
 				
-				Collections.sort(dataList, new SortByProfit());
+				Collections.sort(dataList, new SortByCost());
 				customAdapter.notifyDataSetChanged();
 			}
 		});
@@ -197,13 +197,13 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 
 		urlParams.put("pageNum", pageNum + "");
 		urlParams.put("limit", limit + "");
-		urlParams.put("reportType", "profits");
+		urlParams.put("reportType", "costs");
 		urlParams.put("sort", sort);
 		urlParams.put("start", start);
 		urlParams.put("end", end);
 
 		try {
-			doTaskAsync(C.TASK.salesreportlr, C.API.host + C.API.salesreport,
+			doTaskAsync(C.TASK.salesreportcb, C.API.host + C.API.salesreport,
 					urlParams);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -232,7 +232,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 
 	private void renderList(JSONObject operation) throws JSONException {
 		JSONArray data = new JSONArray();
-		data = operation.getJSONArray("profits");
+		data = operation.getJSONArray("costs");
 
 		// 初始化加载没有数据
 		if (initQuery && data.length() <= 0) {
@@ -255,15 +255,15 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			String id = json.getString("id");
 			String date = json.getString("date");
 			map.put("date", date);
-			map.put("profit", json.getString("profit"));
+			map.put("cost", json.getString("cost"));
 			
 			int pos = dateArrayList.indexOf(date);//获取已存日期的位置
 			
 			//如果没有重复的日期
 			if(dateArrayList.indexOf(date) < 0){
 				// 避免重复加载
-				if (lrIds.indexOf(id) < 0) {
-					lrIds.add(id);
+				if (cbIds.indexOf(id) < 0) {
+					cbIds.add(id);
 					if (isRefresh) {
 						dataList.add(0, map);
 					} else {
@@ -273,11 +273,11 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 				
 				dateArrayList.add(date);
 			}else{
-				Double profit = Double.parseDouble(json.getString("profit"));
+				Double cost = Double.parseDouble(json.getString("cost"));
 				HashMap<String, String> existMap = dataList.get(pos);
-				Double existMapProfit = Double.parseDouble(existMap.get("profit"));
-				Double newProfit = profit+existMapProfit;
-				existMap.put("profit", AppUtil.toFixed(newProfit));
+				Double existMapCost = Double.parseDouble(existMap.get("cost"));
+				Double newCost = cost+existMapCost;
+				existMap.put("cost", AppUtil.toFixed(newCost));
 			}
 		}
 
@@ -310,7 +310,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 		this.sortContainerView = (LinearLayout) this
 				.findViewById(R.id.sortContainer);
 		this.rqView = (LinearLayout) this.findViewById(R.id.rq);
-		this.lrView = (LinearLayout) this.findViewById(R.id.lr);
+		this.cbView = (LinearLayout) this.findViewById(R.id.cb);
 
 		lvView = (BaseListView) this.findViewById(R.id.listView);
 		lvView.setPullLoadEnable(true);
@@ -323,7 +323,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			String[] startSplit = start.split("-");
 			String[] endSplit = end.split("-");
 			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
-					+ endSplit[1] + "-" + endSplit[2] + "的利润");
+					+ endSplit[1] + "-" + endSplit[2] + "的成本");
 		}
 
 		if (sort.equals("1")) {
@@ -440,10 +440,10 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 
 			if (convertView == null) {
 				convertView = LayoutInflater.from(context).inflate(
-						R.layout.template_lr_item, null);
+						R.layout.template_cb_item, null);
 				holder = new ViewHolder();
 				holder.date = (TextView) convertView.findViewById(R.id.date);
-				holder.lr = (TextView) convertView.findViewById(R.id.lr);
+				holder.cb = (TextView) convertView.findViewById(R.id.cb);
 				// 保存视图项
 				convertView.setTag(holder);
 			} else {
@@ -454,15 +454,15 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			String date = map.get("date");
 			holder.date.setText(date.substring(5));
 
-			if (Double.parseDouble(map.get("profit")) < 0) {
-				holder.lr.setTextColor(Color.parseColor("#cc0000"));
-				holder.lr.setText(map.get("profit"));
-			} else if (Double.parseDouble(map.get("profit")) > 0) {
-				holder.lr.setTextColor(Color.parseColor("#669933"));
-				holder.lr.setText(map.get("profit"));
-			} else if (Double.parseDouble(map.get("profit")) == 0) {
-				holder.lr.setText("0");
-				holder.lr.setTextColor(Color.parseColor("#000000"));
+			if (Double.parseDouble(map.get("cost")) < 0) {
+				holder.cb.setTextColor(Color.parseColor("#cc0000"));
+				holder.cb.setText(map.get("cost"));
+			} else if (Double.parseDouble(map.get("cost")) > 0) {
+				holder.cb.setTextColor(Color.parseColor("#669933"));
+				holder.cb.setText(map.get("cost"));
+			} else if (Double.parseDouble(map.get("cost")) == 0) {
+				holder.cb.setText("0");
+				holder.cb.setTextColor(Color.parseColor("#000000"));
 			}
 
 			return convertView;
@@ -488,7 +488,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 	}
 
 	static class ViewHolder {
-		TextView date, lr;
+		TextView date, cb;
 	}
 
 	class SortByDate implements Comparator {
@@ -535,30 +535,30 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 		}
 	}
 	
-	class SortByProfit implements Comparator {
+	class SortByCost implements Comparator {
 		public int compare(Object o1, Object o2) {
 			@SuppressWarnings("unchecked")
 			HashMap<String, String> h1 = (HashMap<String, String>) o1;
 			@SuppressWarnings("unchecked")
 			HashMap<String, String> h2 = (HashMap<String, String>) o2;
 
-			Double olProfit, o2Profit;
+			Double olCost, o2Cost;
 			
-			olProfit = Double.parseDouble(h1.get("profit"));
-			o2Profit = Double.parseDouble(h2.get("profit"));
+			olCost = Double.parseDouble(h1.get("cost"));
+			o2Cost = Double.parseDouble(h2.get("cost"));
 
 			if (sort.equals("3")) {
-				if (olProfit > o2Profit) {
+				if (olCost > o2Cost) {
 					return -1;
-				} else if (olProfit == o2Profit) {
+				} else if (olCost == o2Cost) {
 					return 0;
 				} else {
 					return 1;
 				}
 			} else if (sort.equals("4")) {
-				if (olProfit > o2Profit) {
+				if (olCost > o2Cost) {
 					return 1;
-				} else if (olProfit == o2Profit) {
+				} else if (olCost == o2Cost) {
 					return 0;
 				} else {
 					return -1;

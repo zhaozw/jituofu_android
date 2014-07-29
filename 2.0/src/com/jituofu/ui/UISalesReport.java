@@ -135,6 +135,18 @@ public class UISalesReport extends BaseUiAuth {
 				
 				forward(UISalesReportLR.class, bundle);
 			}});
+		LinearLayout cbBox = (LinearLayout) findViewById(R.id.cb);
+		cbBox.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("start", start);
+				bundle.putString("end", end);
+				bundle.putString("salesList", salesList.toString());
+				
+				forward(UISalesReportCB.class, bundle);
+			}});
 	}
 
 	private void updateView() {

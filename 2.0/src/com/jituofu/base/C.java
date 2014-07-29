@@ -37,7 +37,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://192.168.1.107";
+		public static final String host = "http://192.168.1.103";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";
@@ -103,6 +103,7 @@ public final class C {
 		public static final int cashiercreate = 1026;
 		public static final int salesreport = 1027;
 		public static final int salesreportlr = 1028;
+		public static final int salesreportcb = 1028;
 	}
 	
 	public static final class PASSWORDLENGTH{
