@@ -265,13 +265,13 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 				if (lrIds.indexOf(id) < 0) {
 					lrIds.add(id);
 					if (isRefresh) {
+						dateArrayList.add(0, date);
 						dataList.add(0, map);
 					} else {
 						dataList.add(map);
+						dateArrayList.add(date);
 					}
 				}
-				
-				dateArrayList.add(date);
 			}else{
 				Double profit = Double.parseDouble(json.getString("profit"));
 				HashMap<String, String> existMap = dataList.get(pos);
