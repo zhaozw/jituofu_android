@@ -51,6 +51,7 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 	private String start, end;
 
 	SimpleDateFormat simpleDateFormat;
+	private ArrayList<String> dateArrayList = new ArrayList<String>();//存储所有日期，防止出现合并记账与单笔记账的重复日期
 
 	// 查询分类相关
 	private int pageNum = 1;
@@ -252,18 +253,33 @@ public class UISalesReportLR extends BaseUiAuth implements BaseListViewListener 
 			HashMap<String, String> map = new HashMap<String, String>();
 			JSONObject json = data.getJSONObject(i);
 			String id = json.getString("id");
-			map.put("date", json.getString("date"));
+			String date = json.getString("date");
+			map.put("date", date);
 			map.put("profit", json.getString("profit"));
 			map.put("id", id);
-
-			// 避免重复加载
-			if (lrIds.indexOf(id) < 0) {
-				lrIds.add(id);
-				if (isRefresh) {
-					dataList.add(0, map);
-				} else {
-					dataList.add(map);
+			
+			String[] dateArray = date.split("\\s");
+			int pos = dateArrayList.indexOf(dateArray[0]);//获取已存日期的位置
+			
+			//如果没有重复的日期
+			if(dateArrayList.indexOf(dateArray[0]) < 0){
+				// 避免重复加载
+				if (lrIds.indexOf(id) < 0) {
+					lrIds.add(id);
+					if (isRefresh) {
+						dataList.add(0, map);
+					} else {
+						dataList.add(map);
+					}
 				}
+				
+				dateArrayList.add(dateArray[0]);
+			}else{
+				Double profit = Double.parseDouble(json.getString("profit"));
+				HashMap<String, String> existMap = dataList.get(pos);
+				Double existMapProfit = Double.parseDouble(existMap.get("profit"));
+				Double newProfit = profit+existMapProfit;
+				existMap.put("profit", AppUtil.toFixed(newProfit));
 			}
 		}
 
