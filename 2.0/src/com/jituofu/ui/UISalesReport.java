@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -22,12 +21,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -253,6 +250,7 @@ public class UISalesReport extends BaseUiAuth {
 		});
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showWindow(View parent) {
 
 		if (popupWindow == null) {

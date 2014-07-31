@@ -20,6 +20,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.jituofu.R;
@@ -49,10 +52,10 @@ import com.jituofu.ui.UIWareHouseParentTypeDetailProductsList.ProductsViewHolder
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.DateUtil;
 
-public class UISalesReportProductList extends BaseUiAuth
-implements BaseListViewListener{
+public class UISalesReportProductList extends BaseUiAuth implements
+		BaseListViewListener {
 	private BaseGetProductImageTask bpit;
-	
+
 	private TextView titleView;
 	private LinearLayout noDataView, againView, sortContainerView, borderView;
 	private BaseListView lvView;
@@ -68,8 +71,9 @@ implements BaseListViewListener{
 	private ArrayList<String> productId = new ArrayList<String>();// 存储所有列表的id，以免重复加载
 
 	private Bundle extraBundle;
-	private JSONArray salesList;
 	private String start, end;
+	
+	SimpleDateFormat simpleDateFormat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +86,18 @@ implements BaseListViewListener{
 			end = extraBundle.getString("end");
 		}
 
+		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.CHINA);
+		
 		initView();
 		updateView();
 		onBind();
+		
+		initQuery = true;
+		AppUtil.showLoadingPopup(this, R.string.COMMON_CXZ);
 		doQueryTask();
 	}
-	
+
 	private void renderList(JSONArray salesList) throws JSONException {
 		// 初始化加载没有数据
 		if (initQuery && salesList.length() <= 0) {
@@ -95,7 +105,7 @@ implements BaseListViewListener{
 			againView.setVisibility(View.GONE);
 			noDataView.setVisibility(View.VISIBLE);
 			((TextView) noDataView.findViewById(R.id.txt))
-					.setText(R.string.WAREHOUSE_SPSS_NODATA);
+					.setText(R.string.SALESREPORT_QUERYPRODUCTLIST_NODATA);
 			sortContainerView.setVisibility(View.GONE);
 			borderView.setVisibility(View.GONE);
 			return;
@@ -106,22 +116,16 @@ implements BaseListViewListener{
 
 		sortContainerView.setVisibility(View.VISIBLE);
 		borderView.setVisibility(View.VISIBLE);
+		lvView.setVisibility(View.VISIBLE);
 
 		for (int i = 0; i < salesList.length(); i++) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			JSONObject json = salesList.getJSONObject(i);
 			String id = json.getString("id");
 			map.put("metaData", json.toString());
-			map.put("name", json.getString("name"));
 			map.put("id", id);
-			map.put("isMerge", json.getString("isMerge"));
-			map.put("typeId", json.getString("typeId"));
-			map.put("price", json.getString("price"));
 			map.put("date", json.getString("date"));
-			map.put("remark", json.getString("remark"));
-			map.put("selling_count", json.getString("selling_count"));
-			map.put("selling_price", json.getString("selling_price"));
-			map.put("pic", json.getString("pic"));
+			map.put("isMerge", json.getString("isMerge"));
 
 			// 避免重复加载
 			if (productId.indexOf(id) < 0) {
@@ -134,8 +138,8 @@ implements BaseListViewListener{
 			}
 		}
 
-		customAdapter = customAdapter == null ? new CustomProductsAdapter(
-				this, dataList) : customAdapter;
+		customAdapter = customAdapter == null ? new CustomProductsAdapter(this,
+				dataList) : customAdapter;
 
 		if (isRefresh || isLoadMore) {
 			customAdapter.notifyDataSetChanged();
@@ -154,6 +158,20 @@ implements BaseListViewListener{
 
 	private void onBind() {
 		this.onCustomBack();
+		
+		((TextView) againView.findViewById(R.id.again_btn))
+		.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				initQuery = true;
+				AppUtil.showLoadingPopup(
+						UISalesReportProductList.this,
+						R.string.COMMON_CXZ);
+				doQueryTask();
+			}
+		});
 	}
 
 	private void updateView() {
@@ -161,7 +179,7 @@ implements BaseListViewListener{
 			String[] startSplit = start.split("-");
 			String[] endSplit = end.split("-");
 			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
-					+ endSplit[1] + "-" + endSplit[2] + "的售出商品");
+					+ endSplit[1] + "-" + endSplit[2]);
 		}
 	}
 
@@ -173,14 +191,13 @@ implements BaseListViewListener{
 		lvView.setPullLoadEnable(true);
 		lvView.setPullRefreshEnable(true);
 		lvView.setXListViewListener(this);
-		
-		sortContainerView = (LinearLayout) this.findViewById(R.id.sortContainer);
+
+		sortContainerView = (LinearLayout) this
+				.findViewById(R.id.sortContainer);
 		borderView = (LinearLayout) this.findViewById(R.id.border);
 	}
 
 	private void doQueryTask() {
-		AppUtil.showLoadingPopup(this, R.string.COMMON_CXZ);
-
 		// TODO Auto-generated method stub
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
@@ -188,6 +205,7 @@ implements BaseListViewListener{
 		limit = (screenDisplay[1] / 80) + 10;
 
 		urlParams.put("pageNum", pageNum + "");
+		urlParams.put("reportType", "products");
 		urlParams.put("limit", limit + "");
 		urlParams.put("sort", sort + "");
 		urlParams.put("start", start);
@@ -212,7 +230,8 @@ implements BaseListViewListener{
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-			
+			renderList(operation.getJSONArray("products"));
+			onLoad();
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
@@ -220,16 +239,78 @@ implements BaseListViewListener{
 
 	@Override
 	public void onRefresh() {
+		if (isLoading) {
+			return;
+		}
 		// TODO Auto-generated method stub
-		
+		this.isRefresh = true;
+		this.isLoading = true;
+		doQueryTask();
 	}
 
 	@Override
 	public void onLoadMore() {
+		if (isLoading) {
+			return;
+		}
 		// TODO Auto-generated method stub
-		
+		this.isLoadMore = true;
+		this.isLoading = true;
+		doQueryTask();
+	}
+
+	private void onLoad() {
+		lvView.stopRefresh();
+		lvView.stopLoadMore();
+		lvView.setRefreshTime(AppUtil.getCurrentDateTime());
+		isLoading = false;
 	}
 	
+	@Override
+	protected void onTaskAsyncStop(){
+		super.onTaskAsyncStop();
+		onLoad();
+	}
+	
+	public void onNetworkError(int taskId) {
+		if (initQuery) {
+			lvView.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
+			againView.setVisibility(View.VISIBLE);
+			((TextView) againView.findViewById(R.id.txt))
+					.setText(C.ERROR.networkException);
+
+			initQuery = false;
+			return;
+		}
+	}
+
+	public void onNetworkTimeout(int taskId) {
+		if (initQuery) {
+			lvView.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
+			againView.setVisibility(View.VISIBLE);
+			((TextView) againView.findViewById(R.id.txt))
+					.setText(C.ERROR.networkTimeout);
+
+			initQuery = false;
+			return;
+		}
+	}
+
+	public void onServerException(int taskId) {
+		if (initQuery) {
+			lvView.setVisibility(View.GONE);
+			noDataView.setVisibility(View.GONE);
+			againView.setVisibility(View.VISIBLE);
+			((TextView) againView.findViewById(R.id.txt))
+					.setText(C.ERROR.serverException);
+
+			initQuery = false;
+			return;
+		}
+	}
+
 	/**
 	 * 自定义适配器
 	 * 
@@ -269,6 +350,8 @@ implements BaseListViewListener{
 						.findViewById(R.id.date));
 				holder.setPicView((ImageView) convertView
 						.findViewById(R.id.img));
+				holder.setPicBoxViewView((LinearLayout) convertView
+						.findViewById(R.id.pic));
 				// 保存视图项
 				convertView.setTag(holder);
 			} else {
@@ -276,15 +359,91 @@ implements BaseListViewListener{
 				holder = (ProductsViewHolder) convertView.getTag();
 			}
 
-			holder.getNameView().setText(map.get("name"));
-			holder.getCountView().setText(map.get("selling_count"));
-			holder.getDateView().setText(map.get("date"));
-			holder.getPriceView().setText(map.get("selling_price"));
+			String metaData = map.get("metaData");
+			String isMerge = map.get("isMerge");
+			JSONObject saleData = null;
+			try {
+				saleData = new JSONObject(metaData);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			holder.getPicView().setImageURI(null);
-			holder.getPicView().setBackgroundResource(
-					R.drawable.default_img_placeholder);
-			getProductImg(holder.getPicView(), map.get("pic"), map.get("id"));
+			// 单笔记录
+			if (isMerge.equals("0")) {
+				holder.getMergeImgsView().setVisibility(View.GONE);
+				holder.getPicView().setVisibility(View.VISIBLE);
+
+				holder.getPicView().setImageURI(null);
+				holder.getPicView().setBackgroundResource(
+						R.drawable.default_img_placeholder);
+
+				try {
+					String pic = saleData.getString("pic");
+					if (pic != null && pic.length() > 0) {
+						getProductImg(holder.getPicView(),
+								saleData.getString("pic"),
+								saleData.getString("pid"));
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				holder.getMergeImgsView().setVisibility(View.VISIBLE);
+				holder.getPicView().setVisibility(View.GONE);
+
+				JSONArray products;
+				try {
+					products = saleData.getJSONArray("products");
+					ImageView one = (ImageView) holder.getMergeImgsView()
+							.findViewById(R.id.one);
+					ImageView two = (ImageView) holder.getMergeImgsView()
+							.findViewById(R.id.two);
+					ImageView three = (ImageView) holder.getMergeImgsView()
+							.findViewById(R.id.three);
+					ImageView four = (ImageView) holder.getMergeImgsView()
+							.findViewById(R.id.four);
+					int mergeMaxImgCount = 1;
+					
+					one.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
+					two.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
+					three.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
+					four.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
+					for (int i = 0; i < products.length(); i++) {
+						JSONObject product = (JSONObject) products.get(i);
+
+						// 加载合并记账中的商品图片
+						if (mergeMaxImgCount < 5) {
+							String pic = product.getString("pic");
+							ImageView img;
+
+							if (mergeMaxImgCount == 1) {
+								img = one;
+							} else if (mergeMaxImgCount == 2) {
+								img = two;
+							} else if (mergeMaxImgCount == 3) {
+								img = three;
+							} else {
+								img = four;
+							}
+
+							if (pic != null && pic.length() > 0) {
+								img.setImageDrawable(null);
+								mergeMaxImgCount++;
+								getProductImg(img, pic,
+										product.getString("pid"));
+							}
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			String date = map.get("date");
+			holder.getDateView().setText(date.substring(5));
 
 			return convertView;
 		}
@@ -319,9 +478,31 @@ implements BaseListViewListener{
 		private View baseView;
 		private ImageView picView;
 		private TextView nameView, priceView, countView, dateView;
+		private LinearLayout picBoxView;
 
 		public ProductsViewHolder(View baseView) {
 			this.baseView = baseView;
+		}
+
+		public RelativeLayout getMergeImgsView() {
+			if (picBoxView == null) {
+				return null;
+			}
+			RelativeLayout view = (RelativeLayout) picBoxView
+					.findViewById(R.id.merger_imgs);
+			return view;
+		}
+
+		public LinearLayout getPicBoxViewView() {
+			if (picBoxView == null) {
+				picBoxView = (LinearLayout) baseView.findViewById(R.id.pic);
+			}
+
+			return picBoxView;
+		}
+
+		public void setPicBoxViewView(LinearLayout view) {
+			picBoxView = view;
 		}
 
 		public TextView getNameView() {

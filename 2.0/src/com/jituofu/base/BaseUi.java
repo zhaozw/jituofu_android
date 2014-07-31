@@ -116,6 +116,7 @@ public class BaseUi extends Activity {
 			public void onStop() {
 				super.onStop();
 				closePopupDialog();
+				onTaskAsyncStop();
 			}
 
 			@Override
@@ -330,6 +331,10 @@ public class BaseUi extends Activity {
 			this.popupDialog.dismiss();
 			this.popupDialog = null;
 		}
+	}
+	
+	protected void onTaskAsyncStop(){
+		
 	}
 
 	/**

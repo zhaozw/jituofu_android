@@ -275,4 +275,5 @@
     <string name="SALESREPORT_QUERYLR_LOADING">获取利润列表...</string>
     <string name="SALESREPORT_QUERYCB_LOADING">获取成本列表...</string>
     <string name="SALESREPORT_QUERYLR_NODATA">没有相关利润数据</string>
+    <string name="SALESREPORT_QUERYPRODUCTLIST_NODATA">没有相关销售数据</string>
 </resources>
