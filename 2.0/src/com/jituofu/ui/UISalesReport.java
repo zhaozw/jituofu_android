@@ -55,7 +55,6 @@ public class UISalesReport extends BaseUiAuth {
 	private int limit = 10;
 	
 	private String totalCost, totalPrice, totalCount, totalLr;
-	private JSONArray salesList;
 
 	// 自定义弹出窗口
 	private PopupWindow popupWindow;
@@ -131,7 +130,6 @@ public class UISalesReport extends BaseUiAuth {
 				Bundle bundle = new Bundle();
 				bundle.putString("start", start);
 				bundle.putString("end", end);
-				bundle.putString("salesList", salesList.toString());
 				
 				forward(UISalesReportLR.class, bundle);
 			}});
@@ -143,9 +141,19 @@ public class UISalesReport extends BaseUiAuth {
 				Bundle bundle = new Bundle();
 				bundle.putString("start", start);
 				bundle.putString("end", end);
-				bundle.putString("salesList", salesList.toString());
 				
 				forward(UISalesReportCB.class, bundle);
+			}});
+		LinearLayout spBox = (LinearLayout) findViewById(R.id.sp);
+		spBox.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("start", start);
+				bundle.putString("end", end);
+				
+				forward(UISalesReportProductList.class, bundle);
 			}});
 	}
 
@@ -445,14 +453,10 @@ public class UISalesReport extends BaseUiAuth {
 	public void onTaskComplete(int taskId, BaseMessage message)
 			throws Exception {
 		super.onTaskComplete(taskId, message);
-		
-		pageNum++;
 
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-			salesList = operation.getJSONArray("salesList");
-			
 			totalCost = operation.getString("totalCost");
 			totalCount = operation.getString("totalCount");
 			totalPrice = operation.getString("totalPrice");

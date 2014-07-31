@@ -327,8 +327,8 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 		this.isRefresh = false;
 
 		if (data.length() < limit) {
-			//lv.setPullLoadEnable(false);
-			//lv.setPullRefreshEnable(false);
+			lv.setPullLoadEnable(false);
+			lv.setPullRefreshEnable(false);
 		}
 	}
 
