@@ -277,4 +277,6 @@
     <string name="SALESREPORT_QUERYCB_LOADING">获取成本列表...</string>
     <string name="SALESREPORT_QUERYLR_NODATA">没有相关利润数据</string>
     <string name="SALESREPORT_QUERYPRODUCTLIST_NODATA">没有相关销售数据</string>
+    <string name="SALESREPORT_HJ">合计</string>
+    <string name="SALESREPORT_TUIHUOBTN">退货</string>
 </resources>

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/topbar2" />
+
+    <LinearLayout
+        style="@style/container"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="0dp"
+        android:paddingTop="0dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ScrollView
+                android:id="@+id/scrollView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <RelativeLayout
+                        android:id="@+id/imgBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:background="#eeeeee" >
+
+                        <ImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:scaleType="centerCrop" />
+
+                        <LinearLayout
+                            android:id="@+id/updateImgBtn"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true"
+                            android:alpha="0.75"
+                            android:background="#000000"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:visibility="gone" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/PRODUCT_DETAIL_UPDATETXT"
+                                android:textColor="#ffffff"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        style="@style/field_separator"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <RelativeLayout style="@style/field" >
+
+                            <TextView
+                                android:id="@+id/textView1"
+                                style="@style/label"
+                                android:text="@string/CASHIER_XSSL" />
+
+                            <TextView
+                                android:id="@+id/selling_count"
+                                style="@style/commonEditText"
+                                android:layout_toRightOf="@+id/textView1"
+                                android:focusable="false" />
+
+                            <LinearLayout
+                                style="@style/field_separator"
+                                android:layout_alignParentBottom="true"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout style="@style/field" >
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                style="@style/label"
+                                android:text="@string/CASHIER_SELLING_PRICE" />
+
+                            <TextView
+                                android:id="@+id/selling_price"
+                                style="@style/commonEditText"
+                                android:layout_toRightOf="@+id/textView2"
+                                android:focusable="false" />
+
+                            <LinearLayout
+                                style="@style/field_separator"
+                                android:layout_alignParentBottom="true"
+                                android:orientation="vertical" >
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:text="@string/PRODUCT_PTYPE" />
+
+                            <TextView
+                                android:id="@+id/type"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:paddingRight="10dp" />
+
+                            <ImageView
+                                android:layout_width="7.5dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="15dp"
+                                android:src="@drawable/arrow" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/border"
+                            style="@style/field_separator"
+                            android:layout_marginLeft="15dp"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:text="@string/CASHIER_JZSJTXT" />
+
+                            <TextView
+                                android:id="@+id/date"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="right"
+                                android:paddingRight="10dp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field_separator"
+                            android:layout_marginLeft="15dp"
+                            android:orientation="vertical" >
+                        </LinearLayout>
+
+                        <LinearLayout
+                            style="@style/field"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" >
+
+                            <TextView
+                                style="@style/label"
+                                android:layout_marginTop="15dp"
+                                android:gravity="top"
+                                android:text="@string/PRODUCT_PREMARK" />
+
+                            <TextView
+                                android:id="@+id/remark"
+                                style="@style/textarea"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="15dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/field_separator"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <RelativeLayout style="@style/field" android:background="@null" >
+
+            <TextView
+                android:id="@+id/textView2"
+                style="@style/label"
+                android:text="@string/SALESREPORT_HJ" />
+
+            <TextView
+                android:id="@+id/hj"
+                style="@style/commonEditText"
+                android:textColor="#ff5500"
+                android:layout_toRightOf="@+id/textView2"
+                android:focusable="false" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/thBtn"
+            style="@style/negativeButton"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/SALESREPORT_TUIHUOBTN" />
+    </LinearLayout>
+
+</LinearLayout>

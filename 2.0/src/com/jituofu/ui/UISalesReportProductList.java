@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -162,6 +163,27 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private void onBind() {
 		this.onCustomBack();
+		
+		lvView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				@SuppressWarnings("unchecked")
+				HashMap<String, String> map = (HashMap<String, String>) lvView
+						.getItemAtPosition(position);
+				
+				String isMerge = map.get("isMerge");
+				Bundle bundle = new Bundle();
+				bundle.putString("id", map.get("id"));
+				bundle.putString("detail", map.get("metaData"));
+				
+				if(isMerge.equals("0")){
+					forward(UISaleDetail.class, bundle);
+				}
+			}
+		});
 		
 		((TextView) againView.findViewById(R.id.again_btn))
 		.setOnClickListener(new OnClickListener() {
@@ -469,6 +491,9 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 				try {
 					holder.getCountView().setText("总数量："+saleData.getString("selling_count"));
+					holder.getNameView().setText(saleData.getString("name"));
+					holder.getPriceView().setVisibility(View.VISIBLE);
+					holder.getPriceView().setText("销售单价："+AppUtil.toFixed(Double.parseDouble(saleData.getString("selling_price")))+" 元");
 					String pic = saleData.getString("pic");
 					if (pic != null && pic.length() > 0) {
 						getProductImg(holder.getPicView(),
@@ -486,7 +511,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				JSONArray products;
 				try {
 					holder.getCountView().setText("总数量："+saleData.getString("totalCount"));
-					
+					holder.getNameView().setText("合并记账("+saleData.getJSONArray("cashierList").length()+")");
+					holder.getPriceView().setVisibility(View.GONE);
 					products = saleData.getJSONArray("products");
 					ImageView one = (ImageView) holder.getMergeImgsView()
 							.findViewById(R.id.one);
