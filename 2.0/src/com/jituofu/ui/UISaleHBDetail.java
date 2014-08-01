@@ -100,7 +100,11 @@ public class UISaleHBDetail extends BaseUiAuth {
 					detail.put("selling_count", map.get("selling_count"));
 					detail.put("selling_price", map.get("selling_price"));
 					detail.put("remark", map.get("remark"));
-					detail.put("typeName", new JSONObject(map.get("typeName")));
+					try{
+						detail.put("typeName", new JSONObject(map.get("typeName")));
+					}catch(JSONException e){
+						detail.put("typeName", "");
+					}
 					detail.put("date", map.get("date"));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
