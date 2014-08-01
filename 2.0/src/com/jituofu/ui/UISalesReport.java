@@ -418,8 +418,10 @@ public class UISalesReport extends BaseUiAuth {
 			e1.printStackTrace();
 		}
 		
-		
-		if(endDate != null && startDate !=null && endDate.getTime() < startDate.getTime()){
+		if(startyear != endyear){
+			this.showToast(R.string.SALESREPORT_YEARERROR);
+			return;
+		}else if(endDate != null && startDate !=null && endDate.getTime() < startDate.getTime()){
 			this.showToast(R.string.SALESREPORT_DATEERROR);
 			return;
 		}

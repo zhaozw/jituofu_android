@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +49,10 @@ import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.base.BaseListView.BaseListViewListener;
 import com.jituofu.ui.UISalesReportCB.CustomAdapter;
+import com.jituofu.ui.UISalesReportLR.SortByProfit;
 import com.jituofu.ui.UIWareHouseParentTypeDetailProductsList.CustomProductsAdapter;
 import com.jituofu.ui.UIWareHouseParentTypeDetailProductsList.ProductsViewHolder;
+import com.jituofu.ui.UIWareHouseParentTypeDetailProductsList.SortByDate;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.DateUtil;
 
@@ -57,7 +61,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 	private BaseGetProductImageTask bpit;
 
 	private TextView titleView;
-	private LinearLayout noDataView, againView, sortContainerView, borderView;
+	private LinearLayout noDataView, againView, sortContainerView, borderView, rqView, slView;
 	private BaseListView lvView;
 
 	// 查询分类相关
@@ -172,6 +176,82 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				doQueryTask();
 			}
 		});
+		
+		rqView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				slView.setBackgroundResource(0);
+				TextView slViewTxt = (TextView) slView.findViewById(R.id.txt);
+				ImageView slViewArrow = (ImageView) slView
+						.findViewById(R.id.arrow);
+				slViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				slViewArrow.setImageResource(R.drawable.icon_arrow_up);
+
+				// TODO Auto-generated method stub
+				if (sort.equals("1")) {
+					sort = "2";
+					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					TextView txt = (TextView) rqView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) rqView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
+				} else {
+					sort = "1";
+					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					TextView txt = (TextView) rqView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) rqView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				}
+				
+				Collections.sort(dataList, new SortByDate());
+				customAdapter.notifyDataSetChanged();
+			}
+		});
+		
+		slView.setOnClickListener(new OnClickListener() {
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void onClick(View v) {
+				if(customAdapter == null){
+					return;
+				}
+				
+				rqView.setBackgroundResource(0);
+				TextView rqViewTxt = (TextView) rqView
+						.findViewById(R.id.txt);
+				ImageView rqViewArrow = (ImageView) rqView
+						.findViewById(R.id.arrow);
+				rqViewTxt.setTextColor(Color.rgb(153, 153, 153));
+				rqViewArrow.setImageResource(R.drawable.icon_arrow_down);
+
+				// TODO Auto-generated method stub
+				if (sort.equals("4")) {
+					sort = "3";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) slView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) slView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_down_white);
+				} else {
+					sort = "4";
+					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					TextView txt = (TextView) slView.findViewById(R.id.txt);
+					ImageView arrow = (ImageView) slView
+							.findViewById(R.id.arrow);
+					txt.setTextColor(Color.rgb(255, 255, 255));
+					arrow.setImageResource(R.drawable.icon_arrow_up_white);
+				}
+				
+				Collections.sort(dataList, new SortByCount());
+				customAdapter.notifyDataSetChanged();
+			}
+		});
 	}
 
 	private void updateView() {
@@ -180,6 +260,13 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			String[] endSplit = end.split("-");
 			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
 					+ endSplit[1] + "-" + endSplit[2]);
+		}
+		if (sort.equals("1")) {
+			rqView.setBackgroundResource(R.drawable.base_lt_lb_round);
+			TextView txt = (TextView) rqView.findViewById(R.id.txt);
+			ImageView arrow = (ImageView) rqView.findViewById(R.id.arrow);
+			txt.setTextColor(Color.rgb(255, 255, 255));
+			arrow.setImageResource(R.drawable.icon_arrow_down_white);
 		}
 	}
 
@@ -195,6 +282,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 		sortContainerView = (LinearLayout) this
 				.findViewById(R.id.sortContainer);
 		borderView = (LinearLayout) this.findViewById(R.id.border);
+		rqView = (LinearLayout) this.findViewById(R.id.rq);
+		slView = (LinearLayout) this.findViewById(R.id.sl);
 	}
 
 	private void doQueryTask() {
@@ -379,6 +468,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 						R.drawable.default_img_placeholder);
 
 				try {
+					holder.getCountView().setText("总数量："+saleData.getString("selling_count"));
 					String pic = saleData.getString("pic");
 					if (pic != null && pic.length() > 0) {
 						getProductImg(holder.getPicView(),
@@ -395,6 +485,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 				JSONArray products;
 				try {
+					holder.getCountView().setText("总数量："+saleData.getString("totalCount"));
+					
 					products = saleData.getJSONArray("products");
 					ImageView one = (ImageView) holder.getMergeImgsView()
 							.findViewById(R.id.one);
@@ -443,7 +535,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			}
 
 			String date = map.get("date");
-			holder.getDateView().setText(date.substring(5));
+			holder.getDateView().setText("时间：" + date.substring(5));
 
 			return convertView;
 		}
@@ -563,6 +655,139 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 		public void setPicView(ImageView view) {
 			picView = view;
+		}
+	}
+	
+	class SortByDate implements Comparator {
+		public int compare(Object o1, Object o2) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h2 = (HashMap<String, String>) o2;
+
+			Date h1d = null;
+			try {
+				h1d = simpleDateFormat.parse(h1.get("date"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Date h2d = null;
+			try {
+				h2d = simpleDateFormat.parse(h2.get("date"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			if (sort.equals("1")) {
+				if (h1d.getTime() > h2d.getTime()) {
+					return -1;
+				} else if (h1d.getTime() == h2d.getTime()) {
+					return 0;
+				} else {
+					return 1;
+				}
+			} else if (sort.equals("2")) {
+				if (h1d.getTime() > h2d.getTime()) {
+					return 1;
+				} else if (h1d.getTime() == h2d.getTime()) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+			
+			return 0;
+		}
+	}
+	
+	class SortByCount implements Comparator {
+		public int compare(Object o1, Object o2) {
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h1 = (HashMap<String, String>) o1;
+			@SuppressWarnings("unchecked")
+			HashMap<String, String> h2 = (HashMap<String, String>) o2;
+
+			Double olCount = null, o2Count = null;
+			JSONObject saleData1 = null, saleData2 = null;
+			try {
+				saleData1 = new JSONObject(h1.get("metaData"));
+				saleData2 = new JSONObject(h2.get("metaData"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String olIsMerge = h1.get("isMerge");
+			String o2IsMerge = h2.get("isMerge");
+			
+			if(olIsMerge.equals("0")){
+				try {
+					olCount = Double.parseDouble(saleData1.getString("selling_count"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else if(olIsMerge.equals("1")){
+				try {
+					olCount = Double.parseDouble(saleData1.getString("totalCount"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(o2IsMerge.equals("0")){
+				try {
+					o2Count = Double.parseDouble(saleData2.getString("selling_count"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else if(o2IsMerge.equals("1")){
+				try {
+					o2Count = Double.parseDouble(saleData2.getString("totalCount"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(olCount == null || o2Count == null){
+				return 0;
+			}
+
+			if (sort.equals("3")) {
+				if (olCount > o2Count) {
+					return -1;
+				} else if (olCount == o2Count) {
+					return 0;
+				} else {
+					return 1;
+				}
+			} else if (sort.equals("4")) {
+				if (olCount > o2Count) {
+					return 1;
+				} else if (olCount == o2Count) {
+					return 0;
+				} else {
+					return -1;
+				}
+			}
+			
+			return 0;
 		}
 	}
 }
