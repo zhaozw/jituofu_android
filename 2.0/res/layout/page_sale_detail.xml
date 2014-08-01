@@ -89,7 +89,8 @@
                                 android:id="@+id/selling_count"
                                 style="@style/commonEditText"
                                 android:layout_toRightOf="@+id/textView1"
-                                android:focusable="false" />
+                                android:focusable="false"
+                                android:gravity="center|right" />
 
                             <LinearLayout
                                 style="@style/field_separator"
@@ -103,13 +104,15 @@
                             <TextView
                                 android:id="@+id/textView2"
                                 style="@style/label"
+                                android:layout_width="100dp"
                                 android:text="@string/CASHIER_SELLING_PRICE" />
 
                             <TextView
                                 android:id="@+id/selling_price"
                                 style="@style/commonEditText"
                                 android:layout_toRightOf="@+id/textView2"
-                                android:focusable="false" />
+                                android:focusable="false"
+                                android:gravity="center|right" />
 
                             <LinearLayout
                                 style="@style/field_separator"
@@ -119,34 +122,33 @@
                         </RelativeLayout>
 
                         <LinearLayout
-                            style="@style/field"
-                            android:orientation="horizontal" >
-
-                            <TextView
-                                style="@style/label"
-                                android:text="@string/PRODUCT_PTYPE" />
-
-                            <TextView
-                                android:id="@+id/type"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:paddingRight="10dp" />
-
-                            <ImageView
-                                android:layout_width="7.5dp"
-                                android:layout_height="10dp"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="15dp"
-                                android:src="@drawable/arrow" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/border"
-                            style="@style/field_separator"
-                            android:layout_marginLeft="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical" >
+
+                            <LinearLayout
+                                style="@style/field"
+                                android:orientation="horizontal" >
+
+                                <TextView
+                                    style="@style/label"
+                                    android:text="@string/PRODUCT_PTYPE" />
+
+                                <TextView
+                                    android:id="@+id/type"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:paddingRight="10dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/border"
+                                style="@style/field_separator"
+                                android:layout_marginLeft="15dp"
+                                android:orientation="vertical" >
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -162,7 +164,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="right"
+                                android:gravity="center|right"
                                 android:paddingRight="10dp" />
                         </LinearLayout>
 
@@ -186,6 +188,7 @@
                             <TextView
                                 android:id="@+id/remark"
                                 style="@style/textarea"
+                                android:text="32"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="15dp" />
                         </LinearLayout>
@@ -199,7 +202,9 @@
             android:orientation="vertical" >
         </LinearLayout>
 
-        <RelativeLayout style="@style/field" android:background="@null" >
+        <RelativeLayout
+            style="@style/field"
+            android:background="@null" >
 
             <TextView
                 android:id="@+id/textView2"
@@ -208,10 +213,11 @@
 
             <TextView
                 android:id="@+id/hj"
+                android:gravity="center|right"
                 style="@style/commonEditText"
-                android:textColor="#ff5500"
                 android:layout_toRightOf="@+id/textView2"
-                android:focusable="false" />
+                android:focusable="false"
+                android:textColor="#ff5500" />
         </RelativeLayout>
 
         <Button
