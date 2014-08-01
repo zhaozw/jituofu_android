@@ -181,6 +181,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				
 				if(isMerge.equals("0")){
 					forward(UISaleDetail.class, bundle);
+				}else{
+					forward(UISaleHBDetail.class, bundle);
 				}
 			}
 		});
@@ -493,7 +495,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					holder.getCountView().setText("总数量："+saleData.getString("selling_count"));
 					holder.getNameView().setText(saleData.getString("name"));
 					holder.getPriceView().setVisibility(View.VISIBLE);
-					holder.getPriceView().setText("销售单价："+AppUtil.toFixed(Double.parseDouble(saleData.getString("selling_price")))+" 元");
+					holder.getPriceView().setText(getString(R.string.CASHIER_SELLING_PRICE)+"："+AppUtil.toFixed(Double.parseDouble(saleData.getString("selling_price"))));
 					String pic = saleData.getString("pic");
 					if (pic != null && pic.length() > 0) {
 						getProductImg(holder.getPicView(),
