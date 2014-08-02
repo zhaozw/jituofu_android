@@ -289,4 +289,6 @@
     <string name="SALESREPORT_RETURNSALE_SL_SPECIFY">请填写退货数量</string>
     <string name="SALESREPORT_RETURNSALE_SL_MAX">退货数量超过总销售数量</string>
     <string name="SALESREPORT_RETURNSALE_SL_ERROR">退货数量不正确</string>
+    <string name="SALESREPORT_RETURNSALE_DATE">退货日期</string>
+    <string name="SALESREPORT_RETURNSALE_LOADING">退货中...</string>
 </resources>

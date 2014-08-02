@@ -65,6 +65,7 @@ public final class C {
 		public static final String productquerybytype = "/products/querybytype";
 		public static final String cashiercreate = "/cashier/create";
 		public static final String salesreport = "/salesreport/index";
+		public static final String returnsale = "/salesreport/returnsale";
 	}
 
 	public static final class ERROR {
@@ -104,6 +105,7 @@ public final class C {
 		public static final int salesreport = 1027;
 		public static final int salesreportlr = 1028;
 		public static final int salesreportcb = 1028;
+		public static final int returnsale = 1029;
 	}
 	
 	public static final class PASSWORDLENGTH{
