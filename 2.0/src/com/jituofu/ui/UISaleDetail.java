@@ -1,36 +1,56 @@
 package com.jituofu.ui;
 
+import java.util.HashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ImageView.ScaleType;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseGetProductImageTask;
 import com.jituofu.base.BaseListView;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.util.AppUtil;
 
 public class UISaleDetail extends BaseUiAuth {
+	//相关的控件
 	private TextView titleView, sellingCountView, typeView, sellingPrice,
 			dateView, hjView, remarkView;
 	private Button thBtnView;
 	private ImageView picView;
 
+	//外部参数
 	private Bundle extraBundle;
 	private String id;
 	private JSONObject detail;
 	
-	private BaseGetProductImageTask bpit;// 异步获取商品图片
+	// 异步获取商品图片
+	private BaseGetProductImageTask bpit;
+	
+	//退货相关的变量
+	private String returnSaleYY;// 退货原因
+	private BaseDialog.Builder baseDialogBuilder;
+	private BaseDialog baseDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +80,103 @@ public class UISaleDetail extends BaseUiAuth {
 	
 	private void onBind(){
 		this.onCustomBack();
+		thBtnView.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				returnSale();
+			}});
+	}
+	
+	private void returnSale(){
+		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
+				R.layout.template_return_sale, null);
+		baseDialogBuilder = new BaseDialog.Builder(this);
+		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setTitle("退货");
+
+		final RadioGroup rg = (RadioGroup) baseDialogBuilder.contentView
+				.findViewById(R.id.radioGroup);
+		final EditText slView = (EditText) baseDialogBuilder.contentView
+				.findViewById(R.id.sl);
+		final EditText yyView = (EditText) baseDialogBuilder.contentView
+				.findViewById(R.id.yy);
+		final EditText remarkView = (EditText) baseDialogBuilder.contentView
+				.findViewById(R.id.remark);
+
+		slView.setFocusableInTouchMode(true);
+		yyView.setFocusableInTouchMode(true);
+		remarkView.setFocusableInTouchMode(true);
+		
+		rg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(RadioGroup rg, int id) {
+				// TODO Auto-generated method stub
+				if (id == R.id.radio3) {
+					((LinearLayout)yyView.getParent()).setVisibility(View.VISIBLE);
+				}else{
+					((LinearLayout)yyView.getParent()).setVisibility(View.GONE);
+				}
+			}
+		});
+
+		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						// TODO Auto-generated method stub
+						RadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
+						returnSaleYY = rb.getText().toString();
+						String otherYY = AppUtil.trimAll(getEditValue(yyView));
+						String sl = getEditValue(slView);
+						String remark = getEditValue(remarkView);
+						Double totalSaleCount = null;
+						try {
+							//总销售数量
+							totalSaleCount = Double.parseDouble(detail.getString("selling_count"));
+						} catch (NumberFormatException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						//对其它退货原因做检验
+						if(rb.getId() == R.id.radio3 && (otherYY==null || otherYY.length() <= 0)){
+							showToast(R.string.SALESREPORT_RETURNSALE_YY_SPECIFY);
+							return;
+						}else if(rg.getId() == R.id.radio3){
+							returnSaleYY = otherYY;
+						}
+						//对退货数量做检验
+						if(sl == null){
+							showToast(R.string.SALESREPORT_RETURNSALE_SL_SPECIFY);
+							return;
+						}else{
+							Double slDouble = Double.parseDouble(sl);
+							if(slDouble == 0){
+								showToast(R.string.SALESREPORT_RETURNSALE_SL_ERROR);
+								return;
+							}else if(totalSaleCount != null && slDouble > totalSaleCount){
+								showToast(R.string.SALESREPORT_RETURNSALE_SL_MAX);
+								return;
+							}
+						}
+					}
+				});
+		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface di, int which) {
+						baseDialog.dismiss();
+					}
+				});
+		baseDialog = baseDialogBuilder.create();
+		baseDialog.show();
 	}
 
 	private void updateView() throws JSONException {

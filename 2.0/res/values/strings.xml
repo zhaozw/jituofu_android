@@ -279,4 +279,14 @@
     <string name="SALESREPORT_QUERYPRODUCTLIST_NODATA">没有相关销售数据</string>
     <string name="SALESREPORT_HJ">合计(元)</string>
     <string name="SALESREPORT_TUIHUOBTN">退货</string>
+    <string name="SALESREPORT_RETURNSALE_ONE">商品质量原因</string>
+    <string name="SALESREPORT_RETURNSALE_TWO">商品需要维修</string>
+    <string name="SALESREPORT_RETURNSALE_THREE">无理由退货</string>
+    <string name="SALESREPORT_RETURNSALE_FOUR">其它原因</string>
+    <string name="SALESREPORT_RETURNSALE_YY">退货原因</string>
+    <string name="SALESREPORT_RETURNSALE_SL">退货数量</string>
+    <string name="SALESREPORT_RETURNSALE_YY_SPECIFY">请填写退货原因</string>
+    <string name="SALESREPORT_RETURNSALE_SL_SPECIFY">请填写退货数量</string>
+    <string name="SALESREPORT_RETURNSALE_SL_MAX">退货数量超过总销售数量</string>
+    <string name="SALESREPORT_RETURNSALE_SL_ERROR">退货数量不正确</string>
 </resources>
