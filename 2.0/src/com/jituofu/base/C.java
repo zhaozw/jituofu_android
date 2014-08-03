@@ -106,6 +106,7 @@ public final class C {
 		public static final int salesreportlr = 1028;
 		public static final int salesreportcb = 1028;
 		public static final int returnsale = 1029;
+		public static final int salesreporttypelist = 1030;
 	}
 	
 	public static final class PASSWORDLENGTH{

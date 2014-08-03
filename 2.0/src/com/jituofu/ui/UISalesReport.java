@@ -152,6 +152,18 @@ public class UISalesReport extends BaseUiAuth {
 				
 				forward(UISalesReportProductList.class, bundle);
 			}});
+		
+		LinearLayout flBox = (LinearLayout) findViewById(R.id.fl);
+		flBox.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				Bundle bundle = new Bundle();
+				bundle.putString("start", start);
+				bundle.putString("end", end);
+				
+				forward(UISalesReportTypeList.class, bundle);
+			}});
 	}
 
 	private void updateView() {
