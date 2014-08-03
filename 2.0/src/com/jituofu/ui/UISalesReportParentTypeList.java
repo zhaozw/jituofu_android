@@ -41,7 +41,7 @@ import com.jituofu.ui.UIWareHouseParentTypeDetail.SortByPrice;
 import com.jituofu.ui.UIWareHouseParentTypeDetail.ViewHolder;
 import com.jituofu.util.AppUtil;
 
-public class UISalesReportTypeList extends BaseUiAuth {
+public class UISalesReportParentTypeList extends BaseUiAuth {
 	private TextView titleView;
 	private LinearLayout topbarView, noDataView, againView;
 	private BaseListView lvView;
@@ -58,7 +58,7 @@ public class UISalesReportTypeList extends BaseUiAuth {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.page_salesreport_typelist);
+		setContentView(R.layout.page_salesreport_parent_typelist);
 
 		extraBundle = this.getIntent().getExtras();
 		if (extraBundle != null) {
@@ -86,7 +86,7 @@ public class UISalesReportTypeList extends BaseUiAuth {
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
 						initQuery = true;
-						AppUtil.showLoadingPopup(UISalesReportTypeList.this,
+						AppUtil.showLoadingPopup(UISalesReportParentTypeList.this,
 								R.string.SALESREPORT_QUERYTYPE_LOADING);
 						doQueryTask();
 					}
@@ -322,12 +322,23 @@ public class UISalesReportTypeList extends BaseUiAuth {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			String child = map.get("child");
+			final String child = map.get("child");
 			if(child != null){
 				try {
 					JSONArray childs = new JSONArray(child);
 					if(childs != null && childs.length() > 0){
 						holder.arrow.setVisibility(View.VISIBLE);
+						convertView.setOnClickListener(null);
+						convertView.setOnClickListener(new OnClickListener(){
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Bundle bundle = new Bundle();
+								bundle.putString("child", child);
+								bundle.putString("title", map.get("typeName")+" 的小分类销售");
+								forward(UISalesReportChildTypeList.class, bundle);
+							}});
 					}else{
 						holder.arrow.setVisibility(View.GONE);
 					}

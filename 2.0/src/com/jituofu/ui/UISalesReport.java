@@ -162,7 +162,7 @@ public class UISalesReport extends BaseUiAuth {
 				bundle.putString("start", start);
 				bundle.putString("end", end);
 				
-				forward(UISalesReportTypeList.class, bundle);
+				forward(UISalesReportParentTypeList.class, bundle);
 			}});
 	}
 
