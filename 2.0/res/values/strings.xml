@@ -11,7 +11,7 @@
     <string name="helpCenter">帮助中心</string>
     <string name="shangpinguanli">商品管理</string>
     <string name="lsxsjl">历史销售管理</string>
-    <string name="storesettings">小店设置</string>
+    <string name="storesettings">进销存设置</string>
     <string name="securitysettings">安全中心</string>
     <string name="COMMON_CLZ">处理中...</string>
     <string name="COMMON_CXZ">查询中...</string>
@@ -292,4 +292,11 @@
     <string name="SALESREPORT_RETURNSALE_SL_ERROR">退货数量不正确</string>
     <string name="SALESREPORT_RETURNSALE_DATE">退货日期</string>
     <string name="SALESREPORT_RETURNSALE_LOADING">退货中...</string>
+    
+    <!-- 商家设置 -->
+    <string name="STORESETTINGS_TITLE">进销存设置</string>
+    <string name="STORESETTINGS_NAME">商户名称</string>
+    <string name="STORESETTINGS_NAME_SPECIFY">请填写商户名称</string>
+    <string name="STORESETTINGS_NAME_INVALID">商户名称无效</string>
+    <string name="STORESETTINGS_NEW_NAME_EQUAL_OLD_NAME">新商户名称与旧的相同</string>
 </resources>

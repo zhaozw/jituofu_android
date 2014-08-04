@@ -39,12 +39,13 @@ import com.jituofu.base.BaseMenuBottom2Top;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseGetProductImageTask;
 import com.jituofu.base.BaseUi;
+import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.BaseUiBuilder;
 import com.jituofu.base.BaseUiFormBuilder;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
-public class UIProductDetail extends BaseUi implements BaseUiBuilder,
+public class UIProductDetail extends BaseUiAuth implements BaseUiBuilder,
 		BaseUiFormBuilder {
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;

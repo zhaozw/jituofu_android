@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/topbar2" />
+
+    <ScrollView style="@style/container" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout style="@style/box1" >
+
+                <RelativeLayout style="@style/field" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        style="@style/label"
+                        android:text="@string/STORESETTINGS_NAME" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        style="@style/commonEditText"
+                        android:layout_toRightOf="@+id/textView1"
+                        android:gravity="center|left" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/submitLogin"
+                style="@style/primaryBtn"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="@string/COMMON_OK" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

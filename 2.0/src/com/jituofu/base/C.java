@@ -20,6 +20,7 @@ public final class C {
 	    public static final String userIdFileName = "uid";
 	    public static final String userCookieFileName = "uck";
 	    public static final String feedbackCacheFileName = "fd";
+	    public static final String storeSettingsCacheFileName = "ss";
 	}
 
 	public static final class COMMON {
@@ -66,6 +67,8 @@ public final class C {
 		public static final String cashiercreate = "/cashier/create";
 		public static final String salesreport = "/salesreport/index";
 		public static final String returnsale = "/salesreport/returnsale";
+		public static final String storesettingsget = "/storesettings/get";
+		public static final String storesettingsupdate = "/storesettings/update";
 	}
 
 	public static final class ERROR {
@@ -107,6 +110,8 @@ public final class C {
 		public static final int salesreportcb = 1028;
 		public static final int returnsale = 1029;
 		public static final int salesreporttypelist = 1030;
+		public static final int storesettingsget = 1031;
+		public static final int storesettingsupdate = 1032;
 	}
 	
 	public static final class PASSWORDLENGTH{

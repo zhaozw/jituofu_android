@@ -779,6 +779,25 @@ public class AppUtil {
 	}
 
 	/**
+	 * 从服务器上获取商户信息
+	 * 
+	 * @param ctx
+	 * @param ui
+	 */
+	public static void fetchStoreSettingsFromServer(Context ctx, BaseUi ui) {
+		String deviceId = AppUtil.getDeviceId(ctx);
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+
+		urlParams.put("clientId", deviceId);
+		try {
+			ui.doTaskAsync(C.TASK.storesettingsget, C.API.host + C.API.storesettingsget,
+					urlParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * 根据当前设备的密度,获取真实的尺寸值
 	 * 
 	 * @param measure

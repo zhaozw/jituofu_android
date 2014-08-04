@@ -161,7 +161,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		final String name = map.get("name");
 		
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
-				R.layout.template_edit_type, null);
+				R.layout.template_edit_text, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
 		baseDialogBuilder.setTitle("编辑" + name);
