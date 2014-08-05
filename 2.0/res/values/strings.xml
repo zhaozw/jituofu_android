@@ -37,6 +37,10 @@
     <string name="COMMON_SEARCHTXT">搜索</string>
     <string name="COMMON_DAOTXT">到</string>
     <string name="COMMON_CHAXUNTXT">查询</string>
+    <string name="COMMON_CHECKUPDATE_TITLE">检查更新</string>
+    <string name="COMMON_ABOUT">关于记托付</string>
+    <string name="COMMON_PINGLUN_TITLE">给个评论</string>
+    <string name="COMMON_UPDAING_TXT">获取更新</string>
 
     <!-- 注册登录 -->
 

@@ -9,5 +9,10 @@
 	<classpathentry kind="lib" path="libs/httpcore-4.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/httpmime-4.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/zhuqi/Desktop/old-adt-bundle-windows-x86_64-20140321/sdk/extras/android/support/v4/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/zhuqi/Desktop/adt-bundle-windows-x86_64-20140321/sdk/platforms/android-19/android.jar">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

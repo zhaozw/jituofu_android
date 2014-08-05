@@ -34,6 +34,8 @@ public final class C {
 		public static final String productEdit = "productEdit";
 		public static final String warehouse = "warehouse";
 		public static final String cashier = "cashier";
+		public static final String aboutUrl = "http://jizhangbao.com.cn";
+		public static final String updateUrl = "http://taobao.com";
 	}
 
 	public static final class API {

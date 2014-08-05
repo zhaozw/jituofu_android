@@ -462,7 +462,7 @@ public class AppUtil {
 	/**
 	 * 去应用市场
 	 */
-	public void gotoMarket(BaseUi ui) {
+	public static void gotoMarket(BaseUi ui) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.parse("market://details?id=" + ui.getPackageName()));
 		ui.startActivity(intent);
