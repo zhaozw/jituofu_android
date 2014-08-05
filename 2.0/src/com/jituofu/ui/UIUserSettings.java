@@ -26,23 +26,23 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
-	private String nameVal, emailVal;
-	private TextView nameView, emailView, titleView;
+public class UIUserSettings extends BaseUiAuth implements BaseUiFormBuilder{
+	private String emailVal;
+	private TextView emailView, titleView;
 	private Button submitLoginView;
 	
-	private JSONObject storeSettingsObj;
+	private JSONObject userInfo;
 
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
 	
-	private String oldName = "";//旧的商户名称
-	private String newName = "";//新的商户名称
+	private String oldEmail = "";//旧的邮箱名
+	private String newEmail = "";//新的邮箱名
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.page_storesettings);
+		setContentView(R.layout.page_user_settings);
 
 		initView();
 		onUpdate();
@@ -51,25 +51,24 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 	
 	private void initView(){
 		titleView = (TextView) findViewById(R.id.title);
-		nameView = (TextView) findViewById(R.id.name);
 		emailView = (TextView) findViewById(R.id.email);
 		submitLoginView = (Button) findViewById(R.id.submitLogin);
 		
-		byte[] storeSettings = StorageUtil.readInternalStoragePrivate(this, C.DIRS.storeSettingsCacheFileName);
-		String storeSettingsVal = null;
-		if (storeSettings.length > 0 && storeSettings[0] != 0) {
+		byte[] userinfo = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userInfoFileName);
+		String userinfoVal = null;
+		if (userinfo.length > 0 && userinfo[0] != 0) {
 			try {
-				storeSettingsVal = new String(storeSettings, "UTF-8");
+				userinfoVal = new String(userinfo, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		if(storeSettingsVal != null){
+		if(userinfoVal != null){
 			try {
-				storeSettingsObj = new JSONObject(storeSettingsVal);
-				oldName = storeSettingsObj.getString("name") != null ? storeSettingsObj.getString("name") : "";
+				userInfo = new JSONObject(userinfoVal);
+				oldEmail = userInfo.getString("email");
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,15 +77,22 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 	}
 
 	private void onUpdate() {
-		titleView.setText(this.getString(R.string.STORESETTINGS_TITLE));
-		nameView.setText(oldName);
+		titleView.setText(this.getString(R.string.USERSETTINGS_TITLE));
+		if(userInfo != null){
+			try {
+				emailView.setText(userInfo.getString("email"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void onBind() {
 		this.onCustomBack();
 		
-		RelativeLayout nameViewBox = (RelativeLayout) nameView.getParent();
-		nameViewBox.setOnClickListener(new OnClickListener(){
+		RelativeLayout emailViewBox = (RelativeLayout) emailView.getParent();
+		emailViewBox.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
@@ -106,16 +112,16 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 	private void doUpdateNameTask(){
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_edit_text, null);
-		view.setMinimumWidth((int) (UIStoreSettings.this.getWindowManager()  
+		view.setMinimumWidth((int) (UIUserSettings.this.getWindowManager()  
                 .getDefaultDisplay().getWidth() * 0.8));
 		baseDialogBuilder = new BaseDialog.Builder(this);
 		baseDialogBuilder.setContentView(view);
-		baseDialogBuilder.setTitle("更新" + this.getResources().getString(R.string.STORESETTINGS_NAME));
+		baseDialogBuilder.setTitle("更新" + this.getResources().getString(R.string.COMMON_EMAIL));
 		
-		final EditText newNameView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);
+		final EditText newEmailView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);
 		
-		newNameView.setText(oldName);
-		newNameView.setSelected(true);
+		newEmailView.setText(oldEmail);
+		newEmailView.setSelected(true);
 		
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
 				new DialogInterface.OnClickListener() {
@@ -123,21 +129,19 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 					@Override
 					public void onClick(DialogInterface di, int which) {
 						// TODO Auto-generated method stub
-						newName = AppUtil.trimAll(getEditValue(newNameView));
+						newEmail = AppUtil.trimAll(getEditValue(newEmailView));
 						
-						if (newName == null) {
-							showToast(R.string.STORESETTINGS_NAME_SPECIFY);
-							return;
-						}else if(newName.equals(oldName)){
-							showToast(R.string.STORESETTINGS_NEW_NAME_EQUAL_OLD_NAME);
-							return;
-						} else if ((AppUtil.getStrLen(newName) < 2)
-								|| (AppUtil.getStrLen(newName) > 25)) {
-							showToast(R.string.STORESETTINGS_NAME_INVALID);
+						if (newEmail != null) {
+							if (AppUtil.getStrLen(newEmail) < 5 || newEmail.indexOf("@") < 0) {
+								showToast(R.string.USERSETTINGS_EMAIL_INVALID);
+								return;
+							}
+						} else {
+							showToast(R.string.USERSETTINGS_EMAIL_SPECIFY);
 							return;
 						}
 						
-						doUpdateNameTask(newName);
+						doUpdateNameTask(newEmail);
 					}
 				});
 		baseDialogBuilder.setNegativeButton(R.string.COMMON_CANCEL,
@@ -152,15 +156,15 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 		baseDialog.show();
 	}
 	
-	private void doUpdateNameTask(String newName){
+	private void doUpdateNameTask(String newEmail){
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CLZ);
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 
-		urlParams.put("name", newName);
+		urlParams.put("email", newEmail);
 
 		try {
-			doTaskAsync(C.TASK.storesettingsupdate, C.API.host
-					+ C.API.storesettingsupdate, urlParams);
+			doTaskAsync(C.TASK.update, C.API.host
+					+ C.API.update, urlParams);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,13 +178,13 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
-			//更新商户名称
-			if(taskId == C.TASK.storesettingsupdate){
-				nameView.setText(newName);
+			//更新邮箱
+			if(taskId == C.TASK.update){
+				emailView.setText(newEmail);
 				//更新本地缓存的商户信息数据
-				storeSettingsObj.put("name", newName);
-				oldName = newName;
-				StorageUtil.writeInternalStoragePrivate(this, C.DIRS.storeSettingsCacheFileName, storeSettingsObj.toString());
+				userInfo.put("email", newEmail);
+				oldEmail = newEmail;
+				StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userInfoFileName, userInfo.toString());
 				baseDialog.dismiss();
 			}
 		} else {

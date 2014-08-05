@@ -23,6 +23,8 @@ import android.widget.TextView;
 public class UIIhome extends BaseUiAuth {
 	private int sysVersion = Build.VERSION.SDK_INT;
 	
+	private LinearLayout userinfoView;
+	
 	@Override
 	protected void onBrReceive(String type){
 		if(type.equals("ClearActivitiesBroadcast")){
@@ -51,10 +53,23 @@ public class UIIhome extends BaseUiAuth {
 
 		onBindUi();
 	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		try {
+			updateView();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	protected void onBindUi() {
 		super.onBindUi();
+		
+		userinfoView.setOnClickListener(new LinearLayoutClick());
 		
 		LinearLayout security = (LinearLayout) this.findViewById(R.id.security);
 		LinearLayout spgl = (LinearLayout) this.findViewById(R.id.spgl);
@@ -68,6 +83,8 @@ public class UIIhome extends BaseUiAuth {
 	}
 
 	private void initView() {
+		userinfoView = (LinearLayout) findViewById(R.id.userinfo);
+		
 		// 记账台
 		LinearLayout jzt = (LinearLayout) findViewById(R.id.jzt);
 		ImageView jztIcon = (ImageView) jzt.findViewById(R.id.icon);
@@ -197,6 +214,9 @@ public class UIIhome extends BaseUiAuth {
 				break;
 			case R.id.settings:
 				forward(UIStoreSettings.class);
+				break;
+			case R.id.userinfo:
+				forward(UIUserSettings.class);
 				break;
 			default:
 				break;

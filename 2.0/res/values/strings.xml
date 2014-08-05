@@ -299,4 +299,9 @@
     <string name="STORESETTINGS_NAME_SPECIFY">请填写商户名称</string>
     <string name="STORESETTINGS_NAME_INVALID">商户名称无效</string>
     <string name="STORESETTINGS_NEW_NAME_EQUAL_OLD_NAME">新商户名称与旧的相同</string>
+    
+    <!-- 用户信息设置 -->
+    <string name="USERSETTINGS_TITLE">用户信息设置</string>
+    <string name="USERSETTINGS_EMAIL_SPECIFY">请填写新邮箱地址</string>
+    <string name="USERSETTINGS_EMAIL_INVALID">新邮箱地址不正确</string>
 </resources>
