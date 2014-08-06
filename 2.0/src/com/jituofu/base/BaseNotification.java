@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat.Builder;
 
 /***
  * @description 状态栏通知相关
@@ -25,8 +26,13 @@ public class BaseNotification {
 	private int id;
 	private Class<?> obj;
 	private String tickerText, title, content;
-	
-	public BaseNotification(Context context, int id){
+
+	private Notification notification;
+	private NotificationCompat.Builder notificationCompatBuilder;
+	private NotificationManager manager;
+	private PendingIntent pendingIntent;
+
+	public BaseNotification(Context context, int id) {
 		this.context = context;
 		this.id = id;
 	}
@@ -37,24 +43,27 @@ public class BaseNotification {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	public void create(Class<?> obj, String tickerText, String title, String content) {
+	public void create(Class<?> obj, String tickerText, String title,
+			String content, int icon, int smallIcon) {
 		this.obj = obj;
 		this.tickerText = tickerText;
 		this.content = content;
-		
-		NotificationManager manager = (NotificationManager) context
+
+		manager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 
 		Intent intent = new Intent(context, obj);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_NEW_TASK);
+		pendingIntent = pendingIntent != null ? pendingIntent : PendingIntent
+				.getActivity(context, 0, intent,
+						PendingIntent.FLAG_UPDATE_CURRENT);
 
 		// 低版本
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-			Notification notification = new Notification();
+			notification = new Notification();
 
-			notification.icon = R.drawable.ic_launcher;
+			notification.icon = icon;
 			notification.tickerText = tickerText;
 			notification.defaults = Notification.DEFAULT_SOUND;
 			notification.audioStreamType = android.media.AudioManager.ADJUST_LOWER;
@@ -64,16 +73,12 @@ public class BaseNotification {
 			manager.notify(id, notification);
 
 		} else {
-			NotificationCompat.Builder notificationCompatBuilder = new NotificationCompat.Builder(
-					context);
+			notificationCompatBuilder = new NotificationCompat.Builder(context);
 			notificationCompatBuilder
-			        .setTicker(tickerText)
-					.setLargeIcon(
-							AppUtil.getBitmapFromResources(context,
-									R.drawable.ic_launcher))
+					.setTicker(tickerText)
+					.setLargeIcon(AppUtil.getBitmapFromResources(context, icon))
 					.setContentTitle(title).setContentText(content)
-					.setContentIntent(pendingIntent)
-					.setSmallIcon(R.drawable.sucess_small)
+					.setContentIntent(pendingIntent).setSmallIcon(smallIcon)
 					.setDefaults(Notification.DEFAULT_SOUND)
 					.setAutoCancel(true).getNotification();
 			manager.notify(id, notificationCompatBuilder.build());
@@ -81,9 +86,49 @@ public class BaseNotification {
 	}
 
 	public void cancel() {
-		NotificationManager manager = (NotificationManager) context
+		manager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.cancel(id);
 	}
 
+	@SuppressWarnings("deprecation")
+	public void setContentText(String content, int defaults, String tickerText) {
+		this.content = content;
+		this.tickerText = tickerText;
+		if (notificationCompatBuilder != null) {
+			notificationCompatBuilder.setTicker(tickerText);
+			notificationCompatBuilder.setDefaults(defaults);
+			notificationCompatBuilder.setContentText(content);
+			manager.notify(id, notificationCompatBuilder.build());
+		} else if (notification != null) {
+			notification.tickerText = tickerText;
+			notification.setLatestEventInfo(context, title, content,
+					pendingIntent);
+			notification.defaults = defaults;
+			manager.notify(id, notification);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public void setContentText(String content, int defaults) {
+		this.content = content;
+		if (notificationCompatBuilder != null) {
+			notificationCompatBuilder.setDefaults(defaults);
+			notificationCompatBuilder.setContentText(content);
+			manager.notify(id, notificationCompatBuilder.build());
+		} else if (notification != null) {
+			notification.setLatestEventInfo(context, title, content,
+					pendingIntent);
+			notification.defaults = defaults;
+			manager.notify(id, notification);
+		}
+	}
+
+	public void setPendingIntent(PendingIntent pendingIntent) {
+		this.pendingIntent = pendingIntent;
+		// 兼容高端机问题
+		if (notificationCompatBuilder != null) {
+			notificationCompatBuilder.setContentIntent(pendingIntent);
+		}
+	}
 }

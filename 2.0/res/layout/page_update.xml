@@ -6,28 +6,87 @@
 
     <include layout="@layout/template_webview_topbar" />
 
-    <LinearLayout
+    <ScrollView
         style="@style/container"
-        android:orientation="vertical"
-        android:paddingTop="0dp" >
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-        <WebView
-            android:id="@+id/webView1"
-            android:background="@null"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:scrollbars="vertical"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            android:layout_weight="1" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-        <Button
-                android:id="@+id/okBtn"
-                style="@style/primaryBtn"
-                android:visibility="gone"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="@string/COMMON_UPDAING_TXT" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/hasUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:src="@drawable/big_logo" />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:gravity="center"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/okBtn"
+                    style="@style/primaryBtn"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:text="@string/COMMON_UPDAING_TXT" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/noUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center"
+                    android:text="@string/SOFTWAREUPDATE_NO_UPDATE"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

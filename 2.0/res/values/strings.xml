@@ -308,4 +308,9 @@
     <string name="USERSETTINGS_TITLE">用户信息设置</string>
     <string name="USERSETTINGS_EMAIL_SPECIFY">请填写新邮箱地址</string>
     <string name="USERSETTINGS_EMAIL_INVALID">新邮箱地址不正确</string>
+    
+    <!-- 软件更新 -->
+    <string name="SOFTWAREUPDATE_LOADING">检查更新中...</string>
+    <string name="SOFTWAREUPDATE_UPDATE_DATE">发布时间：</string>
+    <string name="SOFTWAREUPDATE_NO_UPDATE">您当前使用的是最新版本</string>
 </resources>

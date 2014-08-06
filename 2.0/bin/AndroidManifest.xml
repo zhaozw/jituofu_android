@@ -448,6 +448,9 @@
             </intent-filter>
  
         </activity>
+
+        <service android:name=".base.BaseUpdateService" >
+        </service>
     </application>
 
 </manifest>
