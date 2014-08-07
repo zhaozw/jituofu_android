@@ -37,6 +37,7 @@ public class BaseUpdateService extends Service {
 	private final static int DOWNLOAD_FAIL = 1;
 
 	private PendingIntent updatePendingIntent = null;
+	private Intent intent;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -53,6 +54,8 @@ public class BaseUpdateService extends Service {
 	@SuppressLint("NewApi")
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		this.intent = intent;
+		
 		title = intent.getStringExtra("title");
 		fileName = intent.getStringExtra("fileName");
 		apkUrl = intent.getStringExtra("apkUrl");
@@ -94,10 +97,12 @@ public class BaseUpdateService extends Service {
 				baseNoti.setPendingIntent(updatePendingIntent);
 				baseNoti.setContentText(tip,
 						Notification.DEFAULT_SOUND, tip);
+				stopService(intent);
 				break;
 			case DOWNLOAD_FAIL:
 				tip = "下载失败";
 				baseNoti.setContentText(tip, Notification.DEFAULT_SOUND, tip);
+				stopService(intent);
 				break;
 			default:
 			}

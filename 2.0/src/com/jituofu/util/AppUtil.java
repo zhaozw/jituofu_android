@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -34,6 +35,8 @@ import com.jituofu.base.C;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -64,35 +67,63 @@ import android.widget.TextView;
 
 public class AppUtil {
 	/**
+	 * 检查某个服务是否已开启
+	 * 
+	 * @param context
+	 * @param PackageName
+	 * @return
+	 */
+	public static boolean isServiceStarted(Context context, String PackageName) {
+		boolean isRunning = false;
+		ActivityManager activityManager = (ActivityManager) context
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+				.getRunningServices(30);
+		if (!(serviceList.size() > 0)) {
+			return false;
+		}
+		for (int i = 0; i < serviceList.size(); i++) {
+			String cn = serviceList.get(i).service.getClassName();
+			if (cn.equals(PackageName) == true) {
+				isRunning = true;
+				break;
+			}
+		}
+		return isRunning;
+	}
+
+	/**
 	 * 强制转换个位到十位
+	 * 
 	 * @param value
 	 * @return
 	 */
-	public static String to2bit(int value){
-		if(value < 10){
-			return "0"+value;
+	public static String to2bit(int value) {
+		if (value < 10) {
+			return "0" + value;
 		}
-		
-		return value+"";
+
+		return value + "";
 	}
-	
+
 	/**
 	 * 是否是24小时制
+	 * 
 	 * @param context
 	 * @return
 	 */
-	public static boolean is24(Context context){
+	public static boolean is24(Context context) {
 		ContentResolver cv = context.getContentResolver();
-        String strTimeFormat = android.provider.Settings.System.getString(cv,
-                                           android.provider.Settings.System.TIME_12_24);
-        
-        if(strTimeFormat != null && strTimeFormat.equals("24"))       {
-              return true;
-        }
-        
-        return false;
+		String strTimeFormat = android.provider.Settings.System.getString(cv,
+				android.provider.Settings.System.TIME_12_24);
+
+		if (strTimeFormat != null && strTimeFormat.equals("24")) {
+			return true;
+		}
+
+		return false;
 	}
-	
+
 	/**
 	 * 获取当前时间：date time
 	 * 
@@ -532,6 +563,7 @@ public class AppUtil {
 
 	/**
 	 * 检查字符串是否是数字
+	 * 
 	 * @param str
 	 * @return
 	 */
@@ -543,20 +575,21 @@ public class AppUtil {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 四舍五入
+	 * 
 	 * @return
 	 */
 	@SuppressLint("DefaultLocale")
-	public static String toFixed(double value){
+	public static String toFixed(double value) {
 		String result = String.format("%.2f", value);
-		
-		//去除小数点后为0的数字
-		if(result.indexOf(".") != -1){
+
+		// 去除小数点后为0的数字
+		if (result.indexOf(".") != -1) {
 			String[] resultSplit = result.split("\\.");
-			if(resultSplit.length > 1){
-				if(Integer.parseInt(resultSplit[1]) <= 0){
+			if (resultSplit.length > 1) {
+				if (Integer.parseInt(resultSplit[1]) <= 0) {
 					result = resultSplit[0];
 				}
 			}
@@ -578,17 +611,18 @@ public class AppUtil {
 		} else if ((price.indexOf(".") == 0)
 				|| (price.indexOf(".") == price.length() - 1)) {
 			result = false;
-		} else if (price.indexOf(".") != -1){
+		} else if (price.indexOf(".") != -1) {
 			String[] priceSplit = price.split("\\.");
-			
-			if(!AppUtil.isNumeric(priceSplit[0]) || !AppUtil.isNumeric(priceSplit[1])){
+
+			if (!AppUtil.isNumeric(priceSplit[0])
+					|| !AppUtil.isNumeric(priceSplit[1])) {
 				result = false;
 			}
-		}else if(!AppUtil.isNumeric(price)){
+		} else if (!AppUtil.isNumeric(price)) {
 			result = false;
 		}
 
-			return result;
+		return result;
 	}
 
 	/**
@@ -790,13 +824,13 @@ public class AppUtil {
 
 		urlParams.put("clientId", deviceId);
 		try {
-			ui.doTaskAsync(C.TASK.storesettingsget, C.API.host + C.API.storesettingsget,
-					urlParams);
+			ui.doTaskAsync(C.TASK.storesettingsget, C.API.host
+					+ C.API.storesettingsget, urlParams);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * 根据当前设备的密度,获取真实的尺寸值
 	 * 
