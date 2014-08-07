@@ -149,7 +149,7 @@ public class UIRegister extends BaseUiForm {
 		urlParams.put("username", this.usernameVal);
 		urlParams.put("email", this.emailVal);
 		urlParams.put("password", this.passwordVal);
-		urlParams.put("REGISTER_CPASSWORD", this.REGISTER_CPASSWORDVal);
+		urlParams.put("cpassword", this.REGISTER_CPASSWORDVal);
 		urlParams.put("clientId", deviceId);
 
 		try {
