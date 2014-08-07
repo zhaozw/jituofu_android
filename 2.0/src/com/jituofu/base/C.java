@@ -22,6 +22,7 @@ public final class C {
 	    public static final String feedbackCacheFileName = "fd";
 	    public static final String storeSettingsCacheFileName = "ss";
 	    public static final String apksDirName = "/apks";//APK升级包目前
+	    public static final String tipUpdate = "tu";//是否有提示升级
 	}
 
 	public static final class COMMON {

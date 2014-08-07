@@ -12,8 +12,10 @@ import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -66,6 +68,30 @@ import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 public class AppUtil {
+	/**
+	 * 获取具体的星期几？
+	 * 
+	 * @param dt
+	 * @return
+	 */
+	public static String getWeekOfDate() {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+		String[] weekDays = { "星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六" };
+
+		try {
+			cal.setTime(simpleDateFormat.parse(AppUtil.getCurrentDateTime()));
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+		if (w < 0)
+			w = 0;
+		return weekDays[w];
+	}
+
 	/**
 	 * 检查某个服务是否已开启
 	 * 
