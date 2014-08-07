@@ -152,7 +152,7 @@ define(function (require, exports, module){
         }else{
             ft = new FileTransfer();
         }
-        ft.upload(imageURI, "http://115.29.39.106/controlers/upload.php?action=phonegap&t="+new Date().getTime(), win, fail, options);
+        ft.upload(imageURI, "http://10.0.2.2/controlers/upload.php?action=phonegap&t="+new Date().getTime(), win, fail, options);
         isUploading = true;
     } 
    

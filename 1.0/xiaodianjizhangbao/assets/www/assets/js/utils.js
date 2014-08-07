@@ -180,7 +180,7 @@ define(function (require, exports, module) {
             }, productInfo.productname, btns);
         },
         downloadUpdate: function (){
-            window.open('http://115.29.39.106/download/xiaodianjizhangbao.apk', '_system', 'location=yes');
+            window.open('http://10.0.2.2/download/xiaodianjizhangbao.apk', '_system', 'location=yes');
             navigator.app.exitApp();
         },
         prompt: function (msg, firstCallback, secondCallback, btns, defaultTxt){

@@ -121,7 +121,7 @@ public class DownloadService extends Service{
                 }
                 //下载函数，以QQ为例子
                 //增加权限<uses-permission android:name="android.permission.INTERNET">;
-                downloadUpdateFile("http://115.29.39.106/download/xiaodianjizhangbao.apk",updateFile);
+                downloadUpdateFile("http://10.0.2.2/download/xiaodianjizhangbao.apk",updateFile);
             }catch(Exception ex){
                 ex.printStackTrace();
                 message.what = DOWNLOAD_FAIL;

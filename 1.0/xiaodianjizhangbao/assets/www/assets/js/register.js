@@ -19,7 +19,7 @@ define(function (require, exports, module){
 //    function updateCheckcode(){
 //        var imgBox = $('#J-checkCodeImgBox');
 //        imgBox.html("<p>获取中...</p>");
-//        imgBox.append("<img src=\"http://115.29.39.106/models/captcha.php\" alt=\"验证码\" style='display:none;' />");
+//        imgBox.append("<img src=\"http://10.0.2.2/models/captcha.php\" alt=\"验证码\" style='display:none;' />");
 //        imgBox.find("img").on("load", function (){
 //            imgBox.find("p").remove();
 //            imgBox.find("img").show();
