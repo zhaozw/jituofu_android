@@ -105,7 +105,6 @@ define(function (require, exports, module){
 
             this.startTimeout = 1;
             console.log("发送: "+this.cfg.url, JSON.stringify(this.cfg.data));
-
             this.ajaxObj = $.ajax({
                 url: 'http://10.0.2.2/client.php'+"?t="+new Date().getTime(),
                 dataType: this.cfg.dataType,
