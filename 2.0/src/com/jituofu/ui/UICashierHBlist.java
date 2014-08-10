@@ -205,7 +205,7 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 	@Override
 	public void doSubmit() {
 		// TODO Auto-generated method stub
-		UICashier.showPreview(this);
+		UICashier.showPreview(this, UICashierHBlist.this);
 	}
 
 	@Override

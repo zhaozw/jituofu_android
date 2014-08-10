@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
+import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
@@ -65,6 +66,8 @@ import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class AppUtil {
