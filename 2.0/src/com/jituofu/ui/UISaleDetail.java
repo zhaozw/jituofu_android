@@ -106,7 +106,7 @@ public class UISaleDetail extends BaseUiAuth {
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_return_sale, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UISaleDetail.this);
 		baseDialogBuilder.setTitle("退货");
 
 		returnSaleDate = AppUtil.getCurrentDateTime();

@@ -21,6 +21,7 @@ import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -119,7 +120,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		onBind();
 	}
 
-	public static void showPreview(final BaseUi context) {
+	public static void showPreview(final BaseUi context, Activity activity) {
 		dateTimePicker = new BaseDateTimePicker(context);
 		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
 
@@ -222,7 +223,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		});
 
 		baseDialogBuilder = new BaseDialog.Builder(context);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, activity);
 
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
 				new DialogInterface.OnClickListener() {
@@ -687,11 +688,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 			if (validation(false)) {
 				addProduct2HBlist();
 			}
-			showPreview(this);
+			showPreview(this, UICashier.this);
 		} else {
 			if (validation(true)) {
 				addProduct2HBlist();
-				showPreview(this);
+				showPreview(this, UICashier.this);
 			}
 		}
 		validated = false;

@@ -106,10 +106,8 @@ public class UIStoreSettings extends BaseUiAuth implements BaseUiFormBuilder{
 	private void doUpdateNameTask(){
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_edit_text, null);
-		view.setMinimumWidth((int) (UIStoreSettings.this.getWindowManager()  
-                .getDefaultDisplay().getWidth() * 0.8));
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UIStoreSettings.this);
 		baseDialogBuilder.setTitle("更新" + this.getResources().getString(R.string.STORESETTINGS_NAME));
 		
 		final EditText newNameView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);

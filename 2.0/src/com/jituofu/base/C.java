@@ -23,6 +23,7 @@ public final class C {
 	    public static final String storeSettingsCacheFileName = "ss";
 	    public static final String apksDirName = "/apks";//APK升级包目前
 	    public static final String tipUpdate = "tu";//是否有提示升级
+	    public static final String tipPL = "pl";//是否有提示过评论
 	}
 
 	public static final class COMMON {
@@ -42,7 +43,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://192.168.1.101";
+		public static final String host = "http://192.168.1.102";
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";

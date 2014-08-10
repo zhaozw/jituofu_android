@@ -1,6 +1,7 @@
 package com.jituofu.base;
 
 import com.jituofu.R;
+import com.jituofu.ui.UIStoreSettings;
 import com.jituofu.util.AppUtil;
 
 import android.app.Activity;
@@ -93,8 +94,11 @@ public class BaseDialog extends Dialog {
          * @param v
          * @return
          */
-        public Builder setContentView(View v) {
+        public Builder setContentView(View v, Activity activity) {
             this.contentView = v;
+            this.contentView.setMinimumWidth((int) (activity.getWindowManager()  
+                    .getDefaultDisplay().getWidth() * 0.8));
+            
             return this;
         }
  
@@ -164,9 +168,7 @@ public class BaseDialog extends Dialog {
             View layout = inflater.inflate(R.layout.template_base_dialog, null);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-            lp.leftMargin = 0;
-            lp.rightMargin = 0;
-     
+            
             dialog.addContentView(layout, lp);
             // set the dialog title
             if(title == null){

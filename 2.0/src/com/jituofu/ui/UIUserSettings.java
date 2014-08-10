@@ -115,7 +115,7 @@ public class UIUserSettings extends BaseUiAuth implements BaseUiFormBuilder{
 		view.setMinimumWidth((int) (UIUserSettings.this.getWindowManager()  
                 .getDefaultDisplay().getWidth() * 0.8));
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UIUserSettings.this);
 		baseDialogBuilder.setTitle("更新" + this.getResources().getString(R.string.COMMON_EMAIL));
 		
 		final EditText newEmailView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);

@@ -118,7 +118,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_add_type, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UIChildType.this);
 		baseDialogBuilder.setTitle(R.string.SPFL_QUERY_ADDCHILDTXT);
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_OK,
 				new DialogInterface.OnClickListener() {
@@ -163,7 +163,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_edit_text, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UIChildType.this);
 		baseDialogBuilder.setTitle("编辑" + name);
 		
 		final EditText newNameView = (EditText) baseDialogBuilder.contentView.findViewById(R.id.editText);
@@ -231,7 +231,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 		LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 				R.layout.template_delete_child_type, null);
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setContentView(view);
+		baseDialogBuilder.setContentView(view, UIChildType.this);
 		baseDialogBuilder.setTitle("删除" + name);
 
 		RadioGroup rg = (RadioGroup) baseDialogBuilder.contentView

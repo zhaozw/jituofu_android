@@ -1,7 +1,10 @@
 package com.jituofu.ui;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.json.JSONObject;
 
@@ -30,6 +33,9 @@ public class UIPortal extends BaseUi {
 
 	private BaseDialog.Builder baseDialogBuilder;
 	private BaseDialog baseDialog;
+
+	private BaseDialog.Builder baseDialogBuilder2;
+	private BaseDialog baseDialog2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +104,8 @@ public class UIPortal extends BaseUi {
 	protected void onResume() {
 		super.onResume();
 
+		queryRank();
+
 		byte[] tipUpdate = StorageUtil.readInternalStoragePrivate(this,
 				C.DIRS.tipUpdate);
 
@@ -125,9 +133,92 @@ public class UIPortal extends BaseUi {
 		if (tipUpdateVal == null
 				&& (HttpUtil.getType(this) != 0 && HttpUtil.getType(this) != 2)
 				&& (week.equals("星期一") || week.equals("星期五"))) {
-			checkUpdate();
+			// 保证评论弹层和升级弹层只出现一次
+			if (baseDialog2 != null) {
+				baseDialog2.show();
+			} else {
+				checkUpdate();
+			}
 		} else {
-			AppUtil.fetchUserFromServer(getApplicationContext(), this);
+			// 保证评论弹层和升级弹层只出现一次
+			if (baseDialog2 != null) {
+				baseDialog2.show();
+			} else {
+				AppUtil.fetchUserFromServer(getApplicationContext(), this);
+			}
+		}
+	}
+
+	/**
+	 * 评价提示
+	 */
+	private void queryRank() {
+		byte[] tipPl = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.tipPL);
+
+		String tipPlVal = null;
+
+		if (tipPl.length > 0 && tipPl[0] != 0) {
+			try {
+				tipPlVal = new String(tipPl, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+
+		try {
+			cal.setTime(simpleDateFormat.parse(AppUtil.getCurrentDateTime()));
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int d = cal.get(Calendar.DAY_OF_MONTH);
+
+		// 每月5号，15号，25号，提示用户给评价
+		if (d % 5 == 0) {
+			if (tipPlVal == null) {
+				baseDialogBuilder2 = new BaseDialog.Builder(this);
+
+				LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
+						R.layout.page_pinglun, null);
+				baseDialogBuilder2.setContentView(view, UIPortal.this);
+				baseDialogBuilder2.setPositiveButton(R.string.PINGLUN_YES,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface di, int which) {
+								// TODO Auto-generated method stub
+								baseDialog2.dismiss();
+								StorageUtil.writeInternalStoragePrivate(
+										UIPortal.this, C.DIRS.tipPL, "true");
+								AppUtil.gotoMarket(UIPortal.this);
+							}
+						});
+				baseDialogBuilder2.setNegativeButton(R.string.PINGLUN_NO,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface di, int which) {
+								baseDialog2.dismiss();
+								StorageUtil.writeInternalStoragePrivate(
+										UIPortal.this, C.DIRS.tipPL, "true");
+								AppUtil.showLoadingPopup(UIPortal.this,
+										R.string.COMMON_DATAASYNC_TXT);
+
+								AppUtil.fetchUserFromServer(
+										getApplicationContext(), UIPortal.this);
+							}
+						});
+				baseDialog2 = baseDialogBuilder2.create();
+			}
+		} else {
+			StorageUtil.deleteInternalStoragePrivate(this, C.DIRS.tipPL);
+			baseDialog2 = null;
 		}
 	}
 
