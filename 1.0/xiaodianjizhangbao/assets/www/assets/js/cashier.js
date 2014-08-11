@@ -343,13 +343,13 @@ define(function (require, exports, module) {
             '</li>';
         $.each(data, function (i, d) {
             if(d.p_pic.indexOf("attachments") !== -1){
-                d.p_pic = "http://10.0.2.2/"+d.p_pic;
+                d.p_pic = "http://115.29.39.106/"+d.p_pic;
             }
 
             if(d.p_pic.indexOf("base64") < 0 && d.p_pic.indexOf("attachments") < 0){
                 var user = JSON.parse(localStorage.getItem("user"));
-                d.p_pic = "http://10.0.2.2/attachments/"+user.attachmentsDir + "/thumb_"+d.p_pic;
-            }
+                d.p_pic = "http://115.29.39.106/attachments/"+user.attachmentsDir + "/thumb_"+d.p_pic;
+            }alert(d.p_pic)
             var price = (d.p_price * 1).toFixed(2);
             price = price.split(".");
             d.p_price = price;

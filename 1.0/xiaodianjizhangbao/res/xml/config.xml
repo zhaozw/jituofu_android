@@ -30,7 +30,7 @@
         Apache Cordova Team
     </author>
 
-    <access origin="http://10.0.2.2/"/>
+    <access origin="http://115.29.39.106/"/>
     <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
     <plugin name="DatePickerPlugin" value="com.phonegap.plugins.DatePickerPlugin"/>
     <plugin name="WaitingDialog" value="com.phonegap.plugins.WaitingDialog"/>

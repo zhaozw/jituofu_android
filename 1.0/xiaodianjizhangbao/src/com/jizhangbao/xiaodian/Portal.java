@@ -139,7 +139,7 @@ class GetAppInfo extends AsyncTask<String, String, String> {
     InputStream inputStream = null;
     String result = ""; 
     
-    private static final String	host = "http://10.0.2.2/client.php"; 
+    private static final String	host = "http://115.29.39.106/client.php"; 
     private Portal portal;
     
     public GetAppInfo(Portal p){
