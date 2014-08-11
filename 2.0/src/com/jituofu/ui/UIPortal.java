@@ -186,7 +186,6 @@ public class UIPortal extends BaseUi {
 
 				LinearLayout view = (LinearLayout) LinearLayout.inflate(this,
 						R.layout.page_pinglun, null);
-				
 				baseDialogBuilder2.setContentView(view, UIPortal.this);
 				baseDialogBuilder2.setPositiveButton(R.string.PINGLUN_YES,
 						new DialogInterface.OnClickListener() {
