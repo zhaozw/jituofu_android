@@ -482,7 +482,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 				baseDialog.show();
 			} else {
 				baseNoti.create(UIFeedback.class, notificationTickerText,
-						notificationTitle, message.getMemo(), R.drawable.logo_noti, R.drawable.logo_noti);
+						notificationTitle, message.getMemo(), R.drawable.logo, R.drawable.logo_noti);
 
 				AppUtil.timer(new TimerTask() {
 
@@ -523,7 +523,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 				baseDialog.show();
 			} else {
 				baseNoti.create(UIFeedback.class, notificationTickerText,
-						notificationTitle, message.getMemo(), R.drawable.ic_launcher, R.drawable.sucess_small);
+						notificationTitle, message.getMemo(), R.drawable.logo, R.drawable.logo_noti);
 
 				AppUtil.timer(new TimerTask() {
 
