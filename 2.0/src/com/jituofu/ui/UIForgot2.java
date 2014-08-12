@@ -197,7 +197,7 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 						}
 					});
 			baseDialogBuilder
-					.setMessage(message.getMemo());
+					.setMessage(message.getMemo(), UIForgot2.this);
 			baseDialog = baseDialogBuilder.create();
 			baseDialog.setCanceledOnTouchOutside(false);
 			baseDialog.show();

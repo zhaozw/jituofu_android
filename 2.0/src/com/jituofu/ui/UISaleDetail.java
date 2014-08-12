@@ -251,7 +251,7 @@ public class UISaleDetail extends BaseUiAuth {
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
 			baseMesDialogBuilder = new BaseDialog.Builder(this);
-			baseMesDialogBuilder.setMessage(message.getMemo());
+			baseMesDialogBuilder.setMessage(message.getMemo(), UISaleDetail.this);
 			baseMesDialog = baseMesDialogBuilder.create();
 			baseMesDialog.show();
 			

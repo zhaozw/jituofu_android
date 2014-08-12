@@ -173,7 +173,7 @@ public class UIProductDetail extends BaseUiAuth implements BaseUiBuilder,
 	private void showUpdateResult(BaseMessage message) throws Exception {
 		updateFormStatus();
 
-		baseDialogBuilder.setMessage(message.getMemo());
+		baseDialogBuilder.setMessage(message.getMemo(), UIProductDetail.this);
 		baseDialog = baseDialogBuilder.create();
 		baseDialog.setCanceledOnTouchOutside(false);
 		baseDialog.show();

@@ -136,7 +136,7 @@ public class UISecurity extends BaseUiAuth {
 							logouted();
 						}
 					});
-			baseDialogBuilder.setMessage(message.getMemo());
+			baseDialogBuilder.setMessage(message.getMemo(), UISecurity.this);
 			baseDialog = baseDialogBuilder.create();
 			baseDialog.setCanceledOnTouchOutside(false);
 			baseDialog.show();

@@ -56,8 +56,9 @@ public class BaseDialog extends Dialog {
 		 * @param title
 		 * @return
 		 */
-		public Builder setMessage(String message) {
+		public Builder setMessage(String message, Activity activity) {
 			this.message = message;
+			this.activity = activity;
 			return this;
 		}
 
@@ -67,8 +68,9 @@ public class BaseDialog extends Dialog {
 		 * @param title
 		 * @return
 		 */
-		public Builder setMessage(int message) {
+		public Builder setMessage(int message, Activity activity) {
 			this.message = (String) context.getText(message);
+			this.activity = activity;
 			return this;
 		}
 

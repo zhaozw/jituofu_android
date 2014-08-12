@@ -483,7 +483,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 	 */
 	private void showTaskResult(String message) {
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setMessage(message);
+		baseDialogBuilder.setMessage(message, UIChildType.this);
 		baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
 				new DialogInterface.OnClickListener() {
 

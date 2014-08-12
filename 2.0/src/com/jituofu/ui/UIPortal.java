@@ -56,7 +56,7 @@ public class UIPortal extends BaseUi {
 		String log = Html.fromHtml(logs) + "";
 
 		baseDialogBuilder = new BaseDialog.Builder(this);
-		baseDialogBuilder.setMessage(log);
+		baseDialogBuilder.setMessage(log, UIPortal.this);
 		baseDialogBuilder.setTitle(R.string.SOFTWAREUPDATE_HAS_UPDATE);
 		baseDialogBuilder.setPositiveButton(R.string.COMMON_XZ,
 				new DialogInterface.OnClickListener() {

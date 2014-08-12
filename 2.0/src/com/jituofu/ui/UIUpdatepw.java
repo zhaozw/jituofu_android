@@ -109,7 +109,7 @@ public class UIUpdatepw extends BaseUiAuth {
 						}
 					});
 			baseDialogBuilder
-					.setMessage(message.getMemo());
+					.setMessage(message.getMemo(), UIUpdatepw.this);
 			baseDialog = baseDialogBuilder.create();
 			baseDialog.setCanceledOnTouchOutside(false);
 			baseDialog.show();

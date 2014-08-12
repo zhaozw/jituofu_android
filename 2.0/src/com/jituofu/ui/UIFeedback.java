@@ -76,7 +76,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.feedback);
-
+		
 		prepare();
 
 		onUpdate();
@@ -302,7 +302,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 				this.textareaView.setText(null);
 
 				baseDialogBuilder
-						.setMessage(R.string.FEEDBACK_SAVE2LOCAL_SUCCESS);
+						.setMessage(R.string.FEEDBACK_SAVE2LOCAL_SUCCESS, UIFeedback.this);
 				baseDialog = baseDialogBuilder.create();
 				baseDialog.show();
 				AppUtil.timer(new TimerTask() {
@@ -477,7 +477,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 								baseDialog.dismiss();
 							}
 						});
-				baseDialogBuilder.setMessage(message.getMemo());
+				baseDialogBuilder.setMessage(message.getMemo(), UIFeedback.this);
 				baseDialog = baseDialogBuilder.create();
 				baseDialog.show();
 			} else {
@@ -518,7 +518,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 								baseDialog.dismiss();
 							}
 						});
-				baseDialogBuilder.setMessage(message.getMemo());
+				baseDialogBuilder.setMessage(message.getMemo(), UIFeedback.this);
 				baseDialog = baseDialogBuilder.create();
 				baseDialog.show();
 			} else {
