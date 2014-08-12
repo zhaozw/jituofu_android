@@ -316,8 +316,9 @@ public class UISaleDetail extends BaseUiAuth {
 				((LinearLayout) typeView.getParent().getParent())
 						.setVisibility(View.GONE);
 			}
+			String remark = detail.getString("remark");
 			dateView.setText(detail.getString("date"));
-			remarkView.setText(detail.getString("remark"));
+			remarkView.setText(remark != null && !remark.equals("null") ? remark : "");
 			sellingCountView.setText(detail.getString("selling_count"));
 			sellingPrice.setText(AppUtil.toFixed(Double.parseDouble(detail
 					.getString("selling_price"))));
