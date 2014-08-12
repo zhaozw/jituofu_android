@@ -32,6 +32,13 @@ public class UIForgot extends BaseUi implements BaseUiFormBuilder,
 	private String username, email;
 
 	@Override
+	protected void onBrReceive(String type){
+		if(type.equals("RegisterAndLoginSuccess")){
+			this.finish();
+		}
+	}
+	
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.forgot);

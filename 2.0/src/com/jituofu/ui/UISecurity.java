@@ -126,6 +126,7 @@ public class UISecurity extends BaseUiAuth {
 			isLogout = true;
 
 			baseDialogBuilder = new BaseDialog.Builder(this);
+			baseDialogBuilder.setActivity(UISecurity.this);
 			baseDialogBuilder.setNegativeButton(R.string.COMMON_IKNOW,
 					new DialogInterface.OnClickListener() {
 

@@ -1,6 +1,7 @@
 package com.jituofu.ui;
 
 import java.util.HashMap;
+
 import com.jituofu.R;
 import com.jituofu.base.BaseDialog;
 import com.jituofu.base.BaseMessage;
@@ -33,6 +34,13 @@ public class UIForgot2 extends BaseUi implements BaseUiFormBuilder,
 	private String token, password, cpassword;
 	private String step = "2";
 
+	@Override
+	protected void onBrReceive(String type){
+		if(type.equals("RegisterAndLoginSuccess")){
+			this.finish();
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

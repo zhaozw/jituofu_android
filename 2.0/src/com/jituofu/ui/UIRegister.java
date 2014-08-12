@@ -11,6 +11,7 @@ import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -187,7 +188,13 @@ public class UIRegister extends BaseUiForm {
 				StorageUtil.writeInternalStoragePrivate(this,
 						C.DIRS.userIdFileName, userId);
 
-				this.forward(UIIhome.class);
+				//发送注册成功的广播
+				Intent broadcast = new Intent();
+				broadcast.setAction("com.jituofu.ui.RegisterAndLoginSuccess");
+				broadcast.putExtra("type", "RegisterAndLoginSuccess");
+				this.sendBroadcast(broadcast);
+				
+				this.forward(UIHome.class);
 			}
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());

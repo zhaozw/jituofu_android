@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+ 
     <!-- 公共部分 -->
+    <string name="COMMON_MISSION">让生意清晰可见</string>
     <string name="app_name">记托付</string>
     <string name="company_name">记恩公司</string>
     <string name="help">帮助</string>
@@ -24,6 +25,7 @@
     <string name="COMMON_SDCARDNOSPACE">SD卡没有存储空间</string>
     <string name="COMMON_USERNAME">用户名</string>
     <string name="COMMON_USERNAME_HINT">请填写用户名</string>
+    <string name="COMMON_USERNAME_HINT_XDJZB">可使用小店记账宝账号登录</string>
     <string name="COMMON_PASSWORD">密码</string>
     <string name="COMMON_GOTOREGISTER">免费注册</string>
     <string name="COMMON_GOTOFORGOTPW">忘记密码</string>
@@ -47,7 +49,7 @@
     <!-- 注册登录 -->
 
     <string name="REGISTER_USERNAME_TIPS">2到20位中英文或数字</string>
-    <string name="REGISTER_EMAIL_TIPS">用于找回密码的常用邮箱,如jizhangbao@qq.com</string>
+    <string name="REGISTER_EMAIL_TIPS">如jituofu@qq.com</string>
     <string name="REGISTER_PASSWORD_TIPS">6到50位登录密码</string>
     <string name="REGISTER_CPASSWORD">确认密码</string>
     <string name="REGISTER_CPASSWORD_hint">请再次填写登录密码</string>

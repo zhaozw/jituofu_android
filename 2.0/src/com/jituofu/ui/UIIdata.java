@@ -5,6 +5,7 @@ import com.jituofu.base.BaseListView;
 import com.jituofu.base.BaseUi;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,11 +16,17 @@ import android.widget.TextView;
 
 public class UIIdata extends BaseUi{
 	private TextView titleView;
+	private int sysVersion = Build.VERSION.SDK_INT;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.idata);
+		
+		if(sysVersion < 16){
+			LinearLayout topBar = (LinearLayout) this.findViewById(R.id.topbar2);
+			topBar.setVisibility(View.GONE);
+		}
 		
 		initView();
 		updateView();

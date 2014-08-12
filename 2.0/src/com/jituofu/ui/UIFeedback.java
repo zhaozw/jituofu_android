@@ -482,7 +482,7 @@ public class UIFeedback extends BaseUi implements BaseUiBuilder,
 				baseDialog.show();
 			} else {
 				baseNoti.create(UIFeedback.class, notificationTickerText,
-						notificationTitle, message.getMemo(), R.drawable.ic_launcher, R.drawable.ic_launcher);
+						notificationTitle, message.getMemo(), R.drawable.logo_noti, R.drawable.logo_noti);
 
 				AppUtil.timer(new TimerTask() {
 

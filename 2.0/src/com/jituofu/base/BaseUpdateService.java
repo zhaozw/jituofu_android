@@ -71,7 +71,7 @@ public class BaseUpdateService extends Service {
 
 		notificationTickerText = "正在下载更新...";
 		baseNoti.create(UIUpdate.class, notificationTickerText, title, "0%",
-				R.drawable.ic_launcher, R.drawable.ic_launcher);
+				R.drawable.logo_noti, R.drawable.logo_noti);
 
 		// 开启一个新的线程下载，如果使用Service同步下载，会导致ANR问题，Service本身也会阻塞
 		new Thread(new updateRunnable()).start();// 这个是下载的重点，是下载的过程

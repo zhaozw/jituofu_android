@@ -13,6 +13,7 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,13 @@ public class UIHelp extends BaseUi {
 	List<HashMap<String,String>> data;
 	ListView lv;
 
+	@Override
+	protected void onBrReceive(String type){
+		if(type.equals("RegisterAndLoginSuccess")){
+			this.finish();
+		}
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

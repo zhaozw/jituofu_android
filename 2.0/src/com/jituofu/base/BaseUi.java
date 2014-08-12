@@ -129,6 +129,7 @@ public class BaseUi extends Activity {
 		// 注册一个监听清除Activities堆栈的广播
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.jituofu.util.ClearActivitiesBroadcast");
+		filter.addAction("com.jituofu.ui.RegisterAndLoginSuccess");
 		BaseUi.this.registerReceiver(br, filter);
 	}
 

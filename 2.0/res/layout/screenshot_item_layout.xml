@@ -7,10 +7,10 @@
         android:id="@+id/iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="6dp"
         android:layout_marginRight="6dp"
+        android:layout_marginTop="6dp"
         android:scaleType="fitEnd"
-        android:src="@drawable/gray_logo" />
+        android:src="@drawable/default_img_placeholder" />
 
     <ImageButton
         android:id="@+id/delete"

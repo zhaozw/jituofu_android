@@ -30,7 +30,7 @@ public final class C {
 		public static final int TAG = R.string.app_name;
 		public static final String channelId = "官方";
 		public static final String versionName = "2.0.0";
-		public static final String localKey = "JTF_ANDROID";// 必须与服务端的localKey对应
+		public static final String localKey = "JITUOFU.COM";// 必须与服务端的localKey对应
 		public static final int camera = 10;// 从相机上传图片
 		public static final int gallery = 11;// 从图库片上传图片
 		public static final String productSubmit = "productSubmit";
@@ -43,7 +43,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://192.168.1.102";
+		public static final String host = "http://115.29.39.106:1111";//后面没有反斜线
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";
@@ -70,11 +70,11 @@ public final class C {
 		public static final String parenttypedetail = "/types/queryparentdetail";
 		public static final String productquerybytype = "/products/querybytype";
 		public static final String cashiercreate = "/cashier/create";
-		public static final String salesreport = "/salesreport/index";
-		public static final String returnsale = "/salesreport/returnsale";
-		public static final String storesettingsget = "/storesettings/get";
-		public static final String storesettingsupdate = "/storesettings/update";
-		public static final String softwareupdate = "/softwareversion/get";
+		public static final String salesreport = "/salesReport/index";
+		public static final String returnsale = "/salesReport/returnsale";
+		public static final String storesettingsget = "/storeSettings/get";
+		public static final String storesettingsupdate = "/storeSettings/update";
+		public static final String softwareupdate = "/softwareVersion/get";
 	}
 
 	public static final class ERROR {
