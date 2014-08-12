@@ -840,6 +840,23 @@ public class AppUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 更新用户最后登录时间
+	 * @param ctx
+	 * @param ui
+	 */
+	public static void updateLSID(BaseUi ui) {
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+
+		urlParams.put("date", AppUtil.getCurrentDateTime());
+		try {
+			ui.doTaskAsync(C.TASK.updatelsid, C.API.host + C.API.updatelsid,
+					urlParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 从服务器上获取商户信息

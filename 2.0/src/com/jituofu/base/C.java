@@ -37,8 +37,7 @@ public final class C {
 		public static final String productEdit = "productEdit";
 		public static final String warehouse = "warehouse";
 		public static final String cashier = "cashier";
-		public static final String aboutUrl = "http://jizhangbao.com.cn";
-		public static final String updateUrl = "http://taobao.com";
+		public static final String aboutUrl = "http://jituofu.com/about";
 	}
 
 	public static final class API {
@@ -75,6 +74,7 @@ public final class C {
 		public static final String storesettingsget = "/storeSettings/get";
 		public static final String storesettingsupdate = "/storeSettings/update";
 		public static final String softwareupdate = "/softwareVersion/get";
+		public static final String updatelsid = "/users/updatelsid";//更新最后登录时间
 	}
 
 	public static final class ERROR {
@@ -119,6 +119,7 @@ public final class C {
 		public static final int storesettingsget = 1031;
 		public static final int storesettingsupdate = 1032;
 		public static final int softwareupdate = 1033;
+		public static final int updatelsid = 1034;
 	}
 	
 	public static final class PASSWORDLENGTH{

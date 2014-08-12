@@ -255,6 +255,9 @@ public class UIPortal extends BaseUi {
 			bundle.putBoolean("hideBack", true);
 
 			if (resultStatus == 100) {
+				//更新最后登录时间
+				AppUtil.updateLSID(this);
+				
 				operation = message.getOperation();
 				boolean hasId = operation.has("id");
 				if (!hasId) {
@@ -280,6 +283,8 @@ public class UIPortal extends BaseUi {
 				this.finish();
 
 			}
+		}else if(taskId == C.TASK.updatelsid){
+			
 		}
 	}
 
