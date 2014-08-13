@@ -25,7 +25,7 @@ public class UIMore extends BaseUiAuth {
 	private int sysVersion = Build.VERSION.SDK_INT;
 
 	private TextView titleView;
-	private LinearLayout topBarView, updateView, aboutView, plView,
+	private LinearLayout topBarView, updateView, aboutView, plView, helpView,
 			feedbackView;
 
 	@Override
@@ -56,6 +56,7 @@ public class UIMore extends BaseUiAuth {
 		aboutView.setOnClickListener(new LinearLayoutClick());
 		plView.setOnClickListener(new LinearLayoutClick());
 		feedbackView.setOnClickListener(new LinearLayoutClick());
+		helpView.setOnClickListener(new LinearLayoutClick());
 	}
 
 	private void initView() {
@@ -65,6 +66,7 @@ public class UIMore extends BaseUiAuth {
 		aboutView = (LinearLayout) this.findViewById(R.id.about);
 		plView = (LinearLayout) this.findViewById(R.id.pl);
 		feedbackView = (LinearLayout) this.findViewById(R.id.feedback);
+		helpView = (LinearLayout) this.findViewById(R.id.help);
 	}
 
 	protected void updateView() {
@@ -94,7 +96,13 @@ public class UIMore extends BaseUiAuth {
 		feedbackViewIcon.setImageDrawable(this.getResources().getDrawable(
 				R.drawable.fankui));
 		feedbackViewTxt.setText(R.string.feedbackTitle);
-		feedbackView.findViewById(R.id.border).setVisibility(View.INVISIBLE);
+		
+		ImageView helpViewIcon = (ImageView) helpView.findViewById(R.id.icon);
+		TextView helpViewTxt = (TextView) helpView.findViewById(R.id.txt);
+		helpViewIcon.setImageDrawable(this.getResources().getDrawable(
+				R.drawable.bangzhu));
+		helpViewTxt.setText(R.string.helpCenter);
+		helpView.findViewById(R.id.border).setVisibility(View.INVISIBLE);
 	}
 
 	class LinearLayoutClick implements OnClickListener {
@@ -112,6 +120,9 @@ public class UIMore extends BaseUiAuth {
 				break;
 			case R.id.feedback:
 				forward(UIFeedback.class);
+				break;
+			case R.id.help:
+				forward(UIHelp.class);
 				break;
 			default:
 				break;
