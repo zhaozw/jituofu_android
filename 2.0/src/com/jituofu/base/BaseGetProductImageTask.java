@@ -52,13 +52,16 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 		}
 		if (imageViewReference != null) {
 			ImageView view = (ImageView) imageViewReference.get();
-			if (result != null) {
-				view.setImageURI(result);
-				view.setBackgroundResource(0);
-			} else {
-				view.setImageURI(null);
-				view.setBackgroundResource(R.drawable.default_img_placeholder);
+			if (view != null) {
+				if (result != null) {
+					view.setImageURI(result);
+					view.setBackgroundResource(0);
+				} else {
+					view.setImageURI(null);
+					view.setBackgroundResource(R.drawable.default_img_placeholder);
+				}
 			}
+
 		}
 	}
 

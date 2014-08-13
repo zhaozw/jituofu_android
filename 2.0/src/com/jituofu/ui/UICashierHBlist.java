@@ -273,16 +273,16 @@ public class UICashierHBlist extends BaseUiAuth implements BaseUiFormBuilder {
 			}
 
 			holder.getNameView().setText(map.get("name"));
-			holder.getCountView().setText("数量：" + map.get("sellingCount"));
-			holder.getDjView().setText("销售单价：" + map.get("sellingPrice"));
+			holder.getCountView().setText(getString(R.string.CASHIER_XSSL)+"：" + map.get("sellingCount"));
+			holder.getDjView().setText(getString(R.string.CASHIER_SELLING_PRICE)+"：" + map.get("sellingPrice"));
 
 			double sellingPrice = Double.parseDouble(map.get("sellingPrice"));
 			double sellingCount = Double.parseDouble(map.get("sellingCount"));
 			holder.getPriceView()
 					.setText(
-							"小计："
+							getString(R.string.CASHIER_XJ)+"："
 									+ AppUtil.toFixed(sellingCount
-											* sellingPrice) + " 元");
+											* sellingPrice));
 
 			holder.getPicView().setImageURI(null);
 			holder.getPicView().setBackgroundResource(

@@ -27,14 +27,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.DialogInterface.OnDismissListener;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
@@ -62,7 +65,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private boolean validated = false;
 
 	private LinearLayout productpreviewView;
-	private TextView topBar2RightView, gotojrxsView;
+	private TextView topBar2RightView, gotojrxsView, deleteView;
 	private EditText nameView, priceView, sellingCountView, sellingPriceView,
 			remarkView;
 	private RelativeLayout flyView, hbView;
@@ -192,8 +195,11 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					.findViewById(R.id.name);
 			TextView sellingcountView = (TextView) productItemView
 					.findViewById(R.id.sellingcount);
+			TextView sellingpriceView = (TextView) productItemView
+					.findViewById(R.id.sellingprice);
 
 			sellingcountView.setText("数量：" + map.get("sellingCount"));
+			sellingpriceView.setText("单价(元)：" + map.get("sellingPrice"));
 			nameView.setText(map.get("name"));
 			picView.setImageURI(null);
 			picView.setBackgroundResource(R.drawable.default_img_placeholder);
@@ -399,6 +405,36 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	private void onBind() {
+		deleteView.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				currentProduct = null;
+				productpreviewView.setVisibility(View.GONE);
+				enableEditText();
+				nameView.setText("");
+				priceView.setText("");
+			}
+		});
+		deleteView.setOnTouchListener(new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				switch(event.getAction()){
+				case MotionEvent.ACTION_DOWN:
+					v.setBackgroundColor(Color.parseColor("#d1d1d1"));
+					deleteView.setTextColor(Color.parseColor("#ffffff"));
+					break;
+				case MotionEvent.ACTION_UP:
+					v.setBackgroundColor(Color.parseColor("#e2e2e2"));
+					deleteView.setTextColor(Color.parseColor("#666666"));
+					break;
+				}
+				return false;
+			}});
+		
 		gotojrxsView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -589,6 +625,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		okBtnView = (Button) findViewById(R.id.okBtn);
 		productpreviewView = (LinearLayout) findViewById(R.id.productpreview);
 		topBar2RightView = (TextView) findViewById(R.id.topBar2Right);
+		deleteView = (TextView) findViewById(R.id.delete);
 
 		nameView = (EditText) findViewById(R.id.name);
 		priceView = (EditText) findViewById(R.id.jjprice);

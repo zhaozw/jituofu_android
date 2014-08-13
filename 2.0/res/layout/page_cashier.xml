@@ -28,21 +28,25 @@
                     <LinearLayout
                         android:id="@+id/productpreview"
                         style="@style/box1"
+                        android:visibility="gone"
                         android:layout_marginBottom="10dp"
-                        android:orientation="horizontal"
-                        android:padding="15dp"
-                        android:visibility="gone" >
+                        android:orientation="horizontal" >
 
                         <ImageView
                             android:id="@+id/productpreview_img"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:layout_marginRight="10dp "
+                            android:layout_margin="15dp"
+                            android:layout_marginRight="10dp"
                             android:src="@drawable/default_img_placeholder" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_marginBottom="15dp"
+                            android:layout_marginRight="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_weight="1"
                             android:orientation="vertical" >
 
                             <TextView
@@ -62,12 +66,23 @@
                                 android:textColor="@color/normalTxt"
                                 android:textSize="16sp" />
                         </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/delete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="#e2e2e2"
+                            android:gravity="center"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="@string/COMMON_DELETETXT"
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout style="@style/box1" >
 
                         <RelativeLayout style="@style/field" >
- 
+
                             <TextView
                                 android:id="@+id/textView1"
                                 style="@style/label.cashier"
@@ -232,23 +247,23 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/fly"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/base_fly_bg"
+        android:gravity="center"
         android:padding="3dp"
-        android:gravity="center" >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+1"
-            android:textStyle="bold"
             android:textColor="#ffffff"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 </RelativeLayout>
