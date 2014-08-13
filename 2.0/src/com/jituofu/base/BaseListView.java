@@ -11,6 +11,7 @@ package com.jituofu.base;
 import com.jituofu.R;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -83,6 +84,10 @@ public class BaseListView extends ListView implements OnScrollListener {
 	}
 
 	private void initWithContext(Context context) {
+		//去除黑色背景
+		this.setCacheColorHint(Color.TRANSPARENT);
+		this.setAlwaysDrawnWithCacheEnabled(true);
+		
 		mScroller = new Scroller(context, new DecelerateInterpolator());
 		// XListView need the scroll event, and it will dispatch the event to
 		// user's listener (as a proxy).
