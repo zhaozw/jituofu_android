@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,8 @@ import com.jituofu.util.AppUtil;
 
 public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		BaseListViewListener {
+	private Double sdkVersion = 0.0;
+
 	private BaseGetProductImageTask bpit;
 
 	// 查询分类相关
@@ -76,6 +79,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_warehouse_parenttype_detail);
+
+		try {
+			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0, 3));
+		} catch (Exception e) {
+
+		}
 
 		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.CHINA);
@@ -137,7 +146,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				// TODO Auto-generated method stub
 				if (sort.equals("1")) {
 					sort = "2";
-					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					}
+					
 					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rksjView
 							.findViewById(R.id.arrow);
@@ -145,7 +159,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				} else {
 					sort = "1";
-					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					}
+					
 					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rksjView
 							.findViewById(R.id.arrow);
@@ -171,7 +190,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				// TODO Auto-generated method stub
 				if (sort.equals("4")) {
 					sort = "3";
-					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					}
+					
 					TextView txt = (TextView) jjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) jjView
 							.findViewById(R.id.arrow);
@@ -179,14 +203,19 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
 				} else {
 					sort = "4";
-					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					}
+					
 					TextView txt = (TextView) jjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) jjView
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				}
-				
+
 				Collections.sort(dataList, new SortByPrice());
 				customProductsAdapter.notifyDataSetChanged();
 			}
@@ -204,7 +233,8 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				Bundle bundle = new Bundle();
 
 				if (extraBundle != null
-						&& extraBundle.getString("from") != null && extraBundle.getString("from").equals(
+						&& extraBundle.getString("from") != null
+						&& extraBundle.getString("from").equals(
 								C.COMMON.cashier)) {// 来自记账台查找商品
 					bundle.putString("from", extraBundle.getString("from"));
 					if (onlyProducts) {
@@ -536,7 +566,12 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		((TextView) noDataView.findViewById(R.id.action_btn))
 				.setVisibility(View.GONE);
 		if (sort.equals("1")) {
-			rksjView.setBackgroundResource(R.drawable.base_rt_rb_round);
+			if (sdkVersion < 4) {
+				rksjView.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
+			} else {
+				rksjView.setBackgroundResource(R.drawable.base_rt_rb_round);
+			}
+
 			TextView txt = (TextView) rksjView.findViewById(R.id.txt);
 			ImageView arrow = (ImageView) rksjView.findViewById(R.id.arrow);
 			txt.setTextColor(Color.rgb(255, 255, 255));

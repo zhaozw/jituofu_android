@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,6 +60,8 @@ import com.jituofu.util.DateUtil;
 
 public class UISalesReportProductList extends BaseUiAuth implements
 		BaseListViewListener {
+	private Double sdkVersion = 0.0;
+	
 	private BaseGetProductImageTask bpit;
 
 	private TextView titleView;
@@ -85,6 +88,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_salesreport_splist);
 
+		try {
+			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0, 3));
+		} catch (Exception e) {
+
+		}
+		
 		extraBundle = this.getIntent().getExtras();
 		if (extraBundle != null) {
 			start = extraBundle.getString("start");
@@ -215,7 +224,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				// TODO Auto-generated method stub
 				if (sort.equals("1")) {
 					sort = "2";
-					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					}
+					
 					TextView txt = (TextView) rqView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rqView
 							.findViewById(R.id.arrow);
@@ -223,7 +237,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				} else {
 					sort = "1";
-					v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_lt_lb_round);
+					}
+					
 					TextView txt = (TextView) rqView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rqView
 							.findViewById(R.id.arrow);
@@ -256,7 +275,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				// TODO Auto-generated method stub
 				if (sort.equals("4")) {
 					sort = "3";
-					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					}
+					
 					TextView txt = (TextView) slView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) slView
 							.findViewById(R.id.arrow);
@@ -264,7 +288,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
 				} else {
 					sort = "4";
-					v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					if (sdkVersion < 4) {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
+					} else {
+						v.setBackgroundResource(R.drawable.base_rt_rb_round);
+					}
+					
 					TextView txt = (TextView) slView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) slView
 							.findViewById(R.id.arrow);
@@ -286,7 +315,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					+ endSplit[1] + "-" + endSplit[2]);
 		}
 		if (sort.equals("1")) {
-			rqView.setBackgroundResource(R.drawable.base_lt_lb_round);
+			if (sdkVersion < 4) {
+				rqView.setBackgroundResource(R.drawable.base_lt_lb_round_3_0);
+			} else {
+				rqView.setBackgroundResource(R.drawable.base_lt_lb_round);
+			}
+			
 			TextView txt = (TextView) rqView.findViewById(R.id.txt);
 			ImageView arrow = (ImageView) rqView.findViewById(R.id.arrow);
 			txt.setTextColor(Color.rgb(255, 255, 255));
