@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -281,21 +282,28 @@ public class UISaleDetail extends BaseUiAuth {
 			String pic = detail.getString("pic");
 			if (pic != null && pic.length() > 0) {
 				bpit = new BaseGetProductImageTask(picView, pic,
-						detail.getString("pid"));
+						detail.getString("pid")){
+					@Override
+					protected void onPostExecute(Uri result) {
+						super.onPostExecute(result);
+						if (this.isCancelled()) {
+							return;
+						}
+						if (picView != null) {
+							if (result != null) {
+								picView.setImageURI(result);
+								picView.setBackgroundResource(0);
+							} else {
+								picView.setImageURI(null);
+								picView.setBackgroundResource(R.drawable.default_img_placeholder);
+								resetImgViewLayout();
+							}
+						}
+					}
+				};
 				bpit.execute();
 			} else {
-				picView.setScaleType(ScaleType.CENTER);
-
-				RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-						RelativeLayout.LayoutParams.WRAP_CONTENT,
-						RelativeLayout.LayoutParams.WRAP_CONTENT);
-				lp.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-				lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-				lp.alignWithParent = true;
-				lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-				lp.addRule(RelativeLayout.CENTER_VERTICAL);
-				lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-				picView.setLayoutParams(lp);
+				resetImgViewLayout();
 				picView.setImageDrawable(this.getResources().getDrawable(
 						R.drawable.default_img_placeholder));
 			}
@@ -326,6 +334,21 @@ public class UISaleDetail extends BaseUiAuth {
 					* Double.parseDouble(detail.getString("selling_price"));
 			hjView.setText(AppUtil.toFixed(hj));
 		}
+	}
+	
+	private void resetImgViewLayout(){
+		picView.setScaleType(ScaleType.CENTER);
+
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		lp.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+		lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+		lp.alignWithParent = true;
+		lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		lp.addRule(RelativeLayout.CENTER_VERTICAL);
+		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		picView.setLayoutParams(lp);
 	}
 
 	private void initView() {

@@ -232,24 +232,46 @@ public class UIProductDetail extends BaseUiAuth implements BaseUiBuilder,
 		typeView.setText(typeName);
 
 		if (pic != null) {
-			bpit = new BaseGetProductImageTask(imgPicView, pic, id);
+			bpit = new BaseGetProductImageTask(imgPicView, pic, id){
+				@Override
+				protected void onPostExecute(Uri result) {
+					super.onPostExecute(result);
+					if (this.isCancelled()) {
+						return;
+					}
+					if (imgPicView != null) {
+						if (result != null) {
+							imgPicView.setImageURI(result);
+							imgPicView.setBackgroundResource(0);
+						} else {
+							imgPicView.setImageURI(null);
+							imgPicView.setBackgroundResource(R.drawable.default_img_placeholder);
+							resetImgViewLayout();
+						}
+					}
+				}
+			};
 			bpit.execute();
 		}
 
 		if (pic == null || pic.length() <= 0) {
-			imgPicView.setScaleType(ScaleType.CENTER);
-
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-					RelativeLayout.LayoutParams.WRAP_CONTENT,
-					RelativeLayout.LayoutParams.WRAP_CONTENT);
-			lp.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-			lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
-			lp.alignWithParent = true;
-			lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-			lp.addRule(RelativeLayout.CENTER_VERTICAL);
-			lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-			imgPicView.setLayoutParams(lp);
+			resetImgViewLayout();
 		}
+	}
+	
+	private void resetImgViewLayout(){
+		imgPicView.setScaleType(ScaleType.CENTER);
+
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+				RelativeLayout.LayoutParams.WRAP_CONTENT,
+				RelativeLayout.LayoutParams.WRAP_CONTENT);
+		lp.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+		lp.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+		lp.alignWithParent = true;
+		lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		lp.addRule(RelativeLayout.CENTER_VERTICAL);
+		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+		imgPicView.setLayoutParams(lp);
 	}
 
 	@Override
