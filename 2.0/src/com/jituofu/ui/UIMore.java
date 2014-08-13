@@ -14,6 +14,7 @@ import com.jituofu.util.StorageUtil;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -27,6 +28,12 @@ public class UIMore extends BaseUiAuth {
 	private LinearLayout topBarView, updateView, aboutView, plView,
 			feedbackView;
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		UIGlobalTabView.tabHost.setCurrentTab(1);
+		return true;
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +69,7 @@ public class UIMore extends BaseUiAuth {
 
 	protected void updateView() {
 		titleView.setText(R.string.moretitle);
+		((LinearLayout) topBarView.findViewById(R.id.back)).setVisibility(View.GONE);
 
 		ImageView updateViewIcon = (ImageView) updateView.findViewById(R.id.icon);
 		TextView updateViewTxt = (TextView) updateView.findViewById(R.id.txt);

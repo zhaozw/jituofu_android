@@ -1,6 +1,7 @@
 package com.jituofu.ui;
 
 import com.jituofu.R;
+
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -17,7 +18,7 @@ import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
 public class UITabActivity extends TabActivity implements TabHost.OnTabChangeListener {
-
+	
 	@Override
 	public void onTabChanged(String tabId) {
 

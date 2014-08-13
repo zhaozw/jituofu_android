@@ -32,6 +32,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver;
@@ -91,7 +92,20 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private static int year, month, day, hour, minute, second;
 	private static TextView dateView;
 	private static String time;
+	private static boolean isJZing = false;//是否正在记账 
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(isJZing){
+			isJZing = false;
+			return super.onKeyDown(keyCode, event);
+		}else{
+			isJZing = false;
+			UIGlobalTabView.tabHost.setCurrentTab(1);
+			return true;
+		}
+	}
+	
 	protected void onBrReceive(String type) {
 		if (type.equals("ClearForm")) {
 			resetForm();
@@ -121,6 +135,8 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	}
 
 	public static void showPreview(final BaseUi context, Activity activity) {
+		isJZing = true;
+		
 		dateTimePicker = new BaseDateTimePicker(context);
 		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
 
@@ -240,9 +256,17 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					@Override
 					public void onClick(DialogInterface di, int which) {
 						baseDialog.dismiss();
+						isJZing = false;
 					}
 				});
 		baseDialog = baseDialogBuilder.create();
+		baseDialog.setOnDismissListener(new OnDismissListener(){
+
+			@Override
+			public void onDismiss(DialogInterface di) {
+				// TODO Auto-generated method stub
+				isJZing = false;
+			}});
 		baseDialog.show();
 	}
 
@@ -638,6 +662,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		int resultStatus = message.getResultStatus();
 		JSONObject operation = message.getOperation();
 		if (resultStatus == 100) {
+			isJZing = false;
 			submitSuccess(this, operation);
 			resetForm();
 			updateHBListCount();

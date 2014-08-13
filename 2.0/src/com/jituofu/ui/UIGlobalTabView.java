@@ -1,6 +1,7 @@
 package com.jituofu.ui;
 
 import com.jituofu.R;
+
 import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,9 +21,9 @@ import android.widget.TextView;
 
 @SuppressWarnings("deprecation")
 public class UIGlobalTabView extends UITabActivity {
-	private TabHost tabHost;
+	public static TabHost tabHost;
 	int sysVersion = Build.VERSION.SDK_INT;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
