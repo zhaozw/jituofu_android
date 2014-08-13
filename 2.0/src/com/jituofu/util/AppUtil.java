@@ -620,6 +620,8 @@ public class AppUtil {
 			if (resultSplit.length > 1) {
 				if (Integer.parseInt(resultSplit[1]) <= 0) {
 					result = resultSplit[0];
+				}else if(Integer.parseInt(resultSplit[1]) % 10 == 0){
+					result = resultSplit[0]+"."+Integer.parseInt(resultSplit[1]) / 10;
 				}
 			}
 		}

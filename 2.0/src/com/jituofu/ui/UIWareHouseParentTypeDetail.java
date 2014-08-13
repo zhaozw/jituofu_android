@@ -269,6 +269,11 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 							forward(UIWareHouseParentTypeDetailChildtypeList.class,
 									bundle);
 						}
+					}else if(onlyChildTypes){
+						bundle.putString("parentTypeData", parentTypeData.toString());
+						bundle.putString("data", map.toString());
+						forward(UIWareHouseParentTypeDetailProductsList.class,
+								bundle);
 					}
 				}
 

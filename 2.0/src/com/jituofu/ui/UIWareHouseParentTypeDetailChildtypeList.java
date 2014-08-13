@@ -112,7 +112,7 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 				
 				// 来自记账台页面查询商品
 				if (extraBundle != null
-						&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+						&& extraBundle.getString("from") != null && extraBundle.getString("from").equals(C.COMMON.cashier)) {
 					bundle.putString("from", extraBundle.getString("from"));
 					forwardForResult(UIWareHouseParentTypeDetailProductsList.class, UICashier.TAG, 
 							bundle);
@@ -251,7 +251,7 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		// 来自记账台页面查询商品
 		if (extraBundle != null
-				&& extraBundle.getString("from").equals(C.COMMON.cashier)) {
+				&& extraBundle.getString("from") != null && extraBundle.getString("from").equals(C.COMMON.cashier)) {
 			((TextView) noDataView.findViewById(R.id.action_btn))
 					.setVisibility(View.GONE);
 		}

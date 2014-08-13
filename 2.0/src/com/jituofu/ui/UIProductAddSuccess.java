@@ -59,6 +59,7 @@ public class UIProductAddSuccess extends BaseUiAuth {
 				Bundle bundle = new Bundle();
 				bundle.putString("id", id);
 				forward(UIProductDetail.class, bundle);
+				finish();
 			}});
 	}
 	
@@ -75,8 +76,9 @@ public class UIProductAddSuccess extends BaseUiAuth {
 			date = extraBundle.getString("date");
 			
 			nameView.setText(name);
+			titleView.setText(name);
 			priceView.setText("进价："+price+" 元");
-			countView.setText("本次入库："+count);
+			countView.setText("入库："+count);
 			if(pic != null && pic.length() > 0){
 				BaseGetProductImageTask bpit = new BaseGetProductImageTask(
 						picView, pic, id);
@@ -95,10 +97,13 @@ public class UIProductAddSuccess extends BaseUiAuth {
 		priceView = (TextView) findViewById(R.id.price);
 		typeView = (TextView) findViewById(R.id.type);
 		
+		nameView.setVisibility(View.GONE);
+		
 		productInfoView = (LinearLayout) findViewById(R.id.productInfo);
 		
 		jzrkBtnView = (Button) findViewById(R.id.jzrkBtn);
 		gotoJztBtnView = (Button) findViewById(R.id.gotoJztBtn);
+		gotoJztBtnView.setVisibility(View.GONE);
 		
 		picView = (ImageView) findViewById(R.id.pic);
 		

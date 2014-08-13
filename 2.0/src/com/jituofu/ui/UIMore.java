@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import com.jituofu.R;
 import com.jituofu.base.BaseMessage;
+import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.util.AppUtil;
@@ -21,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class UIMore extends BaseUiAuth {
+public class UIMore extends BaseUi {
 	private int sysVersion = Build.VERSION.SDK_INT;
 
 	private TextView titleView;

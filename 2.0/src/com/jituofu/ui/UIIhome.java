@@ -134,7 +134,15 @@ public class UIIhome extends BaseUiAuth {
 		TextView email = (TextView) findViewById(R.id.email);
 
 		byte[] userInfo = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userInfoFileName);
+		byte[] storeSetting = StorageUtil.readInternalStoragePrivate(this, C.DIRS.storeSettingsCacheFileName);
+		
 		String userInfoVal = null;
+		String storeSettingVal = null;
+		
+		if (storeSetting.length > 0 && storeSetting[0] != 0) {
+			storeSettingVal = new String(storeSetting, "UTF-8");
+		}
+		
 		if (userInfo.length > 0 && userInfo[0] != 0) {
 			userInfoVal = new String(userInfo, "UTF-8");
 		} else {
@@ -164,7 +172,19 @@ public class UIIhome extends BaseUiAuth {
 				int sysVersion = Build.VERSION.SDK_INT;
 				if (sysVersion >= 16) {
 					TextView title = (TextView) findViewById(R.id.title);
-					title.setText(ui.getString("username"));
+					
+					//如果有设置了商户名称就使用商户名称做标题
+					if(storeSettingVal != null){
+						JSONObject ss = new JSONObject(storeSettingVal);
+						
+						if(ss.has("name") && ss.getString("name").length() > 0){
+							title.setText(ss.getString("name"));
+						}else{
+							title.setText(ui.getString("username"));
+						}
+					}else{
+						title.setText(ui.getString("username"));
+					}
 				}
 
 			} catch (JSONException e) {

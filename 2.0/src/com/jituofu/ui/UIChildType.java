@@ -392,11 +392,12 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 
 				// 初始化加载时，没有数据显示无数据提示
 				if (initQuery && types.length() <= 0) {
+					editView.setVisibility(View.GONE);
 					lv.setVisibility(View.GONE);
 					againView.setVisibility(View.GONE);
 					noDataView.setVisibility(View.VISIBLE);
 					((TextView) noDataView.findViewById(R.id.txt))
-							.setText(R.string.SPFL_QUERY_NODATA);
+							.setText(R.string.SPFL_QUERY_NOCHILDDATA);
 					((TextView) noDataView.findViewById(R.id.action_btn))
 							.setText(R.string.SPFL_QUERY_ADDTXT);
 					
@@ -421,6 +422,8 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 								
 								finish();
 							}});
+						((TextView) noDataView.findViewById(R.id.txt))
+						.setText(R.string.SPFL_QUERY_NOCHILDDATA);
 						((TextView) noDataView.findViewById(R.id.action_btn))
 						.setText(R.string.SPFL_USE_PARENT);
 					}
@@ -443,6 +446,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 				type.put(operation);
 				addList(type);
 				baseDialog.dismiss();
+				editView.setVisibility(View.VISIBLE);
 				break;
 			case C.TASK.typesdeletecp:
 			case C.TASK.typesdeletemp:
@@ -453,6 +457,7 @@ public class UIChildType extends BaseUiAuth implements OnClickListener,
 
 				int dataListCount = this.dataList.size();
 				if(dataListCount <= 0){
+					editView.setVisibility(View.GONE);
 					lv.setVisibility(View.GONE);
 					noDataView.setVisibility(View.VISIBLE);
 					((TextView) noDataView.findViewById(R.id.txt))

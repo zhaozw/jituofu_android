@@ -222,7 +222,7 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 						.getItemAtPosition(position);
 
 				if (extraBundle != null
-						&& extraBundle.getString("from").equals(
+						&& extraBundle.getString("from") != null && extraBundle.getString("from").equals(
 								C.COMMON.cashier)) {//来自记账台查询商品页面
 					Intent intent = new Intent();
 					intent.putExtra("from", extraBundle.getString("from"));
@@ -456,7 +456,6 @@ public class UIWareHouseParentTypeDetailProductsList extends BaseUiAuth
 		((TextView) noDataView.findViewById(R.id.action_btn))
 				.setVisibility(View.GONE);
 		if (sort.equals("1")) {
-			this.showToast(AppUtil.getVersion(this));
 			if (sdkVersion < 4) {
 				rksjView.setBackgroundResource(R.drawable.base_rt_rb_round_3_0);
 			} else {
