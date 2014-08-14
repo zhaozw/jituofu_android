@@ -26,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,7 @@ import com.jituofu.util.DateUtil;
 public class UISalesReportProductList extends BaseUiAuth implements
 		BaseListViewListener {
 	BaseGetProductImageTask bpit;
-	
+
 	private Double sdkVersion = 0.0;
 
 	private TextView titleView;
@@ -159,7 +160,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 		}
 		waitLoadProductsImg = new JSONArray();
 	}
-	
+
 	private void renderList(JSONArray salesList) throws JSONException {
 		// 初始化加载没有数据
 		if (initQuery && salesList.length() <= 0) {
@@ -249,7 +250,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 			}
 		});
-		
+
 		lvView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -397,7 +398,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 		}
 	}
-	
+
 	private void updateView() {
 		if (start != null && end != null) {
 			String[] startSplit = start.split("-");
@@ -507,7 +508,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 	@Override
 	protected void onTaskAsyncStop() {
 		super.onTaskAsyncStop();
-		//onLoad();
+		// onLoad();
 	}
 
 	public void onNetworkError(int taskId) {
@@ -618,7 +619,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 				try {
 					holder.getCountView().setText(
-							"总数量：" + saleData.getString("selling_count"));
+							getString(R.string.SALESREPORT_SORT_SLTXT) + "："
+									+ saleData.getString("selling_count"));
 					holder.getNameView().setText(saleData.getString("name"));
 					holder.getPriceView().setVisibility(View.VISIBLE);
 					holder.getPriceView()
@@ -627,7 +629,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 											+ "："
 											+ AppUtil.toFixed(Double.parseDouble(saleData
 													.getString("selling_price"))));
-					
+
 					JSONObject loadImg = new JSONObject();
 					try {
 						loadImg.put("position", position);
@@ -643,8 +645,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					holder.getPicView().setTag(saleData.get("id"));
 
 					if (hasRoot && hasProductDirPath) {
-						String oldFileName = productDirPath + "/" + saleData.get("id")
-								+ ".png";
+						String oldFileName = productDirPath + "/"
+								+ saleData.get("id") + ".png";
 						File file = new File(oldFileName);
 						// 如果图片存在本地缓存目录，则不去服务器下载
 						if (file.exists()) {
@@ -672,7 +674,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				JSONArray products;
 				try {
 					holder.getCountView().setText(
-							"总数量：" + saleData.getString("totalCount"));
+							getString(R.string.SALESREPORT_SORT_SLTXT) + "："
+									+ saleData.getString("totalCount"));
 					holder.getNameView().setText(
 							"合并记账("
 									+ saleData.getJSONArray("cashierList")
@@ -716,10 +719,29 @@ public class UISalesReportProductList extends BaseUiAuth implements
 							}
 
 							if (pic != null && pic.length() > 0) {
-								img.setImageDrawable(null);
+
 								mergeMaxImgCount++;
-								getProductImg(img, pic,
-										product.getString("pid"));
+								bpit = new BaseGetProductImageTask(img, pic,
+										product.getString("pid")) {
+									@Override
+									protected void onPostExecute(Uri result) {
+										super.onPostExecute(result);
+										if (this.isCancelled()) {
+											return;
+										}
+										if (imageViewReference != null) {
+											ImageView view = (ImageView) imageViewReference.get();
+											if (view != null) {
+												if (result != null) {
+													view.setImageURI(result);
+													view.setBackgroundResource(0);
+												}
+											}
+
+										}
+									}
+								};
+								bpit.execute();
 							}
 						}
 					}
@@ -730,7 +752,9 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			}
 
 			String date = map.get("date");
-			holder.getDateView().setText("时间：" + date.substring(5));
+			holder.getDateView().setText(
+					getString(R.string.SALESREPORT_SORT_DATETXT) + "："
+							+ date.substring(5));
 
 			return convertView;
 		}
@@ -756,7 +780,8 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private void getProductImg(final ImageView view, String imgPath, String id) {
 		if (imgPath != null && imgPath.length() > 0) {
-			BaseGetProductImageTask bpit = new BaseGetProductImageTask(view, imgPath, id);
+			BaseGetProductImageTask bpit = new BaseGetProductImageTask(view,
+					imgPath, id);
 			bpit.execute();
 			loadImgTasks.put(bpit);
 		}

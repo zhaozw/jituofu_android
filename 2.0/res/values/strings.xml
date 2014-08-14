@@ -279,7 +279,7 @@
     <string name="SALESREPORT_AFTERMONTH1">后1个月</string>
     <string name="SALESREPORT_YEARERROR">亲，不能跨年查询哦</string>
     <string name="SALESREPORT_DATEERROR">结束日期小于开始日期</string>
-    <string name="SALESREPORT_SORT_DATETXT">日期</string>
+    <string name="SALESREPORT_SORT_DATETXT">销售日期</string>
     <string name="SALESREPORT_SORT_LRTXT">利润(元)</string>
     <string name="SALESREPORT_SORT_SLTXT">销售总数量</string>
     <string name="SALESREPORT_SORT_CBTXT">成本(元)</string>

@@ -29,7 +29,7 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 	HttpURLConnection conn;
 	InputStream is;
 
-	private final WeakReference<ImageView> imageViewReference;
+	public final WeakReference<ImageView> imageViewReference;
 
 	public BaseGetProductImageTask(ImageView view, String productImgPath,
 			String productId) {
