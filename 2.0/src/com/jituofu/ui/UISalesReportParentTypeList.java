@@ -337,7 +337,7 @@ public class UISalesReportParentTypeList extends BaseUiAuth {
 								// TODO Auto-generated method stub
 								Bundle bundle = new Bundle();
 								bundle.putString("child", child);
-								bundle.putString("title", map.get("typeName")+" 的小分类销售");
+								bundle.putString("title", map.get("typeName"));
 								forward(UISalesReportChildTypeList.class, bundle);
 							}});
 					}else{

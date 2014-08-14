@@ -42,7 +42,7 @@ import com.jituofu.ui.UIWareHouseParentTypeDetail.ViewHolder;
 import com.jituofu.util.AppUtil;
 
 public class UISalesReportChildTypeList extends BaseUiAuth {
-	private TextView titleView;
+	private TextView titleView,subTitleView;
 	private LinearLayout topbarView, noDataView, againView;
 	private BaseListView lvView;
 	private LinearLayout borderView, sortContainerView, slView;
@@ -155,6 +155,7 @@ public class UISalesReportChildTypeList extends BaseUiAuth {
 	private void initView() {
 		topbarView = (LinearLayout) this.findViewById(R.id.topbar2);
 		titleView = (TextView) topbarView.findViewById(R.id.title);
+		subTitleView = (TextView) topbarView.findViewById(R.id.subtitle);
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
@@ -170,7 +171,8 @@ public class UISalesReportChildTypeList extends BaseUiAuth {
 	}
 
 	private void updateView() {
-		titleView.setText(R.string.SALESREPORT_CHILDTYPE_TITLE);
+		titleView.setText(title);
+		subTitleView.setText(R.string.SALESREPORT_CHILDTYPE_TITLE);
 
 		if (sort.equals("1")) {
 			slView.setBackgroundResource(R.drawable.base_rt_rb_lt_lb_round);

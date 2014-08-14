@@ -70,7 +70,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private Double sdkVersion = 0.0;
 
-	private TextView titleView;
+	private TextView titleView, subTitleView;
 	private LinearLayout noDataView, againView, sortContainerView, borderView,
 			rqView, slView;
 	private BaseListView lvView;
@@ -412,8 +412,9 @@ public class UISalesReportProductList extends BaseUiAuth implements
 		if (start != null && end != null) {
 			String[] startSplit = start.split("-");
 			String[] endSplit = end.split("-");
-			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
+			subTitleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
 					+ endSplit[1] + "-" + endSplit[2]);
+			titleView.setText(R.string.SALESREPORT_SPMX_TITLE);
 		}
 		if (sort.equals("1")) {
 			if (sdkVersion < 4) {
@@ -431,6 +432,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private void initView() {
 		titleView = (TextView) this.findViewById(R.id.title);
+		subTitleView = (TextView) this.findViewById(R.id.subtitle);
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
 		lvView = (BaseListView) this.findViewById(R.id.listView);

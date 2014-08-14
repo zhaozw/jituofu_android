@@ -176,6 +176,7 @@
     <string name="SPFL_DELETE_TYPE_MOVE_ERROR">目标分类和当前分类相同，请重新选择</string>
     <string name="SPFL_DELETE_TARGET_TYPETXT">目标分类：</string>
     <string name="SPFL_SPEARATOR"> / </string>
+    <string name="SPFL_CHILD_SUBTITLE">小分类列表</string>
     
     <!-- 自定义listview -->
     <string name="BASE_LISTVIEW_HEADER_HINT_NORMAL">下拉刷新</string>
@@ -305,6 +306,9 @@
     <string name="SALESREPORT_RETURNSALE_LOADING">退货中...</string>
     <string name="SALESREPORT_PARENTTYPE_TITLE">大分类销售明细</string>
     <string name="SALESREPORT_CHILDTYPE_TITLE">小分类销售明细</string>
+    <string name="SALESREPORT_LRMX_TITLE">利润明细</string>
+    <string name="SALESREPORT_CBMX_TITLE">成本明细</string>
+    <string name="SALESREPORT_SPMX_TITLE">售出商品明细</string>
     
     <!-- 商家设置 -->
     <string name="STORESETTINGS_TITLE">进销存设置</string>

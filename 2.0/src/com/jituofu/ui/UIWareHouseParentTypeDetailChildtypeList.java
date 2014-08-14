@@ -44,7 +44,7 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 	private ArrayList<String> typesId = new ArrayList<String>();// 存储所有小分类的id，以免重复加载
 
 	private LinearLayout topbarView, noDataView, againView;
-	private TextView titleView;
+	private TextView titleView,subTitleView;
 	private BaseListView lv;
 
 	private Bundle extraBundle;
@@ -238,7 +238,8 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 	}
 
 	private void updateView() throws JSONException {
-		titleView.setText(this.parentTypeData.getString("name") + " 小分类列表");
+		titleView.setText(this.parentTypeData.getString("name"));
+		subTitleView.setText(R.string.SPFL_CHILD_SUBTITLE);
 		((TextView) noDataView.findViewById(R.id.action_btn))
 				.setVisibility(View.GONE);
 
@@ -247,6 +248,7 @@ public class UIWareHouseParentTypeDetailChildtypeList extends BaseUiAuth
 	private void initView() {
 		topbarView = (LinearLayout) this.findViewById(R.id.topbar2);
 		titleView = (TextView) topbarView.findViewById(R.id.title);
+		subTitleView = (TextView) topbarView.findViewById(R.id.subtitle); 
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		// 来自记账台页面查询商品

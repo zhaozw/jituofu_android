@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/topbar2"
-        layout="@layout/topbar2" />
+        layout="@layout/topbar4" />
 
     <LinearLayout
         style="@style/container"

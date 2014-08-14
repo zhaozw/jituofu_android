@@ -45,7 +45,7 @@ import com.jituofu.util.AppUtil;
 public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener {
 	private Double sdkVersion = 0.0;
 	
-	private TextView titleView;
+	private TextView titleView, subTitleView;
 	private LinearLayout topbarView, noDataView, againView;
 	private BaseListView lvView;
 	private LinearLayout borderView, sortContainerView, rqView, cbView;
@@ -328,6 +328,7 @@ public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener 
 	private void initView() {
 		topbarView = (LinearLayout) this.findViewById(R.id.topbar2);
 		titleView = (TextView) topbarView.findViewById(R.id.title);
+		subTitleView = (TextView) topbarView.findViewById(R.id.subtitle);
 
 		noDataView = (LinearLayout) this.findViewById(R.id.noData);
 		againView = (LinearLayout) this.findViewById(R.id.again);
@@ -347,8 +348,9 @@ public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener 
 		if (start != null && end != null) {
 			String[] startSplit = start.split("-");
 			String[] endSplit = end.split("-");
-			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
-					+ endSplit[1] + "-" + endSplit[2] + "的成本");
+			subTitleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
+					+ endSplit[1] + "-" + endSplit[2]);
+			titleView.setText(R.string.SALESREPORT_CBMX_TITLE);
 		}
 
 		if (sort.equals("1")) {
