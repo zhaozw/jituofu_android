@@ -221,8 +221,9 @@ public class UISalesReportParentTypeList extends BaseUiAuth {
 		if (start != null && end != null) {
 			String[] startSplit = start.split("-");
 			String[] endSplit = end.split("-");
-			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
-					+ endSplit[1] + "-" + endSplit[2] + "的大分类销售");
+//			titleView.setText(startSplit[1] + "-" + startSplit[2] + "到"
+//					+ endSplit[1] + "-" + endSplit[2] + "的大分类销售");
+			titleView.setText(R.string.SALESREPORT_PARENTTYPE_TITLE);
 		}
 
 		if (sort.equals("1")) {

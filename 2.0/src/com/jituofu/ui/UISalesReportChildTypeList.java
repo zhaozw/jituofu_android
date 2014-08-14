@@ -170,7 +170,7 @@ public class UISalesReportChildTypeList extends BaseUiAuth {
 	}
 
 	private void updateView() {
-		titleView.setText(title);
+		titleView.setText(R.string.SALESREPORT_CHILDTYPE_TITLE);
 
 		if (sort.equals("1")) {
 			slView.setBackgroundResource(R.drawable.base_rt_rb_lt_lb_round);

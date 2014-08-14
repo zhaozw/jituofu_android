@@ -323,11 +323,6 @@ public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener 
 
 		this.isLoadMore = false;
 		this.isRefresh = false;
-
-		if (data.length() < limit) {
-			lvView.setPullLoadEnable(false);
-			lvView.setPullRefreshEnable(false);
-		}
 	}
 
 	private void initView() {
@@ -344,9 +339,8 @@ public class UISalesReportCB extends BaseUiAuth implements BaseListViewListener 
 		this.cbView = (LinearLayout) this.findViewById(R.id.cb);
 
 		lvView = (BaseListView) this.findViewById(R.id.listView);
-		lvView.setPullLoadEnable(true);
-		lvView.setPullRefreshEnable(true);
-		lvView.setXListViewListener(this);
+		lvView.setPullLoadEnable(false);
+		lvView.setPullRefreshEnable(false);
 	}
 
 	private void updateView() {
