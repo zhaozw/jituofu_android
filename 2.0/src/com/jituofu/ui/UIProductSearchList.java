@@ -1,5 +1,6 @@
 package com.jituofu.ui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,15 +63,27 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 	private String keyword;
 
-	private BaseGetProductImageTask bpit;
-
 	private Bundle extraBundle;
+
+	// 待加载的商品图片
+	JSONArray waitLoadProductsImg = new JSONArray();
+
+	// 所有下载图片的异步任务
+	private JSONArray loadImgTasks = new JSONArray();
+	private String productDirPath = AppUtil.getExternalStorageDirectory()
+			+ C.DIRS.rootdir + C.DIRS.productDir;
+	private boolean hasRoot = false;
+	private boolean hasProductDirPath = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_products_searchlist);
 
+		hasRoot = AppUtil.mkdir(AppUtil.getExternalStorageDirectory()
+				+ C.DIRS.rootdir);
+		hasProductDirPath = AppUtil.mkdir(productDirPath);
+		
 		extraBundle = this.getIntent().getExtras();
 
 		initView();
@@ -76,6 +91,35 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 		onBind();
 	}
 
+	private void loadProductsImage() {
+		int start = lv.getFirstVisiblePosition();
+		int end = lv.getLastVisiblePosition();
+		if (end >= lv.getCount()) {
+			end = lv.getCount() - 1;
+		}
+
+		for (int i = 0; i < waitLoadProductsImg.length(); i++) {
+			try {
+				JSONObject loadImg = (JSONObject) waitLoadProductsImg.get(i);
+				int position = loadImg.getInt("position");
+				String pic = loadImg.getString("pic");
+				String id = loadImg.getString("id");
+
+				if ((position + 1) >= start && position <= end && pic != null
+						&& pic.length() > 0) {
+					ImageView view = (ImageView) loadImg.get("view");
+					if (view != null) {
+						getProductImg(view, pic, id);
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		waitLoadProductsImg = new JSONArray();
+	}
+	
 	private void onBind() {
 		this.onCustomBack();
 
@@ -95,6 +139,36 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 				doSearchTask();
 			}
 		});
+		
+		lv.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					clearAllLoadImgTasks();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					loadProductsImage();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					clearAllLoadImgTasks();
+					break;
+
+				default:
+					break;
+				}
+
+			}
+		});
+		
 		lv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -113,10 +187,10 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 					Intent intent = new Intent();
 					intent.putExtra("from", extraBundle.getString("from"));
 					intent.putExtra("data", map.get("metaData"));
-					
+
 					backForResult(UICashier.TAG, intent);
 					finish();
-				} else {//商品详情页
+				} else {// 商品详情页
 					bundle.putString("id", map.get("id"));
 					forward(UIProductDetail.class, bundle);
 				}
@@ -124,6 +198,22 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 		});
 	}
 
+	private void clearAllLoadImgTasks() {
+		for (int i = 0; i < loadImgTasks.length(); i++) {
+			BaseGetProductImageTask bpit;
+			try {
+				bpit = (BaseGetProductImageTask) loadImgTasks.get(i);
+				if (bpit != null) {
+					bpit.cancel(true);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+	
 	private void searchBefore() {
 		AppUtil.showLoadingPopup(this, R.string.WAREHOUSE_SPSS_QUERYLOADING);
 		lv.setVisibility(View.GONE);
@@ -405,10 +495,39 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 			holder.getDateView().setText(map.get("date"));
 			holder.getPriceView().setText(map.get("price"));
 
-			holder.getPicView().setImageURI(null);
-			holder.getPicView().setBackgroundResource(
-					R.drawable.default_img_placeholder);
-			getProductImg(holder.getPicView(), map.get("pic"), map.get("id"));
+			JSONObject loadImg = new JSONObject();
+			try {
+				loadImg.put("position", position);
+				loadImg.put("view", holder.getPicView());
+				loadImg.put("pic", map.get("pic"));
+				loadImg.put("id", map.get("id"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Uri src = null;
+			holder.getPicView().setTag(map.get("id"));
+
+			if (hasRoot && hasProductDirPath) {
+				String oldFileName = productDirPath + "/" + map.get("id")
+						+ ".png";
+				File file = new File(oldFileName);
+				// 如果图片存在本地缓存目录，则不去服务器下载
+				if (file.exists()) {
+					src = Uri.fromFile(file);
+				}
+			}
+
+			if (src != null) {
+				holder.getPicView().setBackgroundResource(0);
+				holder.getPicView().setImageURI(src);
+			} else {
+				holder.getPicView().setImageURI(null);
+				holder.getPicView().setBackgroundResource(
+						R.drawable.default_img_placeholder);
+				waitLoadProductsImg.put(loadImg);
+			}
 
 			return convertView;
 		}
@@ -434,8 +553,10 @@ public class UIProductSearchList extends BaseUiAuth implements OnClickListener,
 
 	private void getProductImg(final ImageView view, String imgPath, String id) {
 		if (imgPath != null && imgPath.length() > 0) {
-			bpit = new BaseGetProductImageTask(view, imgPath, id);
+			BaseGetProductImageTask bpit = new BaseGetProductImageTask(view,
+					imgPath, id);
 			bpit.execute();
+			loadImgTasks.put(bpit);
 		}
 	}
 

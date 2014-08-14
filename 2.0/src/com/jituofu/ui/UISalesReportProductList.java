@@ -1,5 +1,6 @@
 package com.jituofu.ui;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -31,7 +33,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -60,12 +64,13 @@ import com.jituofu.util.DateUtil;
 
 public class UISalesReportProductList extends BaseUiAuth implements
 		BaseListViewListener {
-	private Double sdkVersion = 0.0;
+	BaseGetProductImageTask bpit;
 	
-	private BaseGetProductImageTask bpit;
+	private Double sdkVersion = 0.0;
 
 	private TextView titleView;
-	private LinearLayout noDataView, againView, sortContainerView, borderView, rqView, slView;
+	private LinearLayout noDataView, againView, sortContainerView, borderView,
+			rqView, slView;
 	private BaseListView lvView;
 
 	// 查询分类相关
@@ -80,20 +85,34 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private Bundle extraBundle;
 	private String start, end;
-	
+
 	SimpleDateFormat simpleDateFormat;
+
+	// 待加载的商品图片
+	JSONArray waitLoadProductsImg = new JSONArray();
+
+	// 所有下载图片的异步任务
+	private JSONArray loadImgTasks = new JSONArray();
+	private String productDirPath = AppUtil.getExternalStorageDirectory()
+			+ C.DIRS.rootdir + C.DIRS.productDir;
+	private boolean hasRoot = false;
+	private boolean hasProductDirPath = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_salesreport_splist);
 
+		hasRoot = AppUtil.mkdir(AppUtil.getExternalStorageDirectory()
+				+ C.DIRS.rootdir);
+		hasProductDirPath = AppUtil.mkdir(productDirPath);
 		try {
-			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0, 3));
+			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0,
+					3));
 		} catch (Exception e) {
 
 		}
-		
+
 		extraBundle = this.getIntent().getExtras();
 		if (extraBundle != null) {
 			start = extraBundle.getString("start");
@@ -102,16 +121,45 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 		simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.CHINA);
-		
+
 		initView();
 		updateView();
 		onBind();
-		
+
 		initQuery = true;
 		AppUtil.showLoadingPopup(this, R.string.COMMON_CXZ);
 		doQueryTask();
 	}
 
+	private void loadProductsImage() {
+		int start = lvView.getFirstVisiblePosition();
+		int end = lvView.getLastVisiblePosition();
+		if (end >= lvView.getCount()) {
+			end = lvView.getCount() - 1;
+		}
+
+		for (int i = 0; i < waitLoadProductsImg.length(); i++) {
+			try {
+				JSONObject loadImg = (JSONObject) waitLoadProductsImg.get(i);
+				int position = loadImg.getInt("position");
+				String pic = loadImg.getString("pic");
+				String id = loadImg.getString("id");
+
+				if ((position + 1) >= start && position <= end && pic != null
+						&& pic.length() > 0) {
+					ImageView view = (ImageView) loadImg.get("view");
+					if (view != null) {
+						getProductImg(view, pic, id);
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		waitLoadProductsImg = new JSONArray();
+	}
+	
 	private void renderList(JSONArray salesList) throws JSONException {
 		// 初始化加载没有数据
 		if (initQuery && salesList.length() <= 0) {
@@ -172,6 +220,35 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private void onBind() {
 		this.onCustomBack();
+
+		lvView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					clearAllLoadImgTasks();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					loadProductsImage();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					clearAllLoadImgTasks();
+					break;
+
+				default:
+					break;
+				}
+
+			}
+		});
 		
 		lvView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -182,34 +259,33 @@ public class UISalesReportProductList extends BaseUiAuth implements
 				@SuppressWarnings("unchecked")
 				HashMap<String, String> map = (HashMap<String, String>) lvView
 						.getItemAtPosition(position);
-				
+
 				String isMerge = map.get("isMerge");
 				Bundle bundle = new Bundle();
 				bundle.putString("id", map.get("id"));
 				bundle.putString("detail", map.get("metaData"));
-				
-				if(isMerge.equals("0")){
+
+				if (isMerge.equals("0")) {
 					forward(UISaleDetail.class, bundle);
-				}else{
+				} else {
 					forward(UISaleHBDetail.class, bundle);
 				}
 			}
 		});
-		
-		((TextView) againView.findViewById(R.id.again_btn))
-		.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				initQuery = true;
-				AppUtil.showLoadingPopup(
-						UISalesReportProductList.this,
-						R.string.COMMON_CXZ);
-				doQueryTask();
-			}
-		});
-		
+		((TextView) againView.findViewById(R.id.again_btn))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						initQuery = true;
+						AppUtil.showLoadingPopup(UISalesReportProductList.this,
+								R.string.COMMON_CXZ);
+						doQueryTask();
+					}
+				});
+
 		rqView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -229,7 +305,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_lt_lb_round);
 					}
-					
+
 					TextView txt = (TextView) rqView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rqView
 							.findViewById(R.id.arrow);
@@ -242,31 +318,30 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_lt_lb_round);
 					}
-					
+
 					TextView txt = (TextView) rqView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rqView
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_down_white);
 				}
-				
+
 				Collections.sort(dataList, new SortByDate());
 				customAdapter.notifyDataSetChanged();
 			}
 		});
-		
+
 		slView.setOnClickListener(new OnClickListener() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void onClick(View v) {
-				if(customAdapter == null){
+				if (customAdapter == null) {
 					return;
 				}
-				
+
 				rqView.setBackgroundResource(0);
-				TextView rqViewTxt = (TextView) rqView
-						.findViewById(R.id.txt);
+				TextView rqViewTxt = (TextView) rqView.findViewById(R.id.txt);
 				ImageView rqViewArrow = (ImageView) rqView
 						.findViewById(R.id.arrow);
 				rqViewTxt.setTextColor(Color.rgb(153, 153, 153));
@@ -280,7 +355,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_rt_rb_round);
 					}
-					
+
 					TextView txt = (TextView) slView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) slView
 							.findViewById(R.id.arrow);
@@ -293,20 +368,36 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_rt_rb_round);
 					}
-					
+
 					TextView txt = (TextView) slView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) slView
 							.findViewById(R.id.arrow);
 					txt.setTextColor(Color.rgb(255, 255, 255));
 					arrow.setImageResource(R.drawable.icon_arrow_up_white);
 				}
-				
+
 				Collections.sort(dataList, new SortByCount());
 				customAdapter.notifyDataSetChanged();
 			}
 		});
 	}
 
+	private void clearAllLoadImgTasks() {
+		for (int i = 0; i < loadImgTasks.length(); i++) {
+			BaseGetProductImageTask bpit;
+			try {
+				bpit = (BaseGetProductImageTask) loadImgTasks.get(i);
+				if (bpit != null) {
+					bpit.cancel(true);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+	}
+	
 	private void updateView() {
 		if (start != null && end != null) {
 			String[] startSplit = start.split("-");
@@ -320,7 +411,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			} else {
 				rqView.setBackgroundResource(R.drawable.base_lt_lb_round);
 			}
-			
+
 			TextView txt = (TextView) rqView.findViewById(R.id.txt);
 			ImageView arrow = (ImageView) rqView.findViewById(R.id.arrow);
 			txt.setTextColor(Color.rgb(255, 255, 255));
@@ -412,13 +503,13 @@ public class UISalesReportProductList extends BaseUiAuth implements
 		lvView.setRefreshTime(AppUtil.getCurrentDateTime());
 		isLoading = false;
 	}
-	
+
 	@Override
-	protected void onTaskAsyncStop(){
+	protected void onTaskAsyncStop() {
 		super.onTaskAsyncStop();
-		onLoad();
+		//onLoad();
 	}
-	
+
 	public void onNetworkError(int taskId) {
 		if (initQuery) {
 			lvView.setVisibility(View.GONE);
@@ -526,15 +617,49 @@ public class UISalesReportProductList extends BaseUiAuth implements
 						R.drawable.default_img_placeholder);
 
 				try {
-					holder.getCountView().setText("总数量："+saleData.getString("selling_count"));
+					holder.getCountView().setText(
+							"总数量：" + saleData.getString("selling_count"));
 					holder.getNameView().setText(saleData.getString("name"));
 					holder.getPriceView().setVisibility(View.VISIBLE);
-					holder.getPriceView().setText(getString(R.string.CASHIER_SELLING_PRICE)+"："+AppUtil.toFixed(Double.parseDouble(saleData.getString("selling_price"))));
-					String pic = saleData.getString("pic");
-					if (pic != null && pic.length() > 0) {
-						getProductImg(holder.getPicView(),
-								saleData.getString("pic"),
-								saleData.getString("pid"));
+					holder.getPriceView()
+							.setText(
+									getString(R.string.CASHIER_SELLING_PRICE)
+											+ "："
+											+ AppUtil.toFixed(Double.parseDouble(saleData
+													.getString("selling_price"))));
+					
+					JSONObject loadImg = new JSONObject();
+					try {
+						loadImg.put("position", position);
+						loadImg.put("view", holder.getPicView());
+						loadImg.put("pic", saleData.get("pic"));
+						loadImg.put("id", saleData.get("pid"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					Uri src = null;
+					holder.getPicView().setTag(saleData.get("id"));
+
+					if (hasRoot && hasProductDirPath) {
+						String oldFileName = productDirPath + "/" + saleData.get("id")
+								+ ".png";
+						File file = new File(oldFileName);
+						// 如果图片存在本地缓存目录，则不去服务器下载
+						if (file.exists()) {
+							src = Uri.fromFile(file);
+						}
+					}
+
+					if (src != null) {
+						holder.getPicView().setBackgroundResource(0);
+						holder.getPicView().setImageURI(src);
+					} else {
+						holder.getPicView().setImageURI(null);
+						holder.getPicView().setBackgroundResource(
+								R.drawable.default_img_placeholder);
+						waitLoadProductsImg.put(loadImg);
 					}
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -546,8 +671,12 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 				JSONArray products;
 				try {
-					holder.getCountView().setText("总数量："+saleData.getString("totalCount"));
-					holder.getNameView().setText("合并记账("+saleData.getJSONArray("cashierList").length()+")");
+					holder.getCountView().setText(
+							"总数量：" + saleData.getString("totalCount"));
+					holder.getNameView().setText(
+							"合并记账("
+									+ saleData.getJSONArray("cashierList")
+											.length() + ")");
 					holder.getPriceView().setVisibility(View.GONE);
 					products = saleData.getJSONArray("products");
 					ImageView one = (ImageView) holder.getMergeImgsView()
@@ -559,11 +688,15 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					ImageView four = (ImageView) holder.getMergeImgsView()
 							.findViewById(R.id.four);
 					int mergeMaxImgCount = 1;
-					
-					one.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
-					two.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
-					three.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
-					four.setImageDrawable(getResources().getDrawable(R.drawable.default_img_placeholder));
+
+					one.setImageDrawable(getResources().getDrawable(
+							R.drawable.default_img_placeholder));
+					two.setImageDrawable(getResources().getDrawable(
+							R.drawable.default_img_placeholder));
+					three.setImageDrawable(getResources().getDrawable(
+							R.drawable.default_img_placeholder));
+					four.setImageDrawable(getResources().getDrawable(
+							R.drawable.default_img_placeholder));
 					for (int i = 0; i < products.length(); i++) {
 						JSONObject product = (JSONObject) products.get(i);
 
@@ -623,8 +756,9 @@ public class UISalesReportProductList extends BaseUiAuth implements
 
 	private void getProductImg(final ImageView view, String imgPath, String id) {
 		if (imgPath != null && imgPath.length() > 0) {
-			bpit = new BaseGetProductImageTask(view, imgPath, id);
+			BaseGetProductImageTask bpit = new BaseGetProductImageTask(view, imgPath, id);
 			bpit.execute();
+			loadImgTasks.put(bpit);
 		}
 	}
 
@@ -719,7 +853,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			picView = view;
 		}
 	}
-	
+
 	class SortByDate implements Comparator {
 		public int compare(Object o1, Object o2) {
 			@SuppressWarnings("unchecked")
@@ -759,11 +893,11 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					return -1;
 				}
 			}
-			
+
 			return 0;
 		}
 	}
-	
+
 	class SortByCount implements Comparator {
 		public int compare(Object o1, Object o2) {
 			@SuppressWarnings("unchecked")
@@ -782,10 +916,11 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			}
 			String olIsMerge = h1.get("isMerge");
 			String o2IsMerge = h2.get("isMerge");
-			
-			if(olIsMerge.equals("0")){
+
+			if (olIsMerge.equals("0")) {
 				try {
-					olCount = Double.parseDouble(saleData1.getString("selling_count"));
+					olCount = Double.parseDouble(saleData1
+							.getString("selling_count"));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -793,31 +928,10 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}else if(olIsMerge.equals("1")){
+			} else if (olIsMerge.equals("1")) {
 				try {
-					olCount = Double.parseDouble(saleData1.getString("totalCount"));
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			if(o2IsMerge.equals("0")){
-				try {
-					o2Count = Double.parseDouble(saleData2.getString("selling_count"));
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else if(o2IsMerge.equals("1")){
-				try {
-					o2Count = Double.parseDouble(saleData2.getString("totalCount"));
+					olCount = Double.parseDouble(saleData1
+							.getString("totalCount"));
 				} catch (NumberFormatException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -826,8 +940,32 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					e.printStackTrace();
 				}
 			}
-			
-			if(olCount == null || o2Count == null){
+
+			if (o2IsMerge.equals("0")) {
+				try {
+					o2Count = Double.parseDouble(saleData2
+							.getString("selling_count"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else if (o2IsMerge.equals("1")) {
+				try {
+					o2Count = Double.parseDouble(saleData2
+							.getString("totalCount"));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (olCount == null || o2Count == null) {
 				return 0;
 			}
 
@@ -848,7 +986,7 @@ public class UISalesReportProductList extends BaseUiAuth implements
 					return -1;
 				}
 			}
-			
+
 			return 0;
 		}
 	}

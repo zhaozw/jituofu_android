@@ -2,6 +2,7 @@ package com.jituofu.base;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -11,6 +12,7 @@ import org.apache.http.HttpStatus;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout.LayoutParams;
@@ -22,6 +24,10 @@ import com.jituofu.util.AppUtil;
 
 public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 	private String productId, productImgPath;
+	
+	URL url;
+	HttpURLConnection conn;
+	InputStream is;
 
 	private final WeakReference<ImageView> imageViewReference;
 
@@ -32,10 +38,27 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 		imageViewReference = new WeakReference<ImageView>(view);
 	}
 
+	@Override
+	protected void onCancelled (){
+		super.onCancelled();
+		if(conn != null && is != null){
+			try {
+				is.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			conn.disconnect();
+		}
+		
+		Log.w("", "取消获取商品："+productId+"的任务");
+	}
+	
 	// 后台运行的子线程子线程
 	@Override
 	protected Uri doInBackground(String... params) {
 		try {
+			Log.w("", "正在获取商品："+productId+"的图片"+productImgPath);
 			return getProductImgUri(productImgPath, productId);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,13 +73,16 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 		if (this.isCancelled()) {
 			return;
 		}
+		Log.w("", "已获取产品"+productId+"的图片"+result);
 		if (imageViewReference != null) {
 			ImageView view = (ImageView) imageViewReference.get();
 			if (view != null) {
 				if (result != null) {
 					view.setImageURI(result);
+					view.setTag(result);
 					view.setBackgroundResource(0);
 				} else {
+					view.setTag(null);
 					view.setImageURI(null);
 					view.setBackgroundResource(R.drawable.default_img_placeholder);
 				}
@@ -88,15 +114,15 @@ public class BaseGetProductImageTask extends AsyncTask<String, String, Uri> {
 					return Uri.fromFile(file);
 				} else {
 					// 从网络上获取图片
-					URL url = new URL(path);
-					HttpURLConnection conn = (HttpURLConnection) url
+					url = new URL(path);
+					conn = (HttpURLConnection) url
 							.openConnection();
-					conn.setConnectTimeout(AppClientUtil.timeoutConnection);
+					conn.setConnectTimeout(AppClientUtil.timeoutConnection/30);
 					conn.setRequestMethod("GET");
 					conn.setDoInput(true);
 					if (conn.getResponseCode() == HttpStatus.SC_OK) {
 
-						InputStream is = conn.getInputStream();
+						is = conn.getInputStream();
 						FileOutputStream fos = new FileOutputStream(file);
 						byte[] buffer = new byte[1024];
 						int len = 0;

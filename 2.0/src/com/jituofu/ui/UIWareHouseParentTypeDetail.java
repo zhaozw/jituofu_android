@@ -1,5 +1,9 @@
 package com.jituofu.ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +23,16 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -39,13 +48,12 @@ import com.jituofu.base.BaseMessage;
 import com.jituofu.base.BaseUiAuth;
 import com.jituofu.base.C;
 import com.jituofu.base.BaseListView.BaseListViewListener;
+import com.jituofu.util.AppClientUtil;
 import com.jituofu.util.AppUtil;
 
 public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		BaseListViewListener {
 	private Double sdkVersion = 0.0;
-
-	private BaseGetProductImageTask bpit;
 
 	// 查询分类相关
 	private int pageNum = 1;
@@ -75,13 +83,27 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 	private LinearLayout borderView, sortContainerView, jjView, rksjView;
 	SimpleDateFormat simpleDateFormat;
 
+	// 待加载的商品图片
+	JSONArray waitLoadProductsImg = new JSONArray();
+
+	// 所有下载图片的异步任务
+	private JSONArray loadImgTasks = new JSONArray();
+	private String productDirPath = AppUtil.getExternalStorageDirectory()
+			+ C.DIRS.rootdir + C.DIRS.productDir;
+	private boolean hasRoot = false;
+	private boolean hasProductDirPath = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.page_warehouse_parenttype_detail);
 
+		hasRoot = AppUtil.mkdir(AppUtil.getExternalStorageDirectory()
+				+ C.DIRS.rootdir);
+		hasProductDirPath = AppUtil.mkdir(productDirPath);
 		try {
-			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0, 3));
+			sdkVersion = Double.parseDouble(Build.VERSION.RELEASE.substring(0,
+					3));
 		} catch (Exception e) {
 
 		}
@@ -125,6 +147,35 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 		}
 	}
 
+	private void loadProductsImage() {
+		int start = lv.getFirstVisiblePosition();
+		int end = lv.getLastVisiblePosition();
+		if (end >= lv.getCount()) {
+			end = lv.getCount() - 1;
+		}
+
+		for (int i = 0; i < waitLoadProductsImg.length(); i++) {
+			try {
+				JSONObject loadImg = (JSONObject) waitLoadProductsImg.get(i);
+				int position = loadImg.getInt("position");
+				String pic = loadImg.getString("pic");
+				String id = loadImg.getString("id");
+
+				if ((position + 1) >= start && position <= end && pic != null
+						&& pic.length() > 0) {
+					ImageView view = (ImageView) loadImg.get("view");
+					if (view != null) {
+						getProductImg(view, pic, id);
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		waitLoadProductsImg = new JSONArray();
+	}
+
 	private void onBind() {
 		this.onCustomBack();
 
@@ -151,7 +202,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_rt_rb_round);
 					}
-					
+
 					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rksjView
 							.findViewById(R.id.arrow);
@@ -164,7 +215,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_rt_rb_round);
 					}
-					
+
 					TextView txt = (TextView) rksjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) rksjView
 							.findViewById(R.id.arrow);
@@ -195,7 +246,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_lt_lb_round);
 					}
-					
+
 					TextView txt = (TextView) jjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) jjView
 							.findViewById(R.id.arrow);
@@ -208,7 +259,7 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 					} else {
 						v.setBackgroundResource(R.drawable.base_lt_lb_round);
 					}
-					
+
 					TextView txt = (TextView) jjView.findViewById(R.id.txt);
 					ImageView arrow = (ImageView) jjView
 							.findViewById(R.id.arrow);
@@ -218,6 +269,35 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 				Collections.sort(dataList, new SortByPrice());
 				customProductsAdapter.notifyDataSetChanged();
+			}
+		});
+
+		lv.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch (scrollState) {
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+					clearAllLoadImgTasks();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+					loadProductsImage();
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					clearAllLoadImgTasks();
+					break;
+
+				default:
+					break;
+				}
+
 			}
 		});
 
@@ -269,8 +349,9 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 							forward(UIWareHouseParentTypeDetailChildtypeList.class,
 									bundle);
 						}
-					}else if(onlyChildTypes){
-						bundle.putString("parentTypeData", parentTypeData.toString());
+					} else if (onlyChildTypes) {
+						bundle.putString("parentTypeData",
+								parentTypeData.toString());
 						bundle.putString("data", map.toString());
 						forward(UIWareHouseParentTypeDetailProductsList.class,
 								bundle);
@@ -767,15 +848,44 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 				holder = (ProductsViewHolder) convertView.getTag();
 			}
 
-			holder.getNameView().setText(map.get("name"));
+			holder.getNameView().setText(map.get("name") + position);
 			holder.getCountView().setText(map.get("count"));
 			holder.getDateView().setText(map.get("date"));
 			holder.getPriceView().setText(map.get("price"));
 
-			holder.getPicView().setImageURI(null);
-			holder.getPicView().setBackgroundResource(
-					R.drawable.default_img_placeholder);
-			getProductImg(holder.getPicView(), map.get("pic"), map.get("id"));
+			JSONObject loadImg = new JSONObject();
+			try {
+				loadImg.put("position", position);
+				loadImg.put("view", holder.getPicView());
+				loadImg.put("pic", map.get("pic"));
+				loadImg.put("id", map.get("id"));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			Uri src = null;
+			holder.getPicView().setTag(map.get("id"));
+
+			if (hasRoot && hasProductDirPath) {
+				String oldFileName = productDirPath + "/" + map.get("id")
+						+ ".png";
+				File file = new File(oldFileName);
+				// 如果图片存在本地缓存目录，则不去服务器下载
+				if (file.exists()) {
+					src = Uri.fromFile(file);
+				}
+			}
+
+			if (src != null) {
+				holder.getPicView().setBackgroundResource(0);
+				holder.getPicView().setImageURI(src);
+			} else {
+				holder.getPicView().setImageURI(null);
+				holder.getPicView().setBackgroundResource(
+						R.drawable.default_img_placeholder);
+				waitLoadProductsImg.put(loadImg);
+			}
 
 			return convertView;
 		}
@@ -801,8 +911,26 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 
 	private void getProductImg(final ImageView view, String imgPath, String id) {
 		if (imgPath != null && imgPath.length() > 0) {
-			bpit = new BaseGetProductImageTask(view, imgPath, id);
+			BaseGetProductImageTask bpit = new BaseGetProductImageTask(view,
+					imgPath, id);
 			bpit.execute();
+			loadImgTasks.put(bpit);
+		}
+	}
+
+	private void clearAllLoadImgTasks() {
+		for (int i = 0; i < loadImgTasks.length(); i++) {
+			BaseGetProductImageTask bpit;
+			try {
+				bpit = (BaseGetProductImageTask) loadImgTasks.get(i);
+				if (bpit != null) {
+					bpit.cancel(true);
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 	}
 

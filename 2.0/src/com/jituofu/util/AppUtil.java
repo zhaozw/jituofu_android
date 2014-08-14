@@ -740,6 +740,10 @@ public class AppUtil {
 			display = "middle";
 			break;
 		}
+		
+		if(HttpUtil.getType(context) == HttpUtil.G2_INT){
+			display = "low";
+		}
 		return display;
 	}
 
