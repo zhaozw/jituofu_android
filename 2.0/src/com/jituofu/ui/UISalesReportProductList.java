@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimerTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -217,6 +218,14 @@ public class UISalesReportProductList extends BaseUiAuth implements
 			lvView.setPullLoadEnable(false);
 			lvView.setPullRefreshEnable(false);
 		}
+		
+		AppUtil.timer(new TimerTask(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				loadProductsImage();
+			}}, 2000);
 	}
 
 	private void onBind() {

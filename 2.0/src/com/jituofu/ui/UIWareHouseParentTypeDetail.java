@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimerTask;
 
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
@@ -557,6 +558,14 @@ public class UIWareHouseParentTypeDetail extends BaseUiAuth implements
 			lv.setPullLoadEnable(false);
 			lv.setPullRefreshEnable(false);
 		}
+		
+		AppUtil.timer(new TimerTask(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				loadProductsImage();
+			}}, 2000);
 	}
 
 	class SortByDate implements Comparator {
