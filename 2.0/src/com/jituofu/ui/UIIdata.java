@@ -24,8 +24,11 @@ public class UIIdata extends BaseUiAuth {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		UIGlobalTabView.tabHost.setCurrentTab(1);
-		return true;
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			UIGlobalTabView.tabHost.setCurrentTab(1);
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

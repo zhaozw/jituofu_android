@@ -95,26 +95,29 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 	private static int year, month, day, hour, minute, second;
 	private static TextView dateView;
 	private static String time;
-	private static boolean isJZing = false;//是否正在记账 
+	private static boolean isJZing = false;// 是否正在记账
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if(isJZing){
-			isJZing = false;
-			return super.onKeyDown(keyCode, event);
-		}else{
-			isJZing = false;
-			UIGlobalTabView.tabHost.setCurrentTab(1);
-			return true;
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (isJZing) {
+				isJZing = false;
+				return super.onKeyDown(keyCode, event);
+			} else {
+				isJZing = false;
+				UIGlobalTabView.tabHost.setCurrentTab(1);
+				return true;
+			}
 		}
+		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	protected void onBrReceive(String type) {
 		if (type.equals("ClearForm")) {
 			resetForm();
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -129,7 +132,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("com.jituofu.ui.ClearForm");
 		this.registerReceiver(br, filter);
-		
+
 		hbList = new ArrayList<HashMap<String, String>>();
 
 		initView();
@@ -139,7 +142,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 
 	public static void showPreview(final BaseUi context, Activity activity) {
 		isJZing = true;
-		
+
 		dateTimePicker = new BaseDateTimePicker(context);
 		dateTimePicker.setTimeDismissListener(new OnDismissListener() {
 
@@ -166,7 +169,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				}
 			}
 		});
-		
+
 		double totalPrice = 0;
 		double totalCount = 0;
 
@@ -266,13 +269,14 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					}
 				});
 		baseDialog = baseDialogBuilder.create();
-		baseDialog.setOnDismissListener(new OnDismissListener(){
+		baseDialog.setOnDismissListener(new OnDismissListener() {
 
 			@Override
 			public void onDismiss(DialogInterface di) {
 				// TODO Auto-generated method stub
 				isJZing = false;
-			}});
+			}
+		});
 		baseDialog.show();
 	}
 
@@ -417,12 +421,12 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 				priceView.setText("");
 			}
 		});
-		deleteView.setOnTouchListener(new OnTouchListener(){
+		deleteView.setOnTouchListener(new OnTouchListener() {
 
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
-				switch(event.getAction()){
+				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					v.setBackgroundColor(Color.parseColor("#d1d1d1"));
 					deleteView.setTextColor(Color.parseColor("#ffffff"));
@@ -433,8 +437,9 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					break;
 				}
 				return false;
-			}});
-		
+			}
+		});
+
 		gotojrxsView.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -503,7 +508,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 					if (hbList.indexOf(currentProduct) < 0) {
 						hbList.add(currentProduct);
 						fly();
-					}else{
+					} else {
 						fly();
 					}
 				}
@@ -634,7 +639,7 @@ public class UICashier extends BaseUiAuth implements BaseUiFormBuilder {
 		remarkView = (EditText) findViewById(R.id.remark);
 
 		flyView = (RelativeLayout) findViewById(R.id.fly);
-		
+
 		gotojrxsView = (TextView) findViewById(R.id.gotojrxs);
 	}
 

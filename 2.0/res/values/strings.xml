@@ -2,6 +2,7 @@
 <resources>
  
     <!-- 公共部分 -->
+    <string name="COMMON_EXIT">再按一次，离开记托付</string>
     <string name="COMMON_MISSION">从此，没有糊涂账</string>
     <string name="app_name">记托付</string>
     <string name="company_name">记恩公司</string>

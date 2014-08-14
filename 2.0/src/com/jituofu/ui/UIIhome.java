@@ -14,6 +14,7 @@ import com.jituofu.util.StorageUtil;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -24,6 +25,30 @@ public class UIIhome extends BaseUiAuth {
 	private int sysVersion = Build.VERSION.SDK_INT;
 	
 	private LinearLayout userinfoView;
+	
+	private long preBackTime = 0;
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if(preBackTime <= 0){
+				preBackTime = System.currentTimeMillis();
+				this.showToast(R.string.COMMON_EXIT);
+			}else{
+				if(System.currentTimeMillis() - preBackTime <= 3000){
+					preBackTime = 0;
+					System.exit(0);
+					return super.onKeyDown(keyCode, event);
+				}else{
+					this.showToast(R.string.COMMON_EXIT);
+					preBackTime = System.currentTimeMillis();
+					return true;
+				}
+			}
+			
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 	
 	@Override
 	protected void onBrReceive(String type){
