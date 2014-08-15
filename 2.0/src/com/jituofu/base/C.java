@@ -27,6 +27,7 @@ public final class C {
 	}
 
 	public static final class COMMON {
+		public static final String isLaunch = "isLaunch";//是否第一次运行
 		public static final int TAG = R.string.app_name;
 		public static final String channelId = "官方";
 		public static final String versionName = "2.0.0";

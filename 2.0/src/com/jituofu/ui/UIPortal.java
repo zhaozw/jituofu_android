@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -37,11 +38,25 @@ public class UIPortal extends BaseUi {
 	private BaseDialog.Builder baseDialogBuilder2;
 	private BaseDialog baseDialog2;
 
+	private SharedPreferences preferences;
+	private boolean isLanuch;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		//检查是不是第一次启动
+		preferences = getSharedPreferences(C.COMMON.isLaunch, MODE_PRIVATE);
+		isLanuch = preferences.getBoolean(C.COMMON.isLaunch, false);
+
+		if (!isLanuch) {
+			finish();
+			forward(UIGuide.class);
+			return;
+		}
+
 		currentVersion = AppUtil.getVersion(this);
 
-		super.onCreate(savedInstanceState);
 		setContentView(R.layout.portal);
 	}
 
@@ -103,6 +118,10 @@ public class UIPortal extends BaseUi {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		if (!isLanuch) {
+			return;
+		}
 
 		queryRank();
 
@@ -255,9 +274,9 @@ public class UIPortal extends BaseUi {
 			bundle.putBoolean("hideBack", true);
 
 			if (resultStatus == 100) {
-				//更新最后登录时间
+				// 更新最后登录时间
 				AppUtil.updateLSID(this);
-				
+
 				operation = message.getOperation();
 				boolean hasId = operation.has("id");
 				if (!hasId) {
@@ -283,8 +302,8 @@ public class UIPortal extends BaseUi {
 				this.finish();
 
 			}
-		}else if(taskId == C.TASK.updatelsid){
-			
+		} else if (taskId == C.TASK.updatelsid) {
+
 		}
 	}
 

@@ -165,7 +165,7 @@ public class UILogin extends BaseUiForm {
 
 			StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userCookieFileName, cookie);
 			StorageUtil.writeInternalStoragePrivate(this, C.DIRS.userIdFileName, userId);
-
+			
 			this.forward(UIHome.class);
 			this.finish();
 		} else {

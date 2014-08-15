@@ -23,50 +23,51 @@ import android.widget.TextView;
 
 public class UIIhome extends BaseUiAuth {
 	private int sysVersion = Build.VERSION.SDK_INT;
-	
+
 	private LinearLayout userinfoView;
-	
+
 	private long preBackTime = 0;
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if(preBackTime <= 0){
+			if (preBackTime <= 0) {
 				preBackTime = System.currentTimeMillis();
 				this.showToast(R.string.COMMON_EXIT);
-			}else{
-				if(System.currentTimeMillis() - preBackTime <= 3000){
+			} else {
+				if (System.currentTimeMillis() - preBackTime <= 3000) {
 					preBackTime = 0;
 					System.exit(0);
 					return super.onKeyDown(keyCode, event);
-				}else{
+				} else {
 					this.showToast(R.string.COMMON_EXIT);
 					preBackTime = System.currentTimeMillis();
 					return true;
 				}
 			}
-			
+
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 	@Override
-	protected void onBrReceive(String type){
-		if(type.equals("ClearActivitiesBroadcast")){
+	protected void onBrReceive(String type) {
+		if (type.equals("ClearActivitiesBroadcast")) {
 			this.finish();
 		}
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ihome);
 
-		if(sysVersion < 16){
+		if (sysVersion < 16) {
 			LinearLayout topBar = (LinearLayout) this.findViewById(R.id.topBar);
 			topBar.setVisibility(View.GONE);
 		}
-		
+
 		initView();
 
 		try {
@@ -78,9 +79,9 @@ public class UIIhome extends BaseUiAuth {
 
 		onBindUi();
 	}
-	
+
 	@Override
-	protected void onResume(){
+	protected void onResume() {
 		super.onResume();
 		try {
 			updateView();
@@ -93,9 +94,9 @@ public class UIIhome extends BaseUiAuth {
 	@Override
 	protected void onBindUi() {
 		super.onBindUi();
-		
+
 		userinfoView.setOnClickListener(new LinearLayoutClick());
-		
+
 		LinearLayout security = (LinearLayout) this.findViewById(R.id.security);
 		LinearLayout spgl = (LinearLayout) this.findViewById(R.id.spgl);
 		LinearLayout lsxsjl = (LinearLayout) this.findViewById(R.id.lsxsjl);
@@ -109,7 +110,7 @@ public class UIIhome extends BaseUiAuth {
 
 	private void initView() {
 		userinfoView = (LinearLayout) findViewById(R.id.userinfo);
-		
+
 		// 记账台
 		LinearLayout jzt = (LinearLayout) findViewById(R.id.jzt);
 		ImageView jztIcon = (ImageView) jzt.findViewById(R.id.icon);
@@ -158,21 +159,27 @@ public class UIIhome extends BaseUiAuth {
 		TextView username = (TextView) findViewById(R.id.username);
 		TextView email = (TextView) findViewById(R.id.email);
 
-		byte[] userInfo = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userInfoFileName);
-		byte[] storeSetting = StorageUtil.readInternalStoragePrivate(this, C.DIRS.storeSettingsCacheFileName);
-		
+		byte[] userInfo = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.userInfoFileName);
+		byte[] storeSetting = StorageUtil.readInternalStoragePrivate(this,
+				C.DIRS.storeSettingsCacheFileName);
+
 		String userInfoVal = null;
 		String storeSettingVal = null;
-		
+
 		if (storeSetting.length > 0 && storeSetting[0] != 0) {
 			storeSettingVal = new String(storeSetting, "UTF-8");
+		} else {
+			// 获取商户信息
+			AppUtil.fetchStoreSettingsFromServer(getApplicationContext(), this);
 		}
-		
+
 		if (userInfo.length > 0 && userInfo[0] != 0) {
 			userInfoVal = new String(userInfo, "UTF-8");
 		} else {
 			// 如果本地没有保存用户信息,就从本地读取userId后,再发送一次获取用户信息的请求
-			byte[] userId = StorageUtil.readInternalStoragePrivate(this, C.DIRS.userIdFileName);
+			byte[] userId = StorageUtil.readInternalStoragePrivate(this,
+					C.DIRS.userIdFileName);
 
 			String userIdVal = null;
 
@@ -197,17 +204,17 @@ public class UIIhome extends BaseUiAuth {
 				int sysVersion = Build.VERSION.SDK_INT;
 				if (sysVersion >= 16) {
 					TextView title = (TextView) findViewById(R.id.title);
-					
-					//如果有设置了商户名称就使用商户名称做标题
-					if(storeSettingVal != null){
+
+					// 如果有设置了商户名称就使用商户名称做标题
+					if (storeSettingVal != null) {
 						JSONObject ss = new JSONObject(storeSettingVal);
-						
-						if(ss.has("name") && ss.getString("name").length() > 0){
+
+						if (ss.has("name") && ss.getString("name").length() > 0) {
 							title.setText(ss.getString("name"));
-						}else{
+						} else {
 							title.setText(ui.getString("username"));
 						}
-					}else{
+					} else {
 						title.setText(ui.getString("username"));
 					}
 				}
@@ -223,13 +230,15 @@ public class UIIhome extends BaseUiAuth {
 	public void onTaskComplete(int taskId, BaseMessage message)
 			throws Exception {
 		super.onTaskComplete(taskId, message);
-
+		
+		int resultStatus = message.getResultStatus();
+		JSONObject operation = message.getOperation();
+		
 		// 如果获取到用户信息就保存到本地
 		if (taskId == C.TASK.getuser) {
-			int resultStatus = message.getResultStatus();
 
 			if (resultStatus == 100) {
-				JSONObject operation = message.getOperation();
+
 				boolean hasId = operation.has("id");
 
 				if (hasId) {
@@ -239,6 +248,18 @@ public class UIIhome extends BaseUiAuth {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
+			}
+		} else if (taskId == C.TASK.storesettingsget) {
+			if (resultStatus == 100) {
+				operation = message.getOperation();
+				if (operation.has("storeSettings")) {
+					String storeSettings = operation.getString("storeSettings");
+					StorageUtil.writeInternalStoragePrivate(this,
+							C.DIRS.storeSettingsCacheFileName, storeSettings);
+					JSONObject ss = new JSONObject(storeSettings);
+					TextView title = (TextView) findViewById(R.id.title);
+					title.setText(ss.getString("name"));
 				}
 			}
 		}

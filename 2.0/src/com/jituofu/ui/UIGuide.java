@@ -6,7 +6,10 @@ import java.util.List;
 import com.jituofu.R;
 import com.jituofu.base.BaseUi;
 import com.jituofu.base.BaseViewPager;
+import com.jituofu.base.C;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -16,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 public class UIGuide extends BaseUi implements OnClickListener, OnPageChangeListener{
+	SharedPreferences preferences;
+	Editor editor;
 	
 	private ViewPager vp;
 	private BaseViewPager vpAdapter;
@@ -37,6 +42,12 @@ public class UIGuide extends BaseUi implements OnClickListener, OnPageChangeList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.page_guide);
+        
+        //标记第一次启动为true
+        preferences = getSharedPreferences(C.COMMON.isLaunch,MODE_PRIVATE);
+        editor = preferences.edit();
+        editor.putBoolean(C.COMMON.isLaunch, true);
+        editor.commit();
         
         views = new ArrayList<View>();
        
