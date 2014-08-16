@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/topBar"
-    android:orientation="horizontal" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/notice_global"
+        android:visibility="gone"
+        layout="@layout/template_notice_tip" />
 
     <LinearLayout
-        android:id="@+id/back"
-        android:layout_width="39dp"
-        android:layout_height="fill_parent"
-        android:gravity="center" >
+        style="@style/topBar"
+        android:orientation="horizontal" >
 
-        <ImageButton style="@style/back" />
+        <LinearLayout
+            android:id="@+id/back"
+            android:layout_width="39dp"
+            android:layout_height="fill_parent"
+            android:gravity="center" >
+
+            <ImageButton style="@style/back" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/title_center_padding"
+            android:paddingRight="@dimen/title_center_padding"
+            android:textColor="@color/white"
+            android:textSize="@dimen/normal_btn_text_size" />
+
+        <TextView
+            android:id="@+id/topBar2Right"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_right_text_size" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:paddingLeft="@dimen/title_center_padding"
-        android:paddingRight="@dimen/title_center_padding"
-        android:textColor="@color/white"
-        android:textSize="@dimen/normal_btn_text_size" />
-
-    <TextView
-        android:id="@+id/topBar2Right"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:textColor="@color/white"
-        android:textSize="@dimen/title_right_text_size" />
 
 </LinearLayout>

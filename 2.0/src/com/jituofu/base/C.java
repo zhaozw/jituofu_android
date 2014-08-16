@@ -43,7 +43,7 @@ public final class C {
 
 	public static final class API {
 		// public static final String host = "http://10.0.2.2";
-		public static final String host = "http://115.29.39.106:1111";//后面没有反斜线
+		public static final String host = "http://192.168.1.102:1111";//后面没有反斜线
 		public static final String register = "/users/create";
 		public static final String getuser = "/users/getInfo";
 		public static final String login = "/users/login";
@@ -76,6 +76,7 @@ public final class C {
 		public static final String storesettingsupdate = "/storeSettings/update";
 		public static final String softwareupdate = "/softwareVersion/get";
 		public static final String updatelsid = "/users/updatelsid";//更新最后登录时间
+		public static final String noticeget = "/notice/index";//
 	}
 
 	public static final class ERROR {
@@ -121,6 +122,7 @@ public final class C {
 		public static final int storesettingsupdate = 1032;
 		public static final int softwareupdate = 1033;
 		public static final int updatelsid = 1034;
+		public static final int noticeget = 1035;
 	}
 	
 	public static final class PASSWORDLENGTH{
