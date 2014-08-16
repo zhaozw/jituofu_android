@@ -12,24 +12,66 @@ import com.jituofu.util.AppUtil;
 import com.jituofu.util.StorageUtil;
 
 import android.content.Intent;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class UIRegister extends BaseUiForm {
-	private String usernameVal, emailVal, passwordVal, REGISTER_CPASSWORDVal;
- 
+public class UIRegister extends BaseUiForm implements LocationListener {
+	private String usernameVal, emailVal, passwordVal, REGISTER_CPASSWORDVal,
+			location = "";;
+
+	private LocationManager locationManager;
+	private String provider;
+	private Location locationObj;
+	private Criteria criteria;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
 
+		getGPS();
+
 		onCustomBack();
 		onUpdateUi();
 		onBindUi();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		locationManager.requestLocationUpdates(provider, 400, 1, this);
+	}
+
+	private void getGPS() {
+		criteria = new Criteria();
+		locationManager = (LocationManager) getSystemService(this.LOCATION_SERVICE);
+		provider = locationManager.getBestProvider(criteria, true);
+		locationObj = locationManager.getLastKnownLocation(provider);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		locationManager.removeUpdates(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		locationManager.removeUpdates(this);
 	}
 
 	@Override
@@ -146,12 +188,24 @@ public class UIRegister extends BaseUiForm {
 	private void doTaskRegister() {
 		String deviceId = AppUtil.getDeviceId(this);
 
+		TelephonyManager tm = (TelephonyManager) this
+				.getSystemService(this.TELEPHONY_SERVICE);
+		WifiManager wifi = (WifiManager) getSystemService(this.WIFI_SERVICE);
+		WifiInfo info = wifi.getConnectionInfo();
+
 		HashMap<String, String> urlParams = new HashMap<String, String>();
 		urlParams.put("username", this.usernameVal);
 		urlParams.put("email", this.emailVal);
 		urlParams.put("password", this.passwordVal);
 		urlParams.put("cpassword", this.REGISTER_CPASSWORDVal);
 		urlParams.put("clientId", deviceId);
+		urlParams.put("location", location);
+		urlParams.put("mac", info.getMacAddress());
+		urlParams.put("imei", tm.getSimSerialNumber());
+		urlParams.put("imsi", tm.getSubscriberId());
+		urlParams.put("model", Build.MODEL);
+		urlParams.put("os", Build.VERSION.RELEASE);
+		urlParams.put("phone", tm.getLine1Number());
 
 		try {
 			this.doTaskAsync(C.TASK.register, C.API.host + C.API.register,
@@ -188,16 +242,45 @@ public class UIRegister extends BaseUiForm {
 				StorageUtil.writeInternalStoragePrivate(this,
 						C.DIRS.userIdFileName, userId);
 
-				//发送注册成功的广播
+				// 发送注册成功的广播
 				Intent broadcast = new Intent();
 				broadcast.setAction("com.jituofu.ui.RegisterAndLoginSuccess");
 				broadcast.putExtra("type", "RegisterAndLoginSuccess");
 				this.sendBroadcast(broadcast);
-				
+
 				this.forward(UIHome.class);
 			}
 		} else {
 			this.showToast(message.getFirstOperationErrorMessage());
 		}
+	}
+
+	@Override
+	public void onLocationChanged(Location lt) {
+		// TODO Auto-generated method stub
+		location = "";
+		if (lt != null) {
+			location += lt.getLatitude() + ","
+					+ lt.getLongitude();
+			Log.w(this.getString(C.COMMON.TAG)+" 当前位置：", location);
+		}
+	}
+
+	@Override
+	public void onProviderDisabled(String arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onProviderEnabled(String arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+		// TODO Auto-generated method stub
+
 	}
 }
