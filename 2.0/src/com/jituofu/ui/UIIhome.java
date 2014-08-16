@@ -78,6 +78,8 @@ public class UIIhome extends BaseUiAuth {
 		}
 
 		onBindUi();
+		
+		getNotice();
 	}
 
 	@Override

@@ -4,12 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <include layout="@layout/topbar1" />
+
     <include
         android:id="@+id/notice_home"
-        layout="@layout/template_notice_tip"
-        android:visibility="gone" />
-
-    <include layout="@layout/topbar1" />
+        android:visibility="gone"
+        layout="@layout/template_notice_tip" />
 
     <ScrollView
         android:id="@+id/scrollView1"

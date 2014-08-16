@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.jituofu.R;
+import com.jituofu.ui.UINotice;
 import com.jituofu.util.AppUtil;
 import com.jituofu.base.BaseBroadcast;
 import com.jituofu.util.HttpUtil;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseUi extends Activity {
@@ -39,7 +41,7 @@ public class BaseUi extends Activity {
 
 	protected BaseTaskPool taskPool;
 	protected BaseHandler handler;
-	
+
 	private BaseTask baseTask;
 
 	protected void onUpdateUi() {
@@ -69,7 +71,7 @@ public class BaseUi extends Activity {
 	protected void onBrReceive(String type) {
 
 	}
-	
+
 	public void backForResult(int requestCode, Intent data) {
 		super.setResult(requestCode, data);
 	}
@@ -77,6 +79,18 @@ public class BaseUi extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	protected void getNotice() {
+		HashMap<String, String> urlParams = new HashMap<String, String>();
+		urlParams.put("version", AppUtil.getVersion(this));
+
+		try {
+			this.doTaskAsync(C.TASK.noticeget, C.API.host + C.API.noticeget,
+					urlParams);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -90,14 +104,13 @@ public class BaseUi extends Activity {
 		this.baseTask = new BaseTask() {
 			@Override
 			public void onComplete(String httpResult) {
-				sendMessage(BaseTask.TASK_COMPLETE, this.getId(),
-						httpResult);
+				sendMessage(BaseTask.TASK_COMPLETE, this.getId(), httpResult);
 			}
-			
+
 			@Override
 			public void onComplete(String httpResult, ArrayList<String> files) {
-				sendMessage(BaseTask.TASK_COMPLETE, this.getId(),
-						httpResult, files);
+				sendMessage(BaseTask.TASK_COMPLETE, this.getId(), httpResult,
+						files);
 			}
 
 			@Override
@@ -191,14 +204,14 @@ public class BaseUi extends Activity {
 		intent.putExtras(params);
 		this.startActivity(intent);
 	}
-	
+
 	public void forwardForResult(Class<?> obj, int requestCode) {
 		Intent intent = new Intent();
 		intent.setClass(this, obj);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivityForResult(intent, requestCode);
 	}
-	
+
 	public void forwardForResult(Class<?> obj, int requestCode, Bundle params) {
 		Intent intent = new Intent();
 		intent.setClass(this, obj);
@@ -290,7 +303,8 @@ public class BaseUi extends Activity {
 		confirmDialog.setPositiveButton("确认", firstListener);
 		confirmDialog.setNegativeButton("取消", secondListener);
 		confirmDialog.create().show();
-	} 
+	}
+
 	@SuppressLint("NewApi")
 	public void showConfirmDialog(String mes,
 			DialogInterface.OnClickListener firstListener,
@@ -333,9 +347,9 @@ public class BaseUi extends Activity {
 			this.popupDialog = null;
 		}
 	}
-	
-	protected void onTaskAsyncStop(){
-		
+
+	protected void onTaskAsyncStop() {
+
 	}
 
 	/**
@@ -408,8 +422,8 @@ public class BaseUi extends Activity {
 		return null;
 	}
 
-	private HashMap<String, JSONObject> getRequestData(HashMap<String, String> data)
-			throws UnsupportedEncodingException {
+	private HashMap<String, JSONObject> getRequestData(
+			HashMap<String, String> data) throws UnsupportedEncodingException {
 		JSONObject urlParams = new JSONObject();
 
 		long timestamp = AppUtil.getCurrentTime();// 时间戳
@@ -446,7 +460,7 @@ public class BaseUi extends Activity {
 		}
 		publicData.put("cookie", cookieVal);
 		publicData.put("userId", userIdVal);
-		
+
 		try {
 			urlParams.put("public", new JSONObject(publicData));
 			urlParams.put("operation", operationData);
@@ -456,7 +470,7 @@ public class BaseUi extends Activity {
 
 		// 构建requestData数据
 		requestData.put("requestData", urlParams);
-		
+
 		return requestData;
 	}
 
@@ -480,9 +494,10 @@ public class BaseUi extends Activity {
 			taskPool.addTask(taskId, taskUrl, getRequestData(data), baseTask, 0);
 		}
 	}
-	
+
 	/**
 	 * 发送一个POST上传文件的请求
+	 * 
 	 * @param taskId
 	 * @param taskUrl
 	 * @param data
@@ -490,13 +505,15 @@ public class BaseUi extends Activity {
 	 * @throws UnsupportedEncodingException
 	 */
 	public void doUploadTaskAsync(int taskId, String taskUrl,
-			HashMap<String, String> data, ArrayList<String> filesPath) throws UnsupportedEncodingException {
+			HashMap<String, String> data, ArrayList<String> filesPath)
+			throws UnsupportedEncodingException {
 		if (HttpUtil.getType(this) == 0) {
 			this.showToast(C.ERROR.networkNone);
 			this.closePopupDialog();
 		} else {
 
-			taskPool.addTask(taskId, taskUrl,  getRequestData(data), filesPath, baseTask, 0);
+			taskPool.addTask(taskId, taskUrl, getRequestData(data), filesPath,
+					baseTask, 0);
 		}
 	}
 
@@ -531,8 +548,9 @@ public class BaseUi extends Activity {
 
 		handler.sendMessage(m);
 	}
-	
-	private void sendMessage(int what, int taskId, String data, ArrayList<String> files) {
+
+	private void sendMessage(int what, int taskId, String data,
+			ArrayList<String> files) {
 		Bundle b = new Bundle();
 
 		b.putInt("task", taskId);
@@ -581,18 +599,88 @@ public class BaseUi extends Activity {
 							C.DIRS.userInfoFileName, userInfo);
 				}
 			}
+		} else if (taskId == C.TASK.noticeget) {
+			int resultStatus = message.getResultStatus();
+
+			if (resultStatus == 100) {
+				final JSONObject operation = message.getOperation();
+				boolean hasTitle = operation.has("title");
+
+				if (hasTitle) {
+					LinearLayout noticeGlobalView = (LinearLayout) findViewById(R.id.notice_global);
+					LinearLayout noticeHomeView = (LinearLayout) findViewById(R.id.notice_home);
+
+					if (operation.getString("position").equals("1")) {
+						noticeGlobalView.setVisibility(View.VISIBLE);
+						noticeHomeView.setVisibility(View.GONE);
+						noticeGlobalView
+								.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										// TODO Auto-generated method stub
+										Bundle bundle = new Bundle();
+										try {
+											bundle.putString("title", operation
+													.getString("title"));
+											bundle.putString(
+													"content",
+													operation
+															.getString("content"));
+										} catch (JSONException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+
+										forward(UINotice.class, bundle);
+									}
+								});
+					} else if (operation.getString("position").equals("0")) {
+						noticeGlobalView.setVisibility(View.GONE);
+						noticeHomeView.setVisibility(View.VISIBLE);
+						noticeHomeView
+								.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										// TODO Auto-generated method stub
+										Bundle bundle = new Bundle();
+										try {
+											bundle.putString("title", operation
+													.getString("title"));
+											bundle.putString(
+													"content",
+													operation
+															.getString("content"));
+										} catch (JSONException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+
+										forward(UINotice.class, bundle);
+									}
+								});
+					}
+
+					TextView noticeTitleView = (TextView) findViewById(R.id.notice);
+					if (noticeTitleView != null) {
+						noticeTitleView.setText(operation.getString("title"));
+					}
+				}
+			}
 		}
 	}
-	
+
 	/**
 	 * 上传文件处理成功
+	 * 
 	 * @param taskId
 	 * @param message
 	 * @param filesPath
 	 * @throws Exception
 	 */
-	public void onTaskComplete(int taskId, BaseMessage message, ArrayList<String> filesPath)
-			throws Exception {
+	public void onTaskComplete(int taskId, BaseMessage message,
+			ArrayList<String> filesPath) throws Exception {
 		this.closePopupDialog();
 
 		// 如果获取到用户信息就保存到本地

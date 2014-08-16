@@ -4,11 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/notice_global"
-        layout="@layout/template_notice_tip"
-        android:visibility="gone" />
-
     <LinearLayout
         android:id="@+id/topBar"
         style="@style/topBar"
@@ -26,5 +21,10 @@
             android:textColor="#ffffff"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <include
+        android:id="@+id/notice_global"
+        layout="@layout/template_notice_tip"
+        android:visibility="gone" />
 
 </LinearLayout>
